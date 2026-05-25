@@ -1,9 +1,13 @@
 package middleware
 
 import (
+	"bytes"
+	"encoding/json"
+	"io"
 	"net/http"
 	"strings"
 
+	"stack-bm/internal/database"
 	"stack-bm/pkg/jwt"
 	"stack-bm/pkg/response"
 
@@ -53,5 +57,38 @@ func CORSMiddleware() gin.HandlerFunc {
 		}
 
 		c.Next()
+	}
+}
+
+func LoggingMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		bodyBytes, _ := io.ReadAll(c.Request.Body)
+		c.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+
+		c.Next()
+
+		statusCode := c.Writer.Status()
+		if statusCode < 400 {
+			return
+		}
+
+		username, _ := c.Get("username")
+		uname := ""
+		if username != nil {
+			uname = username.(string)
+		}
+
+		desc := string(bodyBytes)
+		if len(desc) > 500 {
+			desc = desc[:500]
+		}
+
+		db := database.DBBM
+		if db != nil {
+			db.Exec(`INSERT INTO sys_logs (level, path, username, ip, `+"`desc`"+`, created_at, updated_at) VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())`,
+				"error", c.Request.URL.Path, uname, c.ClientIP(), desc)
+		}
+
+		_ = json.Unmarshal
 	}
 }

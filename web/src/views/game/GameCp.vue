@@ -23,14 +23,11 @@
         <n-form-item path="mark" label="标识">
           <n-input v-model:value="formData.mark" placeholder="请输入标识" :disabled="isEdit" />
         </n-form-item>
-        <n-form-item path="contact" label="联系人">
-          <n-input v-model:value="formData.contact" placeholder="请输入联系人" />
-        </n-form-item>
         <n-form-item path="phone" label="电话">
           <n-input v-model:value="formData.phone" placeholder="请输入电话" />
         </n-form-item>
-        <n-form-item path="description" label="描述">
-          <n-input v-model:value="formData.description" type="textarea" placeholder="请输入描述" />
+        <n-form-item path="addr" label="地址">
+          <n-input v-model:value="formData.addr" placeholder="请输入地址" />
         </n-form-item>
         <n-form-item path="status" label="状态">
           <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
@@ -60,8 +57,8 @@ const searchKeyword = ref('')
 const searchStatus = ref(null)
 const statusOptions = [{ label: '启用', value: 1 }, { label: '禁用', value: 0 }]
 
-const formData = reactive({ name: '', mark: '', contact: '', phone: '', description: '', status: 1 })
-function resetForm() { Object.assign(formData, { name: '', mark: '', contact: '', phone: '', description: '', status: 1 }) }
+const formData = reactive({ name: '', mark: '', phone: '', addr: '', status: 1 })
+function resetForm() { Object.assign(formData, { name: '', mark: '', phone: '', addr: '', status: 1 }) }
 
 const rules = { name: [{ required: true, message: '请输入CP名称', trigger: 'blur' }] }
 
@@ -69,9 +66,8 @@ const columns = [
   { title: 'ID', key: 'id', width: 80 },
   { title: 'CP名称', key: 'name' },
   { title: '标识', key: 'mark' },
-  { title: '联系人', key: 'contact' },
   { title: '电话', key: 'phone' },
-  { title: '描述', key: 'description', ellipsis: { tooltip: true } },
+  { title: '地址', key: 'addr', ellipsis: { tooltip: true } },
   { title: '状态', key: 'status', width: 80, render: (row) => h(NSwitch, { value: row.status === 1, readonly: true, size: 'small' }) },
   { title: '创建时间', key: 'created_at', width: 180 },
   {
@@ -93,7 +89,7 @@ function resetAll() { searchKeyword.value = ''; searchStatus.value = null; reset
 function handleAdd() { resetForm(); open() }
 function handleEdit(row) {
   resetForm()
-  formData.name = row.name; formData.mark = row.mark; formData.contact = row.contact || ''; formData.phone = row.phone || ''; formData.description = row.description || ''; formData.status = row.status
+  formData.name = row.name; formData.mark = row.mark; formData.phone = row.phone || ''; formData.addr = row.addr || ''; formData.status = row.status
   openEdit(row)
 }
 

@@ -54,6 +54,18 @@ const routes = [
         component: () => import('../views/game/GameCp.vue'),
         meta: { title: '游戏CP管理' },
       },
+      {
+        path: 'logs',
+        name: 'SysLogs',
+        component: () => import('../views/system/SysLogs.vue'),
+        meta: { title: '操作日志' },
+      },
+      {
+        path: 'menu',
+        name: 'SysMenu',
+        component: () => import('../views/system/SysMenu.vue'),
+        meta: { title: '菜单管理' },
+      },
     ],
   },
 ]

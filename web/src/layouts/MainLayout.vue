@@ -58,6 +58,8 @@ const menuOptions = [
     children: [
       { label: '管理员管理', key: '/admin' },
       { label: '管理员分组', key: '/admin-group' },
+      { label: '菜单管理', key: '/menu' },
+      { label: '操作日志', key: '/logs' },
     ],
   },
   {

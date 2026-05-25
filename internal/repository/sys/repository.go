@@ -124,3 +124,82 @@ func (r *SysAdminGroupRepository) Update(group *sys.SysAdminGroup) error {
 func (r *SysAdminGroupRepository) Delete(id uint) error {
 	return r.db.Delete(&sys.SysAdminGroup{}, id).Error
 }
+
+type SysLogRepository struct {
+	db *gorm.DB
+}
+
+func NewSysLogRepository() *SysLogRepository {
+	return &SysLogRepository{db: database.DBBM}
+}
+
+func (r *SysLogRepository) Create(log *sys.SysLog) error {
+	return r.db.Create(log).Error
+}
+
+func (r *SysLogRepository) FindPage(page, size int, keyword string, level string) ([]sys.SysLog, int64, error) {
+	var logs []sys.SysLog
+	var total int64
+
+	query := r.db.Model(&sys.SysLog{})
+	if keyword != "" {
+		query = query.Where("path LIKE ? OR username LIKE ? OR `desc` LIKE ?", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%")
+	}
+	if level != "" {
+		query = query.Where("level = ?", level)
+	}
+
+	if err := query.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+
+	offset := (page - 1) * size
+	if err := query.Offset(offset).Limit(size).Order("id DESC").Find(&logs).Error; err != nil {
+		return nil, 0, err
+	}
+
+	return logs, total, nil
+}
+
+type SysMenuRepository struct {
+	db *gorm.DB
+}
+
+func NewSysMenuRepository() *SysMenuRepository {
+	return &SysMenuRepository{db: database.DBBM}
+}
+
+func (r *SysMenuRepository) Create(m *sys.SysMenu) error {
+	return r.db.Create(m).Error
+}
+
+func (r *SysMenuRepository) FindByID(id uint) (*sys.SysMenu, error) {
+	var m sys.SysMenu
+	err := r.db.First(&m, id).Error
+	if err != nil { return nil, err }
+	return &m, nil
+}
+
+func (r *SysMenuRepository) FindPage(page, size int) ([]sys.SysMenu, int64, error) {
+	var menus []sys.SysMenu
+	var total int64
+	query := r.db.Model(&sys.SysMenu{})
+	query.Count(&total)
+	offset := (page - 1) * size
+	err := query.Offset(offset).Limit(size).Order("sort ASC, id ASC").Find(&menus).Error
+	return menus, total, err
+}
+
+func (r *SysMenuRepository) FindAll() ([]sys.SysMenu, error) {
+	var menus []sys.SysMenu
+	err := r.db.Order("sort ASC, id ASC").Find(&menus).Error
+	return menus, err
+}
+
+func (r *SysMenuRepository) Update(m *sys.SysMenu) error {
+	return r.db.Save(m).Error
+}
+
+func (r *SysMenuRepository) Delete(id uint) error {
+	return r.db.Delete(&sys.SysMenu{}, id).Error
+}

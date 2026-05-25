@@ -35,3 +35,27 @@ export function updateAdminGroup(id, data) {
 export function deleteAdminGroup(id) {
   return request.post(`/admin-group/delete/${id}`)
 }
+
+export function getLogList(params) {
+  return request.post('/logs/list', params)
+}
+
+export function getMenuList(params) {
+  return request.post('/menu/list', params)
+}
+
+export function getMenuAll() {
+  return request.post('/menu/all')
+}
+
+export function createMenu(data) {
+  return request.post('/menu/create', data)
+}
+
+export function updateMenu(id, data) {
+  return request.post(`/menu/update/${id}`, data)
+}
+
+export function deleteMenu(id) {
+  return request.post(`/menu/delete/${id}`)
+}

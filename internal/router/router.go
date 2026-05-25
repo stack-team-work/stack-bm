@@ -13,6 +13,7 @@ func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
 	r.Use(middleware.CORSMiddleware())
+	r.Use(middleware.LoggingMiddleware())
 
 	authHandler := handler.NewAuthHandler()
 	sysAdminHandler := handlerSys.NewSysAdminHandler()
@@ -20,6 +21,8 @@ func SetupRouter() *gin.Engine {
 	gameHandler := handlerGame.NewGameHandler()
 	gameAppHandler := handlerGame.NewGameAppHandler()
 	gameCpHandler := handlerGame.NewGameCpHandler()
+	sysLogHandler := handlerSys.NewSysLogHandler()
+	sysMenuHandler := handlerSys.NewSysMenuHandler()
 
 	r.POST("/api/login", authHandler.Login)
 
@@ -60,6 +63,15 @@ func SetupRouter() *gin.Engine {
 		api.POST("/game-cp/detail/:id", gameCpHandler.GetByID)
 		api.POST("/game-cp/update/:id", gameCpHandler.Update)
 		api.POST("/game-cp/delete/:id", gameCpHandler.Delete)
+
+		api.POST("/logs/list", sysLogHandler.GetList)
+
+		api.POST("/menu/create", sysMenuHandler.Create)
+		api.POST("/menu/list", sysMenuHandler.GetList)
+		api.POST("/menu/all", sysMenuHandler.GetAll)
+		api.POST("/menu/detail/:id", sysMenuHandler.GetByID)
+		api.POST("/menu/update/:id", sysMenuHandler.Update)
+		api.POST("/menu/delete/:id", sysMenuHandler.Delete)
 	}
 
 	return r

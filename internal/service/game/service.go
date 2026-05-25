@@ -173,14 +173,11 @@ func (s *GameCpService) Update(id uint, cp *game.GameCp) error {
 	if cp.Mark != "" {
 		existing.Mark = cp.Mark
 	}
-	if cp.Contact != "" {
-		existing.Contact = cp.Contact
-	}
 	if cp.Phone != "" {
 		existing.Phone = cp.Phone
 	}
-	if cp.Description != "" {
-		existing.Description = cp.Description
+	if cp.Addr != "" {
+		existing.Addr = cp.Addr
 	}
 	existing.Status = cp.Status
 
