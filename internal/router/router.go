@@ -16,11 +16,14 @@ func SetupRouter() *gin.Engine {
 	r.Use(middleware.LoggingMiddleware())
 
 	authHandler := handler.NewAuthHandler()
+	dashboardHandler := handler.NewDashboardHandler()
 	sysAdminHandler := handlerSys.NewSysAdminHandler()
 	sysAdminGroupHandler := handlerSys.NewSysAdminGroupHandler()
 	gameHandler := handlerGame.NewGameHandler()
 	gameAppHandler := handlerGame.NewGameAppHandler()
 	gameCpHandler := handlerGame.NewGameCpHandler()
+	gameTagHandler := handlerGame.NewGameTagHandler()
+	gameVariableHandler := handlerGame.NewGameVariableHandler()
 	sysLogHandler := handlerSys.NewSysLogHandler()
 	sysMenuHandler := handlerSys.NewSysMenuHandler()
 
@@ -31,6 +34,8 @@ func SetupRouter() *gin.Engine {
 	api.Use(middleware.AuthMiddleware())
 	{
 		api.POST("/user/info", authHandler.GetUserInfo)
+
+		api.POST("/dashboard/stats", dashboardHandler.Stats)
 
 		api.POST("/admin/create", sysAdminHandler.Create)
 		api.POST("/admin/list", sysAdminHandler.GetList)
@@ -64,6 +69,19 @@ func SetupRouter() *gin.Engine {
 		api.POST("/game-cp/detail/:id", gameCpHandler.GetByID)
 		api.POST("/game-cp/update/:id", gameCpHandler.Update)
 		api.POST("/game-cp/delete/:id", gameCpHandler.Delete)
+
+		api.POST("/game-tag/create", gameTagHandler.Create)
+		api.POST("/game-tag/list", gameTagHandler.GetList)
+		api.POST("/game-tag/all", gameTagHandler.GetAll)
+		api.POST("/game-tag/detail/:id", gameTagHandler.GetByID)
+		api.POST("/game-tag/update/:id", gameTagHandler.Update)
+		api.POST("/game-tag/delete/:id", gameTagHandler.Delete)
+
+		api.POST("/game-variable/create", gameVariableHandler.Create)
+		api.POST("/game-variable/list", gameVariableHandler.GetList)
+		api.POST("/game-variable/detail/:id", gameVariableHandler.GetByID)
+		api.POST("/game-variable/update/:id", gameVariableHandler.Update)
+		api.POST("/game-variable/delete/:id", gameVariableHandler.Delete)
 
 		api.POST("/logs/list", sysLogHandler.GetList)
 

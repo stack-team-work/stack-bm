@@ -4,22 +4,22 @@
       <n-grid :cols="4" :x-gap="24">
         <n-gi>
           <n-card size="small" hoverable>
-            <n-statistic label="后台账号" :value="statAdmin" />
+            <n-statistic label="今日充值人数" :value="statRecharge" />
           </n-card>
         </n-gi>
         <n-gi>
           <n-card size="small" hoverable>
-            <n-statistic label="后台角色" :value="statGroup" />
+            <n-statistic label="今日注册人数" :value="statRegister" />
           </n-card>
         </n-gi>
         <n-gi>
           <n-card size="small" hoverable>
-            <n-statistic label="父游戏" :value="statGame" />
+            <n-statistic label="今日登录人数" :value="statLogin" />
           </n-card>
         </n-gi>
         <n-gi>
           <n-card size="small" hoverable>
-            <n-statistic label="子游戏" :value="statApp" />
+            <n-statistic label="今日激活人数" :value="statActivate" />
           </n-card>
         </n-gi>
       </n-grid>
@@ -33,16 +33,15 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getAdminList, getAdminGroupList, getLogList } from '../../api/system'
-import { getGameList, getGameAppList } from '../../api/game'
+import { getDashboardStats, getLogList } from '../../api/system'
 import { NTag } from 'naive-ui'
 import { h } from 'vue'
 
 const loading = ref(false)
-const statAdmin = ref(0)
-const statGroup = ref(0)
-const statGame = ref(0)
-const statApp = ref(0)
+const statRecharge = ref(0)
+const statRegister = ref(0)
+const statLogin = ref(0)
+const statActivate = ref(0)
 const recentLogs = ref([])
 
 const logColumns = [
@@ -56,17 +55,14 @@ const logColumns = [
 onMounted(async () => {
   loading.value = true
   try {
-    const [ar, gr, g, a, logs] = await Promise.all([
-      getAdminList({ page: 1, size: 1 }),
-      getAdminGroupList({ page: 1, size: 1 }),
-      getGameList({ page: 1, size: 1 }),
-      getGameAppList({ page: 1, size: 1 }),
+    const [stats, logs] = await Promise.all([
+      getDashboardStats(),
       getLogList({ page: 1, size: 10, level: '', keyword: '' }),
     ])
-    statAdmin.value = ar.data.total || 0
-    statGroup.value = gr.data.total || 0
-    statGame.value = g.data.total || 0
-    statApp.value = a.data.total || 0
+    statRecharge.value = stats.data.recharge_users || 0
+    statRegister.value = stats.data.register_users || 0
+    statLogin.value = stats.data.login_users || 0
+    statActivate.value = stats.data.activate_users || 0
     recentLogs.value = logs.data.list || []
   } catch { /* */ }
   finally { loading.value = false }

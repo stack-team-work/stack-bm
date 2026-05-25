@@ -11,9 +11,9 @@
       @collapse="collapsed = true"
       @expand="collapsed = false"
     >
-      <div style="height: 56px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.08)">
-        <span v-if="!collapsed" style="color: #fff; font-size: 16px; font-weight: bold; letter-spacing: 2px">Stack-BM</span>
-        <span v-else style="color: #fff; font-size: 14px; font-weight: bold">BM</span>
+      <div style="height: 56px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.08); gap: 8px">
+        <img src="/logo.png" style="width: 32px; height: 32px; flex-shrink: 0" />
+        <span v-if="!collapsed" style="color: #fff; font-size: 16px; font-weight: bold; letter-spacing: 2px">STACK-BM</span>
       </div>
       <n-menu
         :collapsed="collapsed"
@@ -27,7 +27,11 @@
     </n-layout-sider>
     <n-layout>
       <n-layout-header bordered style="height: 56px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; background: #fff">
-        <span style="font-size: 16px; font-weight: 500">游戏发行后台管理系统</span>
+        <n-breadcrumb>
+          <n-breadcrumb-item v-for="item in breadcrumbs" :key="item.path" @click="item.path && router.push(item.path)">
+            {{ item.label }}
+          </n-breadcrumb-item>
+        </n-breadcrumb>
         <n-space align="center">
           <n-text>{{ userInfo?.username || '' }}</n-text>
           <n-button size="small" @click="handleLogout">退出登录</n-button>
@@ -79,11 +83,19 @@ const menuOptions = [
       { label: '父游戏', key: '/game' },
       { label: '子游戏', key: '/game-app' },
       { label: '游戏CP', key: '/game-cp' },
+      { label: '游戏标签', key: '/game-tag' },
+      { label: '游戏变量', key: '/game-variable' },
     ],
   },
 ]
 
 const currentRoute = computed(() => route.path)
+
+const breadcrumbs = computed(() => {
+  return route.matched
+    .filter(r => r.meta?.title)
+    .map(r => ({ label: r.meta.title, path: r.path }))
+})
 
 function handleMenuSelect(key) {
   router.push(key)

@@ -1,5 +1,9 @@
 import request from '../utils/request'
 
+export function getDashboardStats() {
+  return request.post('/dashboard/stats')
+}
+
 export function getAdminList(params) {
   return request.post('/admin/list', params)
 }

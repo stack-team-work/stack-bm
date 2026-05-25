@@ -61,6 +61,18 @@ const routes = [
         meta: { title: '游戏CP管理' },
       },
       {
+        path: 'game-tag',
+        name: 'GameTag',
+        component: () => import('../views/game/GameTag.vue'),
+        meta: { title: '游戏标签' },
+      },
+      {
+        path: 'game-variable',
+        name: 'GameVariable',
+        component: () => import('../views/game/GameVariable.vue'),
+        meta: { title: '游戏变量' },
+      },
+      {
         path: 'logs',
         name: 'SysLogs',
         component: () => import('../views/system/SysLogs.vue'),

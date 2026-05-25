@@ -55,3 +55,39 @@ export function updateGameCp(id, data) {
 export function deleteGameCp(id) {
   return request.post(`/game-cp/delete/${id}`)
 }
+
+export function getGameTagList(params) {
+  return request.post('/game-tag/list', params)
+}
+
+export function getGameTagAll(params) {
+  return request.post('/game-tag/all', params)
+}
+
+export function createGameTag(data) {
+  return request.post('/game-tag/create', data)
+}
+
+export function updateGameTag(id, data) {
+  return request.post(`/game-tag/update/${id}`, data)
+}
+
+export function deleteGameTag(id) {
+  return request.post(`/game-tag/delete/${id}`)
+}
+
+export function getGameVariableList(params) {
+  return request.post('/game-variable/list', params)
+}
+
+export function createGameVariable(data) {
+  return request.post('/game-variable/create', data)
+}
+
+export function updateGameVariable(id, data) {
+  return request.post(`/game-variable/update/${id}`, data)
+}
+
+export function deleteGameVariable(id) {
+  return request.post(`/game-variable/delete/${id}`)
+}
