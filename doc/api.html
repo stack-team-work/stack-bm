@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Stack-BM API Documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>body{margin:0;padding:0}</style>
+</head>
+<body>
+<div id="redoc-container"></div>
+<script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
+<script>
+Redoc.init(
+`openapi: '3.0.3'
+info:
+  title: Stack-BM API
+  description: 游戏发行后台管理系统 API 文档
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: 本地开发环境
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Response:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: 0=成功, 其他=错误
+          example: 0
+        data:
+          description: 响应数据
+        msg:
+          type: string
+          example: success
+
+    PageResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 0
+        data:
+          type: object
+          properties:
+            list:
+              type: array
+              description: 数据列表
+            total:
+              type: integer
+              description: 总数
+        msg:
+          type: string
+          example: success
+
+    LoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+          example: admin
+        password:
+          type: string
+          example: admin123
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT Token
+        userInfo:
+          $ref: '#/components/schemas/SysAdmin'
+
+    SysAdmin:
+      type: object
+      properties:
+        id: { type: integer }
+        username: { type: string }
+        password: { type: string }
+        user_type: { type: integer }
+        group_id: { type: integer }
+        name: { type: string }
+        phone: { type: string }
+        status: { type: integer, enum: [0, 1], description: '0=禁用,1=启用' }
+        created_at: { type: integer, description: Unix时间戳(秒) }
+        updated_at: { type: integer }
+
+    SysAdminGroup:
+      type: object
+      properties:
+        id: { type: integer }
+        mark: { type: string, description: 唯一标识 }
+        name: { type: string }
+        description: { type: string }
+        status: { type: integer, enum: [0, 1] }
+        created_at: { type: integer }
+        updated_at: { type: integer }
+
+    Game:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string, description: 游戏名称 }
+        web_name: { type: string, description: Web显示名称 }
+        icon: { type: string, description: 图标地址 }
+        type_id: { type: integer, description: '游戏类型标签ID (对应game_tags.type=2)' }
+        style_id: { type: integer, description: '游戏风格标签ID (对应game_tags.type=1)' }
+        cp_id: { type: integer, description: 所属CP ID }
+        mark: { type: string, description: 游戏标识(唯一) }
+        status: { type: integer, enum: [0, 1] }
+        created_at: { type: integer }
+        updated_at: { type: integer }
+
+    GameApp:
+      type: object
+      properties:
+        id: { type: integer }
+        pid: { type: integer, description: 父游戏ID }
+        name: { type: string }
+        package_name: { type: string }
+        app_name: { type: string }
+        os: { type: integer, enum: [1, 2, 3], description: '1=Android,2=iOS,3=H5' }
+        is_verify: { type: integer, enum: [0, 1] }
+        age: { type: integer }
+        is_open_charge: { type: integer, enum: [0, 1] }
+        is_open_register: { type: integer, enum: [0, 1] }
+        is_alert_email: { type: integer, enum: [0, 1] }
+        is_alert_phone: { type: integer, enum: [0, 1] }
+        is_alert_auth: { type: integer, enum: [0, 1] }
+        is_open_float: { type: integer, enum: [0, 1] }
+        sdk_ver: { type: string }
+        app_ver: { type: string }
+        app_key: { type: string, description: 自动生成,不可修改 }
+        app_secret: { type: string, description: 自动生成,不可修改 }
+        callback_url: { type: string }
+        api_domain: { type: string }
+        pay_domain: { type: string }
+        status: { type: integer, enum: [0, 1] }
+        cs_params: { type: string, description: 客服参数JSON }
+        pay_params: { type: string, description: 支付参数JSON }
+        h5_params: { type: string, description: H5参数JSON }
+        created_at: { type: integer }
+        updated_at: { type: integer }
+
+    GameCp:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        mark: { type: string }
+        phone: { type: string }
+        addr: { type: string }
+        status: { type: integer, enum: [0, 1] }
+        created_at: { type: integer }
+        updated_at: { type: integer }
+
+    GameTag:
+      type: object
+      properties:
+        id: { type: integer }
+        type: { type: integer, enum: [1, 2], description: '1=游戏风格(对应game.style_id),2=游戏类型(对应game.type_id)' }
+        mark: { type: string, description: 标签标识(唯一) }
+        name: { type: string, description: 标签名称 }
+        status: { type: integer, enum: [0, 1] }
+        created_at: { type: integer }
+        updated_at: { type: integer }
+
+    GameVariable:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string, description: 变量名称 }
+        key: { type: string, description: 变量Key(唯一) }
+        value: { type: string, description: '变量值,多行自动保存为JSON数组,单行保存为字符串' }
+        mark: { type: string, description: 备注 }
+        status: { type: integer, enum: [0, 1] }
+        created_at: { type: integer }
+        updated_at: { type: integer }
+
+    SysLog:
+      type: object
+      properties:
+        id: { type: integer }
+        level: { type: string, enum: [info, error] }
+        path: { type: string }
+        username: { type: string }
+        ip: { type: string }
+        desc: { type: string }
+        created_at: { type: integer }
+
+    SysMenu:
+      type: object
+      properties:
+        id: { type: integer }
+        type: { type: integer }
+        author: { type: string }
+        name: { type: string }
+        path: { type: string }
+        parent: { type: integer }
+        icon: { type: string }
+        sort: { type: integer }
+        status: { type: integer, enum: [0, 1] }
+        created_at: { type: integer }
+        updated_at: { type: integer }
+
+    DashboardStats:
+      type: object
+      properties:
+        recharge_users: { type: integer, description: 今日充值人数 }
+        register_users: { type: integer, description: 今日注册人数 }
+        login_users: { type: integer, description: 今日登录人数 }
+        activate_users: { type: integer, description: 今日激活人数 }
+
+    ListParams:
+      type: object
+      properties:
+        page: { type: integer, default: 1 }
+        size: { type: integer, default: 10 }
+        keyword: { type: string, description: 搜索关键词 }
+        status: { type: integer, description: '-1=全部,0=禁用,1=启用' }
+
+  parameters:
+    IdPath:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+
+tags:
+  - name: 认证
+    description: 登录相关接口,无需Token
+  - name: 概况
+  - name: 后台账号
+  - name: 后台角色
+  - name: 游戏管理
+  - name: 子游戏
+  - name: 游戏CP
+  - name: 游戏标签
+  - name: 游戏变量
+  - name: 操作日志
+  - name: 菜单管理
+
+paths:
+  # ========== 认证 ==========
+  /api/login:
+    post:
+      tags: [认证]
+      summary: 登录
+      description: 用户登录获取JWT Token。Dev模式下首次登录自动创建 admin/admin123
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/LoginResponse'
+
+  /api/captcha:
+    post:
+      tags: [认证]
+      summary: 获取验证码
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: 验证码信息
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  # ========== 概况 ==========
+  /api/user/info:
+    post:
+      tags: [概况]
+      summary: 获取当前用户信息
+      responses:
+        '200':
+          description: 用户信息
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SysAdmin'
+
+  /api/dashboard/stats:
+    post:
+      tags: [概况]
+      summary: 控制台统计数据
+      responses:
+        '200':
+          description: 统计数据
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/DashboardStats'
+
+  # ========== 后台账号 ==========
+  /api/admin/create:
+    post:
+      tags: [后台账号]
+      summary: 新增账号
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, password, group_id]
+              properties:
+                username: { type: string }
+                password: { type: string }
+                name: { type: string }
+                phone: { type: string }
+                group_id: { type: integer }
+                status: { type: integer }
+      responses:
+        '200':
+          description: 新增的账号信息
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SysAdmin'
+
+  /api/admin/list:
+    post:
+      tags: [后台账号]
+      summary: 账号列表(分页)
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ListParams'
+                - type: object
+                  properties:
+                    group_id: { type: integer, description: '0=全部' }
+      responses:
+        '200':
+          description: 分页数据
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          list:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/SysAdmin'
+
+  /api/admin/detail/{id}:
+    post:
+      tags: [后台账号]
+      summary: 账号详情
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 账号详情
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SysAdmin'
+
+  /api/admin/update/{id}:
+    post:
+      tags: [后台账号]
+      summary: 更新账号
+      description: password留空则不修改
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password: { type: string }
+                name: { type: string }
+                phone: { type: string }
+                group_id: { type: integer }
+                status: { type: integer }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  /api/admin/delete/{id}:
+    post:
+      tags: [后台账号]
+      summary: 删除账号(软删除)
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  # ========== 后台角色 ==========
+  /api/admin-group/create:
+    post:
+      tags: [后台角色]
+      summary: 新增角色
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                mark: { type: string }
+                name: { type: string }
+                description: { type: string }
+                status: { type: integer }
+      responses:
+        '200':
+          description: 新增的角色
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SysAdminGroup'
+
+  /api/admin-group/list:
+    post:
+      tags: [后台角色]
+      summary: 角色列表(分页)
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ListParams'
+      responses:
+        '200':
+          description: 分页数据
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          list:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/SysAdminGroup'
+
+  /api/admin-group/all:
+    post:
+      tags: [后台角色]
+      summary: 获取全部角色
+      responses:
+        '200':
+          description: 角色列表
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SysAdminGroup'
+
+  /api/admin-group/detail/{id}:
+    post:
+      tags: [后台角色]
+      summary: 角色详情
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 角色详情
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SysAdminGroup'
+
+  /api/admin-group/update/{id}:
+    post:
+      tags: [后台角色]
+      summary: 更新角色
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                description: { type: string }
+                status: { type: integer }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  /api/admin-group/delete/{id}:
+    post:
+      tags: [后台角色]
+      summary: 删除角色(软删除)
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  # ========== 游戏管理 ==========
+  /api/game/create:
+    post:
+      tags: [游戏管理]
+      summary: 新增游戏
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, mark, cp_id]
+              properties:
+                name: { type: string, description: 游戏名称 }
+                mark: { type: string, description: 游戏标识(唯一) }
+                web_name: { type: string, description: Web显示名称 }
+                icon: { type: string }
+                cp_id: { type: integer, description: 所属CP ID }
+                type_id: { type: integer, description: '类型标签ID(对应game_tags.type=2)' }
+                style_id: { type: integer, description: '风格标签ID(对应game_tags.type=1)' }
+                status: { type: integer }
+      responses:
+        '200':
+          description: 新增的游戏
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Game'
+
+  /api/game/list:
+    post:
+      tags: [游戏管理]
+      summary: 游戏列表(分页)
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ListParams'
+      responses:
+        '200':
+          description: 分页数据
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          list:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/Game'
+
+  /api/game/all:
+    post:
+      tags: [游戏管理]
+      summary: 获取全部游戏(启用状态)
+      responses:
+        '200':
+          description: 游戏列表
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Game'
+
+  /api/game/detail/{id}:
+    post:
+      tags: [游戏管理]
+      summary: 游戏详情
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 游戏详情
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Game'
+
+  /api/game/update/{id}:
+    post:
+      tags: [游戏管理]
+      summary: 更新游戏
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                mark: { type: string }
+                web_name: { type: string }
+                icon: { type: string }
+                cp_id: { type: integer }
+                status: { type: integer }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  /api/game/delete/{id}:
+    post:
+      tags: [游戏管理]
+      summary: 删除游戏(软删除)
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  # ========== 子游戏 ==========
+  /api/game-app/create:
+    post:
+      tags: [子游戏]
+      summary: 新增子游戏
+      description: AppKey和AppSecret自动生成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, pid]
+              properties:
+                pid: { type: integer, description: 父游戏ID }
+                name: { type: string }
+                package_name: { type: string }
+                app_name: { type: string }
+                os: { type: integer, enum: [1, 2, 3], description: '1=Android,2=iOS,3=H5' }
+                is_verify: { type: integer }
+                age: { type: integer }
+                is_open_charge: { type: integer }
+                is_open_register: { type: integer }
+                is_alert_email: { type: integer }
+                is_alert_phone: { type: integer }
+                is_alert_auth: { type: integer }
+                is_open_float: { type: integer }
+                sdk_ver: { type: string }
+                app_ver: { type: string }
+                callback_url: { type: string }
+                api_domain: { type: string }
+                pay_domain: { type: string }
+                cs_params: { type: string }
+                pay_params: { type: string }
+                h5_params: { type: string }
+                status: { type: integer }
+      responses:
+        '200':
+          description: 新增的子游戏(含自动生成的app_key, app_secret)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/GameApp'
+
+  /api/game-app/list:
+    post:
+      tags: [子游戏]
+      summary: 子游戏列表(分页)
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ListParams'
+                - type: object
+                  properties:
+                    game_id: { type: integer, description: '父游戏ID筛选,0=全部' }
+      responses:
+        '200':
+          description: 分页数据
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          list:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/GameApp'
+
+  /api/game-app/all:
+    post:
+      tags: [子游戏]
+      summary: 获取全部子游戏
+      responses:
+        '200':
+          description: 子游戏列表
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/GameApp'
+
+  /api/game-app/detail/{id}:
+    post:
+      tags: [子游戏]
+      summary: 子游戏详情
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 子游戏详情
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/GameApp'
+
+  /api/game-app/update/{id}:
+    post:
+      tags: [子游戏]
+      summary: 更新子游戏
+      description: AppKey和AppSecret不可修改
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                pid: { type: integer }
+                package_name: { type: string }
+                status: { type: integer }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  /api/game-app/delete/{id}:
+    post:
+      tags: [子游戏]
+      summary: 删除子游戏(软删除)
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  # ========== 游戏CP ==========
+  /api/game-cp/create:
+    post:
+      tags: [游戏CP]
+      summary: 新增CP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string }
+                mark: { type: string }
+                phone: { type: string }
+                addr: { type: string }
+                status: { type: integer }
+      responses:
+        '200':
+          description: 新增的CP
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/GameCp'
+
+  /api/game-cp/list:
+    post:
+      tags: [游戏CP]
+      summary: CP列表(分页)
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ListParams'
+      responses:
+        '200':
+          description: 分页数据
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          list:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/GameCp'
+
+  /api/game-cp/all:
+    post:
+      tags: [游戏CP]
+      summary: 获取全部CP(启用状态)
+      responses:
+        '200':
+          description: CP列表
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/GameCp'
+
+  /api/game-cp/detail/{id}:
+    post:
+      tags: [游戏CP]
+      summary: CP详情
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: CP详情
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/GameCp'
+
+  /api/game-cp/update/{id}:
+    post:
+      tags: [游戏CP]
+      summary: 更新CP
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                phone: { type: string }
+                addr: { type: string }
+                status: { type: integer }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  /api/game-cp/delete/{id}:
+    post:
+      tags: [游戏CP]
+      summary: 删除CP(软删除)
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  # ========== 游戏标签 ==========
+  /api/game-tag/create:
+    post:
+      tags: [游戏标签]
+      summary: 新增标签
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, mark]
+              properties:
+                name: { type: string, description: 标签名称 }
+                mark: { type: string, description: 标签标识 }
+                type: { type: integer, enum: [1, 2], description: '1=游戏风格(对应game.style_id),2=游戏类型(对应game.type_id)' }
+                status: { type: integer }
+      responses:
+        '200':
+          description: 新增的标签
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/GameTag'
+
+  /api/game-tag/list:
+    post:
+      tags: [游戏标签]
+      summary: 标签列表(分页)
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ListParams'
+                - type: object
+                  properties:
+                    type: { type: integer, description: '标签类型筛选,0=全部' }
+      responses:
+        '200':
+          description: 分页数据
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          list:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/GameTag'
+
+  /api/game-tag/all:
+    post:
+      tags: [游戏标签]
+      summary: 获取全部标签(按类型)
+      description: 用于游戏表单中的标签下拉选择
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                type: { type: integer, enum: [1, 2], description: '1=风格标签,2=类型标签' }
+      responses:
+        '200':
+          description: 标签列表
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/GameTag'
+
+  /api/game-tag/detail/{id}:
+    post:
+      tags: [游戏标签]
+      summary: 标签详情
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 标签详情
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/GameTag'
+
+  /api/game-tag/update/{id}:
+    post:
+      tags: [游戏标签]
+      summary: 更新标签
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                mark: { type: string }
+                status: { type: integer }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  /api/game-tag/delete/{id}:
+    post:
+      tags: [游戏标签]
+      summary: 删除标签(软删除)
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  # ========== 游戏变量 ==========
+  /api/game-variable/create:
+    post:
+      tags: [游戏变量]
+      summary: 新增变量
+      description: value多行输入自动保存为JSON数组,单行保存为字符串
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, key]
+              properties:
+                name: { type: string, description: 变量名称 }
+                key: { type: string, description: 变量Key(唯一) }
+                value: { type: string, description: '变量值,支持多行' }
+                mark: { type: string, description: 备注 }
+                status: { type: integer }
+      responses:
+        '200':
+          description: 新增的变量
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/GameVariable'
+
+  /api/game-variable/list:
+    post:
+      tags: [游戏变量]
+      summary: 变量列表(分页)
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ListParams'
+      responses:
+        '200':
+          description: 分页数据
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          list:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/GameVariable'
+
+  /api/game-variable/detail/{id}:
+    post:
+      tags: [游戏变量]
+      summary: 变量详情
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 变量详情
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/GameVariable'
+
+  /api/game-variable/update/{id}:
+    post:
+      tags: [游戏变量]
+      summary: 更新变量
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                key: { type: string }
+                value: { type: string }
+                mark: { type: string }
+                status: { type: integer }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  /api/game-variable/delete/{id}:
+    post:
+      tags: [游戏变量]
+      summary: 删除变量(软删除)
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  # ========== 操作日志 ==========
+  /api/logs/list:
+    post:
+      tags: [操作日志]
+      summary: 日志列表(分页)
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ListParams'
+                - type: object
+                  properties:
+                    level: { type: string, enum: [info, error], description: '日志级别' }
+      responses:
+        '200':
+          description: 分页数据
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          list:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/SysLog'
+
+  /api/logs/clear:
+    post:
+      tags: [操作日志]
+      summary: 清空全部日志
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  # ========== 菜单管理 ==========
+  /api/menu/create:
+    post:
+      tags: [菜单管理]
+      summary: 新增菜单
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, path]
+              properties:
+                type: { type: integer }
+                author: { type: string }
+                name: { type: string }
+                path: { type: string }
+                parent: { type: integer }
+                icon: { type: string }
+                sort: { type: integer }
+                status: { type: integer }
+      responses:
+        '200':
+          description: 新增的菜单
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SysMenu'
+
+  /api/menu/list:
+    post:
+      tags: [菜单管理]
+      summary: 菜单列表(分页)
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ListParams'
+      responses:
+        '200':
+          description: 分页数据
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PageResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          list:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/SysMenu'
+
+  /api/menu/all:
+    post:
+      tags: [菜单管理]
+      summary: 获取全部菜单
+      responses:
+        '200':
+          description: 菜单列表
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SysMenu'
+
+  /api/menu/detail/{id}:
+    post:
+      tags: [菜单管理]
+      summary: 菜单详情
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 菜单详情
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SysMenu'
+
+  /api/menu/update/{id}:
+    post:
+      tags: [菜单管理]
+      summary: 更新菜单
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                path: { type: string }
+                icon: { type: string }
+                sort: { type: integer }
+                status: { type: integer }
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+  /api/menu/delete/{id}:
+    post:
+      tags: [菜单管理]
+      summary: 删除菜单(软删除)
+      parameters:
+        - $ref: '#/components/parameters/IdPath'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+`,
+{},
+document.getElementById('redoc-container'),
+)
+</script>
+</body>
+</html>
