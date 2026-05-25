@@ -1,0 +1,14 @@
+[Unit]
+Description=Stack BM Admin Service
+After=network.target mysql.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/stack-bm
+ExecStart=/opt/stack-bm/stack-bm
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

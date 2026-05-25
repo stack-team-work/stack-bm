@@ -1,0 +1,77 @@
+import { createRouter, createWebHashHistory } from 'vue-router'
+
+const routes = [
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('../views/Login.vue'),
+    meta: { title: '登录' },
+  },
+  {
+    path: '/',
+    component: () => import('../layouts/MainLayout.vue'),
+    redirect: '/admin',
+    children: [
+      {
+        path: 'admin',
+        name: 'SysAdmin',
+        component: () => import('../views/system/SysAdmin.vue'),
+        meta: { title: '管理员管理' },
+      },
+      {
+        path: 'admin-group',
+        name: 'SysAdminGroup',
+        component: () => import('../views/system/SysAdminGroup.vue'),
+        meta: { title: '管理员分组' },
+      },
+      {
+        path: 'game',
+        name: 'Game',
+        component: () => import('../views/game/Game.vue'),
+        meta: { title: '游戏管理' },
+      },
+      {
+        path: 'game-app',
+        name: 'GameApp',
+        component: () => import('../views/game/GameApp.vue'),
+        meta: { title: '游戏应用管理' },
+      },
+      {
+        path: 'game-app/create',
+        name: 'GameAppCreate',
+        component: () => import('../views/game/GameAppForm.vue'),
+        meta: { title: '新增游戏应用' },
+      },
+      {
+        path: 'game-app/edit/:id',
+        name: 'GameAppEdit',
+        component: () => import('../views/game/GameAppForm.vue'),
+        meta: { title: '编辑游戏应用' },
+      },
+      {
+        path: 'game-cp',
+        name: 'GameCp',
+        component: () => import('../views/game/GameCp.vue'),
+        meta: { title: '游戏CP管理' },
+      },
+    ],
+  },
+]
+
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes,
+})
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token')
+  if (to.path !== '/login' && !token) {
+    next('/login')
+  } else if (to.path === '/login' && token) {
+    next('/')
+  } else {
+    next()
+  }
+})
+
+export default router

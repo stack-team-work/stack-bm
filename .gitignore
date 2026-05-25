@@ -1,0 +1,39 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+build/
+dist/
+
+# Test binary
+*.test
+
+# Go workspace
+go.work
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env files (keep sample)
+.env
+*.local.env
+
+# Node
+node_modules/
+web/dist/
+
+# Logs
+*.log
+
+# Temp
+tmp/
+temp/
