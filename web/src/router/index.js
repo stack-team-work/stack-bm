@@ -10,19 +10,25 @@ const routes = [
   {
     path: '/',
     component: () => import('../layouts/MainLayout.vue'),
-    redirect: '/admin',
+    redirect: '/dashboard',
     children: [
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: () => import('../views/system/Dashboard.vue'),
+        meta: { title: '概况' },
+      },
       {
         path: 'admin',
         name: 'SysAdmin',
         component: () => import('../views/system/SysAdmin.vue'),
-        meta: { title: '管理员管理' },
+        meta: { title: '后台账号' },
       },
       {
         path: 'admin-group',
         name: 'SysAdminGroup',
         component: () => import('../views/system/SysAdminGroup.vue'),
-        meta: { title: '管理员分组' },
+        meta: { title: '后台角色' },
       },
       {
         path: 'game',
@@ -34,19 +40,19 @@ const routes = [
         path: 'game-app',
         name: 'GameApp',
         component: () => import('../views/game/GameApp.vue'),
-        meta: { title: '游戏应用管理' },
+        meta: { title: '子游戏' },
       },
       {
         path: 'game-app/create',
         name: 'GameAppCreate',
         component: () => import('../views/game/GameAppForm.vue'),
-        meta: { title: '新增游戏应用' },
+        meta: { title: '新增子游戏' },
       },
       {
         path: 'game-app/edit/:id',
         name: 'GameAppEdit',
         component: () => import('../views/game/GameAppForm.vue'),
-        meta: { title: '编辑游戏应用' },
+        meta: { title: '编辑子游戏' },
       },
       {
         path: 'game-cp',

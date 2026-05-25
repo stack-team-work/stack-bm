@@ -1,12 +1,15 @@
 <template>
   <div>
-    <n-card title="菜单管理" :bordered="false">
-      <template #header-extra><n-button type="primary" @click="handleAdd">新增菜单</n-button></template>
-
-      <n-space vertical :size="16">
-        <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="false" />
+    <n-space vertical :size="16">
+      <n-space>
+        <n-input v-model:value="searchKeyword" placeholder="搜索菜单名称" clearable style="width: 180px" @keyup.enter="doSearch" />
+        <n-select v-model:value="searchParent" :options="parentSearchOptions" placeholder="父级菜单" clearable style="width: 150px" @update:value="doSearch" />
+        <n-button type="primary" size="small" @click="doSearch">搜索</n-button>
+        <n-button type="success" size="small" @click="handleAdd">新增</n-button>
       </n-space>
-    </n-card>
+
+      <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="false" />
+    </n-space>
 
     <n-modal v-model:show="showModal" :title="isEdit ? '编辑菜单' : '新增菜单'" preset="card" style="width: 550px" :mask-closable="false">
       <n-form ref="formRef" :model="formData" :rules="rules">
@@ -48,70 +51,53 @@
 <script setup>
 import { ref, reactive, h, onMounted, computed } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, NTag } from 'naive-ui'
-import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
-import { getMenuList, getMenuAll, createMenu, updateMenu, deleteMenu } from '../../api/system'
+import { getMenuAll, createMenu, updateMenu, deleteMenu } from '../../api/system'
 
-const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getMenuList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
-
-const formData = reactive({ type: 1, name: '', path: '', parent: 0, icon: '', sort: 0, author: '', status: 1 })
-function resetForm() { Object.assign(formData, { type: 1, name: '', path: '', parent: 0, icon: '', sort: 0, author: '', status: 1 }) }
-
-const rules = { name: [{ required: true, message: '请输入菜单名称', trigger: 'blur' }], path: [{ required: true, message: '请输入路由路径', trigger: 'blur' }] }
-
-const typeOptions = [
-  { label: '菜单', value: 1 },
-  { label: '按钮', value: 2 },
-]
-
+const loading = ref(false)
+const tableData = ref([])
+const searchKeyword = ref('')
+const searchParent = ref(null)
 const allMenus = ref([])
-const parentOptions = computed(() => {
-  return [{ label: '顶级菜单', value: 0 }, ...allMenus.value.filter(m => m.id !== editId.value).map(m => ({ label: m.name, value: m.id }))]
+const parentSearchOptions = computed(() => {
+  return [{ label: '全部菜单', value: null }, ...allMenus.value.filter(m => m.parent === 0).map(m => ({ label: m.name, value: m.id }))]
 })
 
+const parentOptions = computed(() => [{ label: '顶级菜单', value: 0 }, ...allMenus.value.filter(m => m.id !== editId.value && m.is_deleted !== 1).map(m => ({ label: m.name, value: m.id }))])
+
 const columns = [
-  { title: 'ID', key: 'id', width: 70 },
-  { title: '类型', key: 'type', width: 70, render: (row) => h(NTag, { type: row.type === 1 ? 'info' : 'default', size: 'small' }, { default: () => row.type === 1 ? '菜单' : '按钮' }) },
+  { title: 'ID', key: 'id', width: 60 },
+  { title: '类型', key: 'type', width: 60, render: (row) => h(NTag, { type: row.type === 1 ? 'info' : 'default', size: 'small' }, { default: () => row.type === 1 ? '菜单' : '按钮' }) },
   { title: '名称', key: 'name' },
-  { title: '路径', key: 'path', width: 180 },
-  { title: '父级ID', key: 'parent', width: 70 },
+  { title: '路径', key: 'path', width: 160 },
+  { title: '父级', key: 'parent', width: 60 },
   { title: '图标', key: 'icon', width: 80 },
   { title: '排序', key: 'sort', width: 60 },
   { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, readonly: true, size: 'small' }) },
-  {
-    title: '操作', key: 'actions', width: 160,
-    render: (row) => h(NSpace, null, {
-      default: () => [
-        h(NButton, { size: 'small', onClick: () => handleEdit(row) }, { default: () => '编辑' }),
-        h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, {
-          default: () => '确认删除?', trigger: () => h(NButton, { size: 'small', type: 'error' }, { default: () => '删除' }),
-        }),
-      ],
-    }),
-  },
+  { title: '操作', key: 'actions', width: 140, render: (row) => h(NSpace, null, { default: () => [
+    h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => '编辑' }),
+    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => '删除' }) }),
+  ]}) },
 ]
 
+function doSearch() {
+  let list = allMenus.value || []
+  if (searchKeyword.value) {
+    const kw = searchKeyword.value.toLowerCase()
+    list = list.filter(m => m.name.toLowerCase().includes(kw))
+  }
+  if (searchParent.value !== null && searchParent.value !== undefined) {
+    list = list.filter(m => m.parent === searchParent.value)
+  }
+  tableData.value = list
+}
+
 function handleAdd() { resetForm(); open() }
-function handleEdit(row) {
-  resetForm()
-  formData.type = row.type; formData.name = row.name; formData.path = row.path; formData.parent = row.parent; formData.icon = row.icon || ''; formData.sort = row.sort; formData.author = row.author || ''; formData.status = row.status
-  openEdit(row)
-}
+function handleEdit(row) { resetForm(); formData.type = row.type; formData.name = row.name; formData.path = row.path; formData.parent = row.parent; formData.icon = row.icon || ''; formData.sort = row.sort; formData.author = row.author || ''; formData.status = row.status; openEdit(row) }
+async function handleSubmit() { if (await submit(formData, createMenu, updateMenu)) loadAll() }
+async function onDelete(id) { if (await doDelete(id, deleteMenu)) loadAll() }
 
-async function handleSubmit() {
-  const ok = await submit(formData)
-  if (ok) loadAll()
-}
-
-async function onDelete(id) {
-  const ok = await doDelete(id, deleteMenu)
-  if (ok) loadAll()
-}
-
-async function loadAll() {
-  try { const res = await getMenuAll(); allMenus.value = res.data || []; tableData.value = allMenus.value } catch { /* */ }
-}
-
+async function loadAll() { try { const res = await getMenuAll(); allMenus.value = res.data || []; doSearch() } catch { /* */ } }
 onMounted(() => { loadAll() })
 </script>

@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { useMessage } from 'naive-ui'
 
-export function useModal({ createFn, updateFn, onSubmit } = {}) {
+export function useModal() {
   const message = useMessage()
   const showModal = ref(false)
   const isEdit = ref(false)
@@ -25,7 +25,7 @@ export function useModal({ createFn, updateFn, onSubmit } = {}) {
     showModal.value = false
   }
 
-  async function submit(formData) {
+  async function submit(formData, createFn, updateFn) {
     try {
       await formRef.value?.validate()
     } catch {

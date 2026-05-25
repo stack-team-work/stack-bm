@@ -18,6 +18,7 @@ type SysAdmin struct {
 	LastLoginIP   string `gorm:"column:last_login_ip;size:64" json:"last_login_ip"`
 	GameAppPermit string `gorm:"column:game_app_permit;type:mediumtext" json:"game_app_permit"`
 	GamePermit    string `gorm:"column:game_permit;type:mediumtext" json:"game_permit"`
+	IsDeleted     int8   `gorm:"column:is_deleted;default:0" json:"is_deleted"`
 	Status        int8   `gorm:"default:1" json:"status"`
 }
 
@@ -32,6 +33,7 @@ type SysAdminGroup struct {
 	Description  string `gorm:"size:256" json:"description"`
 	MenuPermit   string `gorm:"column:menu_permit;type:mediumtext" json:"menu_permit"`
 	ColumnPermit string `gorm:"column:column_permit;type:mediumtext" json:"column_permit"`
+	IsDeleted    int8   `gorm:"column:is_deleted;default:0" json:"is_deleted"`
 	Status       int8   `gorm:"default:1" json:"status"`
 	CreatedAt    int64  `gorm:"column:created_at;autoCreateTime" json:"created_at"`
 	UpdatedAt    int64  `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`
@@ -66,6 +68,7 @@ type SysMenu struct {
 	Icon      string `gorm:"size:128" json:"icon"`
 	Sort      int    `gorm:"default:0" json:"sort"`
 	Status    int8   `gorm:"default:1" json:"status"`
+	IsDeleted int8   `gorm:"column:is_deleted;default:0" json:"is_deleted"`
 	CreatedAt int64  `gorm:"column:created_at;autoCreateTime" json:"created_at"`
 	UpdatedAt int64  `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`
 }

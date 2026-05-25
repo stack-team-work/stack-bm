@@ -15,6 +15,7 @@ type Game struct {
 	Author    string `gorm:"type:mediumtext" json:"author"`
 	Mark      string `gorm:"size:64;uniqueIndex" json:"mark"`
 	Status    int    `gorm:"default:1" json:"status"`
+	IsDeleted int8   `gorm:"column:is_deleted;default:0" json:"is_deleted"`
 	CreatedAt int64  `gorm:"column:created_at;autoCreateTime" json:"created_at"`
 	UpdatedAt int64  `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`
 }
@@ -49,6 +50,7 @@ type GameApp struct {
 	CsParams       string `gorm:"column:cs_params;type:mediumtext" json:"cs_params"`
 	PayParams      string `gorm:"column:pay_params;type:mediumtext" json:"pay_params"`
 	H5Params       string `gorm:"column:h5_params;type:mediumtext" json:"h5_params"`
+	IsDeleted      int8   `gorm:"column:is_deleted;default:0" json:"is_deleted"`
 	CreatedAt      int64  `gorm:"column:created_at;autoCreateTime" json:"created_at"`
 	UpdatedAt      int64  `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`
 }

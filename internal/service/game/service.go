@@ -58,6 +58,7 @@ func (s *GameService) Update(id uint, g *game.Game) error {
 	if g.Icon != "" {
 		existing.Icon = g.Icon
 	}
+	existing.CpID = g.CpID
 	existing.Status = g.Status
 
 	return s.repo.Update(existing)

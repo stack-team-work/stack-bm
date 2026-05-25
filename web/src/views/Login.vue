@@ -8,6 +8,12 @@
         <n-form-item path="password" label="密码">
           <n-input v-model:value="formData.password" type="password" placeholder="请输入密码" @keyup.enter="handleLogin" />
         </n-form-item>
+        <n-form-item path="captcha" label="验证码">
+          <n-space>
+            <n-input v-model:value="formData.captcha" placeholder="验证码" style="width: 140px" @keyup.enter="handleLogin" />
+            <n-button size="small" @click="refreshCaptcha" :loading="captchaLoading">{{ captchaText }}</n-button>
+          </n-space>
+        </n-form-item>
         <n-form-item>
           <n-button type="primary" :loading="loading" block @click="handleLogin">登 录</n-button>
         </n-form-item>
@@ -17,44 +23,65 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMessage } from 'naive-ui'
-import { login } from '../api'
+import request from '../utils/request'
 
 const router = useRouter()
 const message = useMessage()
 const loading = ref(false)
+const captchaLoading = ref(false)
 const formRef = ref(null)
+const captchaID = ref('')
+const captchaText = ref('点击获取')
 
 const formData = reactive({
   username: '',
   password: '',
+  captcha: '',
 })
 
 const rules = {
   username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+  captcha: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+}
+
+async function refreshCaptcha() {
+  captchaLoading.value = true
+  try {
+    const res = await request.post('/captcha')
+    captchaID.value = res.data.captcha_id
+    captchaText.value = res.data.question
+  } catch {
+    captchaText.value = '获取失败'
+  } finally {
+    captchaLoading.value = false
+  }
 }
 
 async function handleLogin() {
-  try {
-    await formRef.value?.validate()
-  } catch {
-    return
-  }
-
+  try { await formRef.value?.validate() } catch { return }
   loading.value = true
   try {
-    const res = await login(formData.username, formData.password)
+    const res = await request.post('/login', {
+      username: formData.username,
+      password: formData.password,
+      captcha_id: captchaID.value,
+      captcha: formData.captcha,
+    })
     localStorage.setItem('token', res.data.token)
     localStorage.setItem('userInfo', JSON.stringify(res.data.admin))
     message.success('登录成功')
     router.push('/')
   } catch (err) {
     message.error(err.message || '登录失败')
+    refreshCaptcha()
   } finally {
     loading.value = false
   }
 }
+
+onMounted(() => refreshCaptcha())
 </script>

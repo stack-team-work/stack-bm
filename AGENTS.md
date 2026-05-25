@@ -50,6 +50,13 @@ import (
 
 New module `Foo` in `stack_api` uses `database.DBApi`; in `stack_bm` uses `database.DBBM`.
 
+**Local connection strings** (from `.env`):
+
+| Database | DSN |
+|----------|-----|
+| `stack_bm` | `root:root@tcp(127.0.0.1:3306)/stack_bm?charset=utf8mb4&parseTime=True&loc=Local` |
+| `stack_api` | `root:root@tcp(127.0.0.1:3306)/stack_api?charset=utf8mb4&parseTime=True&loc=Local` |
+
 ## Model quirks
 
 - **Timestamps**: All tables use `int(11)` Unix timestamps (seconds), NOT `time.Time`. GORM tags: `autoCreateTime` / `autoUpdateTime`.

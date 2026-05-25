@@ -25,6 +25,7 @@ func SetupRouter() *gin.Engine {
 	sysMenuHandler := handlerSys.NewSysMenuHandler()
 
 	r.POST("/api/login", authHandler.Login)
+	r.POST("/api/captcha", authHandler.Captcha)
 
 	api := r.Group("/api")
 	api.Use(middleware.AuthMiddleware())
