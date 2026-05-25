@@ -104,6 +104,10 @@ func (s *GameAppService) FindPage(page, size int, keyword string, gameID int, st
 	return s.repo.FindPage(page, size, keyword, gameID, status)
 }
 
+func (s *GameAppService) FindAll() ([]game.GameApp, error) {
+	return s.repo.FindAll()
+}
+
 func (s *GameAppService) Update(id uint, app *game.GameApp) error {
 	existing, err := s.repo.FindByID(id)
 	if err != nil {

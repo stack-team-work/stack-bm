@@ -17,6 +17,7 @@ import { ref, h, onMounted } from 'vue'
 import { NTag } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { getLogList } from '../../api/system'
+import { formatTime } from '../../utils/format'
 
 const { loading, tableData, pagination, search, resetSearch, handlePageChange, handlePageSizeChange } = useTable(getLogList)
 
@@ -31,7 +32,7 @@ const columns = [
   { title: '用户', key: 'username', width: 90 },
   { title: 'IP', key: 'ip', width: 130 },
   { title: '描述', key: 'desc', ellipsis: { tooltip: true } },
-  { title: '时间', key: 'created_at', width: 160 },
+  { title: '时间', key: 'created_at', width: 160, render: (row) => formatTime(row.created_at) },
 ]
 
 function doSearch() { search({ keyword: searchKeyword.value, level: searchLevel.value }) }

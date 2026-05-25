@@ -24,6 +24,10 @@ export function getGameAppList(params) {
   return request.post('/game-app/list', params)
 }
 
+export function getGameAppAll() {
+  return request.post('/game-app/all')
+}
+
 export function createGameApp(data) {
   return request.post('/game-app/create', data)
 }

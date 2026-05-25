@@ -59,6 +59,7 @@ func SetupRouter() *gin.Engine {
 
 		api.POST("/game-app/create", gameAppHandler.Create)
 		api.POST("/game-app/list", gameAppHandler.GetList)
+		api.POST("/game-app/all", gameAppHandler.GetAll)
 		api.POST("/game-app/detail/:id", gameAppHandler.GetByID)
 		api.POST("/game-app/update/:id", gameAppHandler.Update)
 		api.POST("/game-app/delete/:id", gameAppHandler.Delete)

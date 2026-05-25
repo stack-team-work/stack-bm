@@ -166,6 +166,15 @@ func (h *GameAppHandler) GetList(c *gin.Context) {
 	response.PageSuccess(c, apps, total, page, size)
 }
 
+func (h *GameAppHandler) GetAll(c *gin.Context) {
+	apps, err := h.service.FindAll()
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	response.Success(c, apps)
+}
+
 func (h *GameAppHandler) GetByID(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)

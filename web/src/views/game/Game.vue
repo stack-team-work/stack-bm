@@ -44,13 +44,15 @@
 
 <script setup>
 import { ref, reactive, h, onMounted } from 'vue'
-import { NButton, NSpace, NSwitch, NPopconfirm } from 'naive-ui'
+import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
 import { getGameList, createGame, updateGame, deleteGame, getGameCpAll } from '../../api/game'
+import { formatTime } from '../../utils/format'
 
 const { loading, tableData, pagination, search, resetSearch, handlePageChange, handlePageSizeChange } = useTable(getGameList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
+const message = useMessage()
 
 const searchKeyword = ref('')
 const searchStatus = ref(null)
@@ -67,8 +69,8 @@ const columns = [
   { title: '标识', key: 'mark' },
   { title: 'Web名称', key: 'web_name' },
   { title: 'CP', key: 'cp_id', width: 80, render: (row) => { const c = cpOptions.value.find(o => o.value === row.cp_id); return c ? c.label : '' } },
-  { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, readonly: true, size: 'small' }) },
-  { title: '创建时间', key: 'created_at', width: 170 },
+  { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, onUpdateValue: (val) => handleStatusChange(row, val), size: 'small' }) },
+  { title: '创建时间', key: 'created_at', width: 170, render: (row) => formatTime(row.created_at) },
   { title: '操作', key: 'actions', width: 140, render: (row) => h(NSpace, null, { default: () => [
     h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => '编辑' }),
     h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => '删除' }) }),
@@ -80,6 +82,16 @@ function handleAdd() { resetForm(); open() }
 function handleEdit(row) { resetForm(); formData.name = row.name; formData.mark = row.mark; formData.web_name = row.web_name; formData.icon = row.icon; formData.cp_id = row.cp_id; formData.status = row.status; openEdit(row) }
 async function handleSubmit() { if (await submit(formData, createGame, updateGame)) search({ keyword: searchKeyword.value, status: searchStatus.value ?? -1 }) }
 async function onDelete(id) { if (await doDelete(id, deleteGame)) search({ keyword: searchKeyword.value, status: searchStatus.value ?? -1 }) }
+
+async function handleStatusChange(row, val) {
+  try {
+    await updateGame(row.id, { ...row, status: val ? 1 : 0 })
+    row.status = val ? 1 : 0
+    message.success('状态已更新')
+  } catch {
+    message.error('更新失败')
+  }
+}
 
 async function loadCps() { try { const res = await getGameCpAll(); cpOptions.value = (res.data || []).map(c => ({ label: c.name, value: c.id })) } catch { /* */ } }
 onMounted(() => { loadCps(); search({}) })

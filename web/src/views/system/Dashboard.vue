@@ -35,6 +35,7 @@
 import { ref, onMounted } from 'vue'
 import { getDashboardStats, getLogList } from '../../api/system'
 import { NTag } from 'naive-ui'
+import { formatTime } from '../../utils/format'
 import { h } from 'vue'
 
 const loading = ref(false)
@@ -49,7 +50,7 @@ const logColumns = [
   { title: '路径', key: 'path', width: 160 },
   { title: '用户', key: 'username', width: 80 },
   { title: '描述', key: 'desc', width: 200, ellipsis: { tooltip: true } },
-  { title: '时间', key: 'created_at', width: 150 },
+  { title: '时间', key: 'created_at', width: 150, render: (row) => formatTime(row.created_at) },
 ]
 
 onMounted(async () => {

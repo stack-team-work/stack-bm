@@ -44,13 +44,15 @@
 
 <script setup>
 import { ref, reactive, h, onMounted, computed } from 'vue'
-import { NButton, NSpace, NSwitch, NPopconfirm } from 'naive-ui'
+import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
 import { getAdminList, createAdmin, updateAdmin, deleteAdmin, getAdminGroupAll } from '../../api/system'
+import { formatTime } from '../../utils/format'
 
 const { loading, tableData, pagination, search, resetSearch, handlePageChange, handlePageSizeChange } = useTable(getAdminList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
+const message = useMessage()
 
 const searchKeyword = ref('')
 const searchGroupId = ref(null)
@@ -67,8 +69,8 @@ const columns = [
   { title: '姓名', key: 'name' },
   { title: '手机号', key: 'phone' },
   { title: '角色', key: 'group_id', width: 100, render: (row) => { const g = groupOptions.value.find(o => o.value === row.group_id); return g ? g.label : row.group_id } },
-  { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, readonly: true, size: 'small' }) },
-  { title: '创建时间', key: 'created_at', width: 170 },
+  { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, onUpdateValue: (val) => handleStatusChange(row, val), size: 'small' }) },
+  { title: '创建时间', key: 'created_at', width: 170, render: (row) => formatTime(row.created_at) },
   { title: '操作', key: 'actions', width: 140, render: (row) => h(NSpace, null, { default: () => [
     h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => '编辑' }),
     h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => '删除' }) }),
@@ -84,6 +86,16 @@ async function handleSubmit() {
   if (await submit(formData, createAdmin, updateAdmin)) search({ keyword: searchKeyword.value, group_id: searchGroupId.value ?? 0 })
 }
 async function onDelete(id) { if (await doDelete(id, deleteAdmin)) search({ keyword: searchKeyword.value, group_id: searchGroupId.value ?? 0 }) }
+
+async function handleStatusChange(row, val) {
+  try {
+    await updateAdmin(row.id, { ...row, status: val ? 1 : 0 })
+    row.status = val ? 1 : 0
+    message.success('状态已更新')
+  } catch {
+    message.error('更新失败')
+  }
+}
 
 async function loadGroups() { try { const res = await getAdminGroupAll(); groupOptions.value = (res.data || []).map(g => ({ label: g.name, value: g.id })) } catch { /* */ } }
 onMounted(() => { loadGroups(); search({}) })

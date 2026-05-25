@@ -86,6 +86,12 @@ func (r *GameAppRepository) FindPage(page, size int, keyword string, gameID int,
 
 func (r *GameAppRepository) Update(app *game.GameApp) error { return r.db.Save(app).Error }
 
+func (r *GameAppRepository) FindAll() ([]game.GameApp, error) {
+	var apps []game.GameApp
+	err := r.db.Where("is_deleted = 0").Order("id DESC").Find(&apps).Error
+	return apps, err
+}
+
 func (r *GameAppRepository) Delete(id uint) error {
 	return r.db.Model(&game.GameApp{}).Where("id = ?", id).Update("is_deleted", 1).Error
 }

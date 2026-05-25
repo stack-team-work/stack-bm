@@ -39,13 +39,15 @@
 
 <script setup>
 import { ref, reactive, h, onMounted } from 'vue'
-import { NButton, NSpace, NSwitch, NPopconfirm } from 'naive-ui'
+import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
 import { getGameTagList, createGameTag, updateGameTag, deleteGameTag } from '../../api/game'
+import { formatTime } from '../../utils/format'
 
 const { loading, tableData, pagination, search, resetSearch, handlePageChange, handlePageSizeChange } = useTable(getGameTagList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
+const message = useMessage()
 
 const searchKeyword = ref('')
 const searchType = ref(null)
@@ -62,8 +64,8 @@ const columns = [
   { title: '标签名称', key: 'name' },
   { title: '标识', key: 'mark' },
   { title: '类型', key: 'type', width: 150, render: (row) => row.type === 1 ? '游戏风格(style_id)' : '游戏类型(type_id)' },
-  { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, readonly: true, size: 'small' }) },
-  { title: '创建时间', key: 'created_at', width: 170 },
+  { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, onUpdateValue: (val) => handleStatusChange(row, val), size: 'small' }) },
+  { title: '创建时间', key: 'created_at', width: 170, render: (row) => formatTime(row.created_at) },
   { title: '操作', key: 'actions', width: 140, render: (row) => h(NSpace, null, { default: () => [
     h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => '编辑' }),
     h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => '删除' }) }),
@@ -75,6 +77,16 @@ function handleAdd() { resetForm(); open() }
 function handleEdit(row) { resetForm(); formData.name = row.name; formData.mark = row.mark; formData.type = row.type; formData.status = row.status; openEdit(row) }
 async function handleSubmit() { if (await submit(formData, createGameTag, updateGameTag)) search({ keyword: searchKeyword.value, type: searchType.value ?? 0, status: searchStatus.value ?? -1 }) }
 async function onDelete(id) { if (await doDelete(id, deleteGameTag)) search({ keyword: searchKeyword.value, type: searchType.value ?? 0, status: searchStatus.value ?? -1 }) }
+
+async function handleStatusChange(row, val) {
+  try {
+    await updateGameTag(row.id, { ...row, status: val ? 1 : 0 })
+    row.status = val ? 1 : 0
+    message.success('状态已更新')
+  } catch {
+    message.error('更新失败')
+  }
+}
 
 onMounted(() => search({}))
 </script>
