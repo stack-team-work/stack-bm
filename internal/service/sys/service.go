@@ -171,6 +171,10 @@ func (s *SysLogService) FindPage(page, size int, keyword string, level string) (
 	return s.repo.FindPage(page, size, keyword, level)
 }
 
+func (s *SysLogService) ClearAll() error {
+	return s.repo.ClearAll()
+}
+
 type SysMenuService struct {
 	repo *sysRepo.SysMenuRepository
 }

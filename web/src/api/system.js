@@ -44,6 +44,10 @@ export function getLogList(params) {
   return request.post('/logs/list', params)
 }
 
+export function clearLogs() {
+  return request.post('/logs/clear')
+}
+
 export function getMenuList(params) {
   return request.post('/menu/list', params)
 }

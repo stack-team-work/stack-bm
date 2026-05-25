@@ -105,6 +105,10 @@ func (r *SysLogRepository) FindPage(page, size int, keyword string, level string
 	return logs, total, nil
 }
 
+func (r *SysLogRepository) ClearAll() error {
+	return r.db.Where("1 = 1").Delete(&sys.SysLog{}).Error
+}
+
 type SysMenuRepository struct {
 	db *gorm.DB
 }

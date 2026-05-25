@@ -241,6 +241,14 @@ func (h *SysLogHandler) GetList(c *gin.Context) {
 	response.PageSuccess(c, logs, total, page, size)
 }
 
+func (h *SysLogHandler) ClearAll(c *gin.Context) {
+	if err := h.service.ClearAll(); err != nil {
+		response.Error(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	response.Success(c, nil)
+}
+
 type SysMenuHandler struct {
 	service *sysSvc.SysMenuService
 }

@@ -5,6 +5,12 @@
         <n-input v-model:value="searchKeyword" placeholder="搜索路径/用户/描述" clearable style="width: 250px" @keyup.enter="doSearch" />
         <n-select v-model:value="searchLevel" :options="levelOptions" placeholder="级别" clearable style="width: 120px" @update:value="doSearch" />
         <n-button type="primary" size="small" @click="doSearch">搜索</n-button>
+        <n-popconfirm @positive-click="handleClear">
+          <template #trigger>
+            <n-button type="error" size="small" :loading="clearing">清空日志</n-button>
+          </template>
+          确认清空所有操作日志？
+        </n-popconfirm>
       </n-space>
 
       <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
@@ -14,15 +20,17 @@
 
 <script setup>
 import { ref, h, onMounted } from 'vue'
-import { NTag } from 'naive-ui'
+import { NTag, NPopconfirm, NButton, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
-import { getLogList } from '../../api/system'
+import { getLogList, clearLogs } from '../../api/system'
 import { formatTime } from '../../utils/format'
 
+const message = useMessage()
 const { loading, tableData, pagination, search, resetSearch, handlePageChange, handlePageSizeChange } = useTable(getLogList)
 
 const searchKeyword = ref('')
 const searchLevel = ref('')
+const clearing = ref(false)
 const levelOptions = [{ label: 'error', value: 'error' }, { label: 'info', value: 'info' }]
 
 const columns = [
@@ -36,6 +44,19 @@ const columns = [
 ]
 
 function doSearch() { search({ keyword: searchKeyword.value, level: searchLevel.value }) }
+
+async function handleClear() {
+  clearing.value = true
+  try {
+    await clearLogs()
+    message.success('日志已清空')
+    search({})
+  } catch {
+    message.error('清空失败')
+  } finally {
+    clearing.value = false
+  }
+}
 
 onMounted(() => search({}))
 </script>

@@ -32,10 +32,12 @@
             {{ item.label }}
           </n-breadcrumb-item>
         </n-breadcrumb>
-        <n-space align="center">
-          <n-text>{{ userInfo?.username || '' }}</n-text>
-          <n-button size="small" @click="handleLogout">退出登录</n-button>
-        </n-space>
+        <n-dropdown :options="userDropdownOptions" @select="handleUserAction">
+          <span style="cursor: pointer; display: flex; align-items: center; gap: 4px">
+            <n-text>{{ userInfo?.username || '' }}</n-text>
+            <span style="font-size: 12px; color: #999">▼</span>
+          </span>
+        </n-dropdown>
       </n-layout-header>
       <n-layout-content style="padding: 24px; background: #fff; min-height: calc(100vh - 56px)">
         <router-view />
@@ -55,6 +57,14 @@ const route = useRoute()
 const collapsed = ref(false)
 
 const userInfo = JSON.parse(localStorage.getItem('userInfo') || 'null')
+
+const userDropdownOptions = [
+  { label: '退出登录', key: 'logout' },
+]
+
+function handleUserAction(key) {
+  if (key === 'logout') handleLogout()
+}
 
 const renderIcon = (icon) => () => h(NIcon, null, { default: () => h(icon) })
 

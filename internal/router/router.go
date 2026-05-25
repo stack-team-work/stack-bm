@@ -85,6 +85,7 @@ func SetupRouter() *gin.Engine {
 		api.POST("/game-variable/delete/:id", gameVariableHandler.Delete)
 
 		api.POST("/logs/list", sysLogHandler.GetList)
+		api.POST("/logs/clear", sysLogHandler.ClearAll)
 
 		api.POST("/menu/create", sysMenuHandler.Create)
 		api.POST("/menu/list", sysMenuHandler.GetList)
