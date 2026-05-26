@@ -50,7 +50,7 @@
 import { ref, computed, h } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { NIcon } from 'naive-ui'
-import { HomeOutline, SettingsOutline, GameControllerOutline } from '@vicons/ionicons5'
+import { HomeOutline, SettingsOutline, GameControllerOutline, BarChartOutline } from '@vicons/ionicons5'
 
 const router = useRouter()
 const route = useRoute()
@@ -95,6 +95,16 @@ const menuOptions = [
       { label: '游戏CP', key: '/game-cp' },
       { label: '游戏标签', key: '/game-tag' },
       { label: '游戏变量', key: '/game-variable' },
+      { label: '平台管理', key: '/game-platform' },
+    ],
+  },
+  {
+    label: '渠道管理',
+    key: 'mkt-mgmt',
+    icon: renderIcon(BarChartOutline),
+    children: [
+      { label: '媒体渠道', key: '/media' },
+      { label: '媒体子渠道', key: '/media-sub' },
     ],
   },
 ]

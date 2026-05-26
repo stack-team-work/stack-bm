@@ -95,3 +95,23 @@ export function updateGameVariable(id, data) {
 export function deleteGameVariable(id) {
   return request.post(`/game-variable/delete/${id}`)
 }
+
+export function getGamePlatformList(params) {
+  return request.post('/game-platform/list', params)
+}
+
+export function getGamePlatformAll() {
+  return request.post('/game-platform/all')
+}
+
+export function createGamePlatform(data) {
+  return request.post('/game-platform/create', data)
+}
+
+export function updateGamePlatform(id, data) {
+  return request.post(`/game-platform/update/${id}`, data)
+}
+
+export function deleteGamePlatform(id) {
+  return request.post(`/game-platform/delete/${id}`)
+}

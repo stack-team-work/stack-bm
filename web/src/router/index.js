@@ -73,6 +73,24 @@ const routes = [
         meta: { title: '游戏变量' },
       },
       {
+        path: 'game-platform',
+        name: 'GamePlatform',
+        component: () => import('../views/game/GamePlatform.vue'),
+        meta: { title: '平台管理' },
+      },
+      {
+        path: 'media',
+        name: 'Media',
+        component: () => import('../views/mkt/Media.vue'),
+        meta: { title: '媒体渠道' },
+      },
+      {
+        path: 'media-sub',
+        name: 'MediaSub',
+        component: () => import('../views/mkt/MediaSub.vue'),
+        meta: { title: '媒体子渠道' },
+      },
+      {
         path: 'logs',
         name: 'SysLogs',
         component: () => import('../views/system/SysLogs.vue'),

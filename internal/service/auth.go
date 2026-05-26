@@ -5,18 +5,18 @@ import (
 	"fmt"
 
 	"stack-bm/internal/config"
-	"stack-bm/internal/model/sys"
-	sysRepo "stack-bm/internal/repository/sys"
+	"stack-bm/internal/model/bm/sys"
+	bmSysRepo "stack-bm/internal/repository/bm/sys"
 	"stack-bm/pkg/utils"
 )
 
 type AuthService struct {
-	adminRepo *sysRepo.SysAdminRepository
+	adminRepo *bmSysRepo.SysAdminRepository
 }
 
 func NewAuthService() *AuthService {
 	return &AuthService{
-		adminRepo: sysRepo.NewSysAdminRepository(),
+		adminRepo: bmSysRepo.NewSysAdminRepository(),
 	}
 }
 

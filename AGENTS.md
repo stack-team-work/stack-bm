@@ -16,39 +16,63 @@ Dev mode (`.env` `SERVER_MODE=dev`) auto-creates `admin/admin123` on first login
 
 ## Architecture
 
+Each table prefix is an independent module under 4 layers:
+
 ```
 internal/
-  handler/game/    package game    GameHandler, GameAppHandler, GameCpHandler
-  handler/sys/     package sys     SysAdminHandler, SysAdminGroupHandler
-  handler/         package handler AuthHandler
-  model/game/      package game    Game, GameApp, GameCp
-  model/sys/       package sys     SysAdmin, SysAdminGroup
-  repository/game/ package game    GameRepository, GameAppRepository, GameCpRepository
-  repository/sys/  package sys     SysAdminRepository, SysAdminGroupRepository
-  service/game/    package game    GameService, GameAppService, GameCpService
-  service/sys/     package sys     SysAdminService, SysAdminGroupService
-  service/         package service AuthService
-  router/          package router  central routing
+  handler/
+    game/          package game          GameHandler
+    gameapp/       package gameapp       GameAppHandler
+    gamecp/        package gamecp        GameCpHandler
+    gametag/       package gametag       GameTagHandler
+    gamevariable/  package gamevariable  GameVariableHandler
+    gameplatform/  package gameplatform  GamePlatformHandler
+    sysadmin/      package sysadmin      SysAdminHandler
+    sysadmingroup/ package sysadmingroup SysAdminGroupHandler
+    syslog/        package syslog        SysLogHandler
+    sysmenu/       package sysmenu       SysMenuHandler
+    media/         package media         MediaHandler
+    mediasub/      package mediasub      MediaSubHandler
+    handler/       package handler       AuthHandler, DashboardHandler
+  model/           (mirrors handler/ structure)
+  repository/      (mirrors handler/ structure)
+  service/         (mirrors handler/ structure)
+    auth.go        package service       AuthService
+  router/          package router        central routing
 ```
 
-**Same-name package conflict**: `handler/game`, `model/game`, `service/game`, `repository/game` all declare `package game`. When importing two same-named packages in one file, use aliases:
+**Same-name package conflict**: Within a service or handler, model and repo/service share the same package name. Use aliases:
 
 ```go
+// In service/gameapp/gameapp.go:
 import (
-    gameRepo "stack-bm/internal/repository/game"
-    gameSvc  "stack-bm/internal/service/game"
-    "stack-bm/internal/model/game"    // used as: game.Game, game.GameApp
+    "stack-bm/internal/model/gameapp"
+    gameappRepo "stack-bm/internal/repository/gameapp"
+)
+
+// In handler/gameapp/gameapp.go:
+import (
+    "stack-bm/internal/model/gameapp"
+    gameappSvc "stack-bm/internal/service/gameapp"
+)
+
+// In router.go, each handler package has a unique name — no aliases needed:
+import (
+    "stack-bm/internal/handler/game"
+    "stack-bm/internal/handler/gameapp"
+    "stack-bm/internal/handler/media"
 )
 ```
 
-## Two databases
+## Three databases
 
 | Variable prefix | DB name | Connection var | Contains |
 |-----------------|---------|---------------|----------|
-| `DB_BM_*` | `stack_bm` | `database.DBBM` | sys_admin, sys_admin_group |
-| `DB_API_*` | `stack_api` | `database.DBApi` | game, game_app, game_cp, users, user_orders, etc. |
+| `DB_BM_*` | `stack_bm` | `database.DBBM` | sys_admin, sys_admin_group, sys_logs, sys_menu |
+| `DB_API_*` | `stack_api` | `database.DBApi` | game, game_app, game_cp, game_tags, game_variable, game_platform, users, user_orders, etc. |
+| `DB_MKT_*` | `stack_mkt` | `database.DBMkt` | media, media_sub |
 
-New module `Foo` in `stack_api` uses `database.DBApi`; in `stack_bm` uses `database.DBBM`.
+New module uses the correct `database.DB*` for its table's database.
 
 **Local connection strings** (from `.env`):
 
@@ -56,6 +80,7 @@ New module `Foo` in `stack_api` uses `database.DBApi`; in `stack_bm` uses `datab
 |----------|-----|
 | `stack_bm` | `root:root@tcp(127.0.0.1:3306)/stack_bm?charset=utf8mb4&parseTime=True&loc=Local` |
 | `stack_api` | `root:root@tcp(127.0.0.1:3306)/stack_api?charset=utf8mb4&parseTime=True&loc=Local` |
+| `stack_mkt` | `root:root@tcp(127.0.0.1:3306)/stack_mkt?charset=utf8mb4&parseTime=True&loc=Local` |
 
 ## Model quirks
 
@@ -72,12 +97,10 @@ New module `Foo` in `stack_api` uses `database.DBApi`; in `stack_bm` uses `datab
 
 ## Adding a new module
 
-Each module needs files in 4 directories + router entry:
-
-1. `internal/model/<domain>/` — struct + TableName()
-2. `internal/repository/<domain>/repository.go` — CRUD methods, uses correct `database.DB*`
-3. `internal/service/<domain>/service.go` — business logic
-4. `internal/handler/<domain>/handler.go` — HTTP handler with `ShouldBindJSON`
+1. `internal/model/<table-prefix>/` — struct + TableName(), `package <table-prefix>`
+2. `internal/repository/<table-prefix>/` — CRUD methods, uses correct `database.DB*`, `package <table-prefix>`
+3. `internal/service/<table-prefix>/` — business logic, import repo with alias `<prefix>Repo`
+4. `internal/handler/<table-prefix>/` — HTTP handler, import service with alias `<prefix>Svc`
 5. `internal/router/router.go` — register handler and routes
 
 Frontend: add API functions in `web/src/api/<domain>.js`, create Vue page under `web/src/views/<domain>/`, add route in `web/src/router/index.js`, add menu entry in `web/src/layouts/MainLayout.vue`.
@@ -96,13 +119,15 @@ web/src/
 ├── api/
 │   ├── index.js      login, getUserInfo
 │   ├── system.js     admin, adminGroup
-│   └── game.js       game, gameApp, gameCp
+│   ├── game.js       game, gameApp, gameCp, gamePlatform, gameTag, gameVariable
+│   └── mkt.js        media, mediaSub
 ├── composables/
 │   ├── useTable.js   pagination + search + load
 │   └── useModal.js   form open/edit/submit/delete
 ├── views/
-│   ├── system/       SysAdmin, SysAdminGroup
-│   ├── game/         Game, GameApp, GameCp, GameAppForm
+│   ├── system/       SysAdmin, SysAdminGroup, SysLogs, SysMenu, Dashboard
+│   ├── game/         Game, GameApp, GameAppForm, GameCp, GameTag, GameVariable, GamePlatform
+│   ├── mkt/          Media, MediaSub
 │   ├── Login.vue
 │   └── layouts/      MainLayout.vue
 ```

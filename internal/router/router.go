@@ -2,8 +2,10 @@ package router
 
 import (
 	"stack-bm/internal/handler"
-	handlerGame "stack-bm/internal/handler/game"
-	handlerSys "stack-bm/internal/handler/sys"
+	"stack-bm/internal/handler/bm/sys"
+	"stack-bm/internal/handler/mkt/media"
+	"stack-bm/internal/handler/sdk/game"
+	sdkSys "stack-bm/internal/handler/sdk/sys"
 	"stack-bm/internal/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -17,15 +19,19 @@ func SetupRouter() *gin.Engine {
 
 	authHandler := handler.NewAuthHandler()
 	dashboardHandler := handler.NewDashboardHandler()
-	sysAdminHandler := handlerSys.NewSysAdminHandler()
-	sysAdminGroupHandler := handlerSys.NewSysAdminGroupHandler()
-	gameHandler := handlerGame.NewGameHandler()
-	gameAppHandler := handlerGame.NewGameAppHandler()
-	gameCpHandler := handlerGame.NewGameCpHandler()
-	gameTagHandler := handlerGame.NewGameTagHandler()
-	gameVariableHandler := handlerGame.NewGameVariableHandler()
-	sysLogHandler := handlerSys.NewSysLogHandler()
-	sysMenuHandler := handlerSys.NewSysMenuHandler()
+	sysAdminHandler := sys.NewSysAdminHandler()
+	sysAdminGroupHandler := sys.NewSysAdminGroupHandler()
+	sysLogHandler := sys.NewSysLogHandler()
+	sysMenuHandler := sys.NewSysMenuHandler()
+	gameHandler := game.NewGameHandler()
+	gameAppHandler := game.NewGameAppHandler()
+	gameCpHandler := game.NewGameCpHandler()
+	gameTagHandler := game.NewGameTagHandler()
+	gameVariableHandler := game.NewGameVariableHandler()
+	gamePlatformHandler := game.NewGamePlatformHandler()
+	sdkSysLogHandler := sdkSys.NewSysLogHandler()
+	mediaHandler := media.NewMediaHandler()
+	mediaSubHandler := media.NewMediaSubHandler()
 
 	r.POST("/api/login", authHandler.Login)
 	r.POST("/api/captcha", authHandler.Captcha)
@@ -84,6 +90,13 @@ func SetupRouter() *gin.Engine {
 		api.POST("/game-variable/update/:id", gameVariableHandler.Update)
 		api.POST("/game-variable/delete/:id", gameVariableHandler.Delete)
 
+		api.POST("/game-platform/create", gamePlatformHandler.Create)
+		api.POST("/game-platform/list", gamePlatformHandler.GetList)
+		api.POST("/game-platform/all", gamePlatformHandler.GetAll)
+		api.POST("/game-platform/detail/:id", gamePlatformHandler.GetByID)
+		api.POST("/game-platform/update/:id", gamePlatformHandler.Update)
+		api.POST("/game-platform/delete/:id", gamePlatformHandler.Delete)
+
 		api.POST("/logs/list", sysLogHandler.GetList)
 		api.POST("/logs/clear", sysLogHandler.ClearAll)
 
@@ -93,6 +106,22 @@ func SetupRouter() *gin.Engine {
 		api.POST("/menu/detail/:id", sysMenuHandler.GetByID)
 		api.POST("/menu/update/:id", sysMenuHandler.Update)
 		api.POST("/menu/delete/:id", sysMenuHandler.Delete)
+
+		api.POST("/sdk-logs/list", sdkSysLogHandler.GetList)
+
+		api.POST("/media/create", mediaHandler.Create)
+		api.POST("/media/list", mediaHandler.GetList)
+		api.POST("/media/all", mediaHandler.GetAll)
+		api.POST("/media/detail/:id", mediaHandler.GetByID)
+		api.POST("/media/update/:id", mediaHandler.Update)
+		api.POST("/media/delete/:id", mediaHandler.Delete)
+
+		api.POST("/media-sub/create", mediaSubHandler.Create)
+		api.POST("/media-sub/list", mediaSubHandler.GetList)
+		api.POST("/media-sub/all", mediaSubHandler.GetAll)
+		api.POST("/media-sub/detail/:id", mediaSubHandler.GetByID)
+		api.POST("/media-sub/update/:id", mediaSubHandler.Update)
+		api.POST("/media-sub/delete/:id", mediaSubHandler.Delete)
 	}
 
 	return r

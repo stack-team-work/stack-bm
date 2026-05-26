@@ -9,7 +9,8 @@ import (
 type Config struct {
 	Server ServerConfig
 	DBBM   DBConfig
-	DBApi  DBConfig
+	DBSdk  DBConfig
+	DBMkt  DBConfig
 	JWT    JWTConfig
 	Dev    DevConfig
 }
@@ -61,12 +62,19 @@ func LoadConfig() *Config {
 			Password: viper.GetString("DB_BM_PASSWORD"),
 			Name:     viper.GetString("DB_BM_NAME"),
 		},
-		DBApi: DBConfig{
-			Host:     viper.GetString("DB_API_HOST"),
-			Port:     viper.GetString("DB_API_PORT"),
-			User:     viper.GetString("DB_API_USER"),
-			Password: viper.GetString("DB_API_PASSWORD"),
-			Name:     viper.GetString("DB_API_NAME"),
+		DBSdk: DBConfig{
+			Host:     viper.GetString("DB_SDK_HOST"),
+			Port:     viper.GetString("DB_SDK_PORT"),
+			User:     viper.GetString("DB_SDK_USER"),
+			Password: viper.GetString("DB_SDK_PASSWORD"),
+			Name:     viper.GetString("DB_SDK_NAME"),
+		},
+		DBMkt: DBConfig{
+			Host:     viper.GetString("DB_MKT_HOST"),
+			Port:     viper.GetString("DB_MKT_PORT"),
+			User:     viper.GetString("DB_MKT_USER"),
+			Password: viper.GetString("DB_MKT_PASSWORD"),
+			Name:     viper.GetString("DB_MKT_NAME"),
 		},
 		JWT: JWTConfig{
 			Secret:      viper.GetString("JWT_SECRET"),
