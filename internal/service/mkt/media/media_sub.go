@@ -5,6 +5,7 @@ import (
 
 	"stack-bm/internal/model/mkt/media"
 	mediaRepo "stack-bm/internal/repository/mkt/media"
+	"stack-bm/pkg/utils"
 )
 
 type MediaSubService struct {
@@ -15,7 +16,12 @@ func NewMediaSubService() *MediaSubService {
 	return &MediaSubService{repo: mediaRepo.NewMediaSubRepository()}
 }
 
-func (s *MediaSubService) Create(sub *media.MediaSub) error { return s.repo.Create(sub) }
+func (s *MediaSubService) Create(sub *media.MediaSub) error {
+	if sub.Mark == "" {
+		sub.Mark = utils.ToPinYinMark(sub.Name)
+	}
+	return s.repo.Create(sub)
+}
 func (s *MediaSubService) FindByID(id uint) (*media.MediaSub, error) { return s.repo.FindByID(id) }
 func (s *MediaSubService) FindPage(page, size int, keyword string, mediaID int, status int) ([]media.MediaSub, int64, error) {
 	if page < 1 { page = 1 }

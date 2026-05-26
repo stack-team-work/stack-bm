@@ -115,3 +115,7 @@ export function updateGamePlatform(id, data) {
 export function deleteGamePlatform(id) {
   return request.post(`/game-platform/delete/${id}`)
 }
+
+export function getSdkLogList(params) {
+  return request.post('/sdk-logs/list', params)
+}

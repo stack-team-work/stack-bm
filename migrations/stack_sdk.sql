@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50744
 File Encoding         : 65001
 
-Date: 2026-05-26 17:33:38
+Date: 2026-05-26 18:35:09
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -156,10 +156,10 @@ CREATE TABLE `sys_logs` (
   `level` int(50) NOT NULL DEFAULT '1' COMMENT '日志等级',
   `ip` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '发生ip',
   `desc` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '日志描述',
-  `create_time` int(11) DEFAULT '0' COMMENT '创建时间',
-  `update_time` int(11) DEFAULT NULL,
+  `created_at` int(11) DEFAULT '0' COMMENT '创建时间',
+  `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  KEY `create_time` (`create_time`) USING BTREE
+  KEY `create_time` (`created_at`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=138 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='日志表';
 
 -- ----------------------------

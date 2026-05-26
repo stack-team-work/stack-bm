@@ -5,6 +5,7 @@ import (
 
 	"stack-bm/internal/model/bm/sys"
 	bmSysRepo "stack-bm/internal/repository/bm/sys"
+	"stack-bm/pkg/utils"
 )
 
 type SysAdminGroupService struct {
@@ -15,7 +16,12 @@ func NewSysAdminGroupService() *SysAdminGroupService {
 	return &SysAdminGroupService{repo: bmSysRepo.NewSysAdminGroupRepository()}
 }
 
-func (s *SysAdminGroupService) Create(group *sys.SysAdminGroup) error { return s.repo.Create(group) }
+func (s *SysAdminGroupService) Create(group *sys.SysAdminGroup) error {
+	if group.Mark == "" {
+		group.Mark = utils.ToPinYinMark(group.Name)
+	}
+	return s.repo.Create(group)
+}
 
 func (s *SysAdminGroupService) FindByID(id uint) (*sys.SysAdminGroup, error) { return s.repo.FindByID(id) }
 

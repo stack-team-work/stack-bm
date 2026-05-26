@@ -5,6 +5,7 @@ import (
 
 	"stack-bm/internal/model/sdk/game"
 	gameRepo "stack-bm/internal/repository/sdk/game"
+	"stack-bm/pkg/utils"
 )
 
 type GameTagService struct {
@@ -15,7 +16,12 @@ func NewGameTagService() *GameTagService {
 	return &GameTagService{repo: gameRepo.NewGameTagRepository()}
 }
 
-func (s *GameTagService) Create(tag *game.GameTag) error { return s.repo.Create(tag) }
+func (s *GameTagService) Create(tag *game.GameTag) error {
+	if tag.Mark == "" {
+		tag.Mark = utils.ToPinYinMark(tag.Name)
+	}
+	return s.repo.Create(tag)
+}
 
 func (s *GameTagService) FindByID(id uint) (*game.GameTag, error) { return s.repo.FindByID(id) }
 

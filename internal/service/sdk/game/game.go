@@ -5,6 +5,7 @@ import (
 
 	"stack-bm/internal/model/sdk/game"
 	gameRepo "stack-bm/internal/repository/sdk/game"
+	"stack-bm/pkg/utils"
 )
 
 type GameService struct {
@@ -15,7 +16,12 @@ func NewGameService() *GameService {
 	return &GameService{repo: gameRepo.NewGameRepository()}
 }
 
-func (s *GameService) Create(g *game.Game) error { return s.repo.Create(g) }
+func (s *GameService) Create(g *game.Game) error {
+	if g.Mark == "" {
+		g.Mark = utils.ToPinYinMark(g.Name)
+	}
+	return s.repo.Create(g)
+}
 
 func (s *GameService) FindByID(id uint) (*game.Game, error) { return s.repo.FindByID(id) }
 

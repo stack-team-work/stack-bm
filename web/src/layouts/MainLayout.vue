@@ -82,7 +82,7 @@ const menuOptions = [
       { label: '后台账号', key: '/admin' },
       { label: '后台角色', key: '/admin-group' },
       { label: '菜单管理', key: '/menu' },
-      { label: '操作日志', key: '/logs' },
+      { label: '后台日志', key: '/logs' },
     ],
   },
   {
@@ -96,6 +96,7 @@ const menuOptions = [
       { label: '游戏标签', key: '/game-tag' },
       { label: '游戏变量', key: '/game-variable' },
       { label: '平台管理', key: '/game-platform' },
+      { label: '游戏日志', key: '/sdk-logs' },
     ],
   },
   {

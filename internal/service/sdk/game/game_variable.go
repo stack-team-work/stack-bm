@@ -7,6 +7,7 @@ import (
 
 	"stack-bm/internal/model/sdk/game"
 	gameRepo "stack-bm/internal/repository/sdk/game"
+	"stack-bm/pkg/utils"
 )
 
 type GameVariableService struct {
@@ -45,6 +46,9 @@ func decodeValue(v string) string {
 }
 
 func (s *GameVariableService) Create(v *game.GameVariable) error {
+	if v.Mark == "" {
+		v.Mark = utils.ToPinYinMark(v.Name)
+	}
 	v.Value = encodeValue(v.Value)
 	return s.repo.Create(v)
 }

@@ -79,6 +79,12 @@ const routes = [
         meta: { title: '平台管理' },
       },
       {
+        path: 'sdk-logs',
+        name: 'GameLog',
+        component: () => import('../views/game/GameLog.vue'),
+        meta: { title: '游戏日志' },
+      },
+      {
         path: 'media',
         name: 'Media',
         component: () => import('../views/mkt/Media.vue'),
@@ -94,7 +100,7 @@ const routes = [
         path: 'logs',
         name: 'SysLogs',
         component: () => import('../views/system/SysLogs.vue'),
-        meta: { title: '操作日志' },
+        meta: { title: '后台日志' },
       },
       {
         path: 'menu',
