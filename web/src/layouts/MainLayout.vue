@@ -106,6 +106,10 @@ const menuOptions = [
     children: [
       { label: '媒体渠道', key: '/media' },
       { label: '媒体子渠道', key: '/media-sub' },
+      { label: '渠道代理', key: '/media-agent' },
+      { label: 'mkt管理', key: '/media-application' },
+      { label: 'mkt管家', key: '/media-manager' },
+      { label: '主体管理', key: '/media-subject' },
     ],
   },
 ]

@@ -32,6 +32,10 @@ func SetupRouter() *gin.Engine {
 	sdkSysLogHandler := sdkSys.NewSysLogHandler()
 	mediaHandler := media.NewMediaHandler()
 	mediaSubHandler := media.NewMediaSubHandler()
+	mediaAgentHandler := media.NewMediaAgentHandler()
+	mediaApplicationHandler := media.NewMediaApplicationHandler()
+	mediaManagerHandler := media.NewMediaManagerHandler()
+	mediaSubjectHandler := media.NewMediaSubjectHandler()
 
 	r.POST("/api/login", authHandler.Login)
 	r.POST("/api/captcha", authHandler.Captcha)
@@ -122,6 +126,34 @@ func SetupRouter() *gin.Engine {
 		api.POST("/media-sub/detail/:id", mediaSubHandler.GetByID)
 		api.POST("/media-sub/update/:id", mediaSubHandler.Update)
 		api.POST("/media-sub/delete/:id", mediaSubHandler.Delete)
+
+		api.POST("/media-agent/create", mediaAgentHandler.Create)
+		api.POST("/media-agent/list", mediaAgentHandler.GetList)
+		api.POST("/media-agent/all", mediaAgentHandler.GetAll)
+		api.POST("/media-agent/detail/:id", mediaAgentHandler.GetByID)
+		api.POST("/media-agent/update/:id", mediaAgentHandler.Update)
+		api.POST("/media-agent/delete/:id", mediaAgentHandler.Delete)
+
+		api.POST("/media-application/create", mediaApplicationHandler.Create)
+		api.POST("/media-application/list", mediaApplicationHandler.GetList)
+		api.POST("/media-application/all", mediaApplicationHandler.GetAll)
+		api.POST("/media-application/detail/:id", mediaApplicationHandler.GetByID)
+		api.POST("/media-application/update/:id", mediaApplicationHandler.Update)
+		api.POST("/media-application/delete/:id", mediaApplicationHandler.Delete)
+
+		api.POST("/media-manager/create", mediaManagerHandler.Create)
+		api.POST("/media-manager/list", mediaManagerHandler.GetList)
+		api.POST("/media-manager/all", mediaManagerHandler.GetAll)
+		api.POST("/media-manager/detail/:id", mediaManagerHandler.GetByID)
+		api.POST("/media-manager/update/:id", mediaManagerHandler.Update)
+		api.POST("/media-manager/delete/:id", mediaManagerHandler.Delete)
+
+		api.POST("/media-subject/create", mediaSubjectHandler.Create)
+		api.POST("/media-subject/list", mediaSubjectHandler.GetList)
+		api.POST("/media-subject/all", mediaSubjectHandler.GetAll)
+		api.POST("/media-subject/detail/:id", mediaSubjectHandler.GetByID)
+		api.POST("/media-subject/update/:id", mediaSubjectHandler.Update)
+		api.POST("/media-subject/delete/:id", mediaSubjectHandler.Delete)
 	}
 
 	return r

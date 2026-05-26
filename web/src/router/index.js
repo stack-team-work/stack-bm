@@ -97,6 +97,30 @@ const routes = [
         meta: { title: '媒体子渠道' },
       },
       {
+        path: 'media-agent',
+        name: 'MediaAgent',
+        component: () => import('../views/mkt/MediaAgent.vue'),
+        meta: { title: '渠道代理' },
+      },
+      {
+        path: 'media-application',
+        name: 'MediaApplication',
+        component: () => import('../views/mkt/MediaApplication.vue'),
+        meta: { title: 'mkt管理' },
+      },
+      {
+        path: 'media-manager',
+        name: 'MediaManager',
+        component: () => import('../views/mkt/MediaManager.vue'),
+        meta: { title: 'mkt管家' },
+      },
+      {
+        path: 'media-subject',
+        name: 'MediaSubject',
+        component: () => import('../views/mkt/MediaSubject.vue'),
+        meta: { title: '主体管理' },
+      },
+      {
         path: 'logs',
         name: 'SysLogs',
         component: () => import('../views/system/SysLogs.vue'),

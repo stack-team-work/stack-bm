@@ -4,6 +4,7 @@ type Media struct {
 	ID        uint   `gorm:"primarykey" json:"id"`
 	Name      string `gorm:"size:255;not null" json:"name"`
 	Mark      string `gorm:"size:255" json:"mark"`
+	AdminID   int    `gorm:"column:admin_id" json:"admin_id"`
 	Status    int8   `gorm:"default:1" json:"status"`
 	IsDeleted int8   `gorm:"column:is_deleted;default:0" json:"is_deleted"`
 	CreatedAt int64  `gorm:"column:created_at;autoCreateTime" json:"created_at"`
