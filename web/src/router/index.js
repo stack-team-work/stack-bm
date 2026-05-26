@@ -106,7 +106,7 @@ const routes = [
         path: 'media-application',
         name: 'MediaApplication',
         component: () => import('../views/mkt/MediaApplication.vue'),
-        meta: { title: 'mkt管理' },
+        meta: { title: 'mkt应用' },
       },
       {
         path: 'media-manager',
