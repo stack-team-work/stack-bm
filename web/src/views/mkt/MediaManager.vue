@@ -31,7 +31,7 @@
           <n-input-number v-model:value="formData.account_num" placeholder="绑定账户数" :min="0" style="width: 100%" />
         </n-form-item>
         <n-form-item path="auth_status" label="授权状态">
-          <n-input v-model:value="formData.auth_status" placeholder="授权状态" />
+          <n-select v-model:value="formData.auth_status" :options="authOptions" placeholder="授权状态" />
         </n-form-item>
         <n-form-item path="remark" label="备注">
           <n-input v-model:value="formData.remark" placeholder="请输入备注" />
@@ -70,8 +70,9 @@ const searchStatus = ref(null)
 const mediaOptions = ref([])
 const appOptions = ref([])
 const statusOptions = [{ label: '启用', value: 1 }, { label: '禁用', value: 0 }]
-const formData = reactive({ media_id: null, application_id: null, name: '', account: '', account_id: '', account_num: 0, auth_status: '0', remark: '', extra: '', status: 1 })
-function resetForm() { Object.assign(formData, { media_id: null, application_id: null, name: '', account: '', account_id: '', account_num: 0, auth_status: '0', remark: '', extra: '', status: 1 }) }
+const authOptions = [{ label: '未授权', value: 0 }, { label: '已授权', value: 1 }]
+const formData = reactive({ media_id: null, application_id: null, name: '', account: '', account_id: '', account_num: 0, auth_status: 0, remark: '', extra: '', status: 1 })
+function resetForm() { Object.assign(formData, { media_id: null, application_id: null, name: '', account: '', account_id: '', account_num: 0, auth_status: 0, remark: '', extra: '', status: 1 }) }
 const rules = {
   name: [{ required: true, message: '请输入管家名称', trigger: 'blur' }],
   media_id: [{ required: true, type: 'number', message: '请选择媒体渠道', trigger: 'change' }],

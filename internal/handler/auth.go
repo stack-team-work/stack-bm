@@ -6,6 +6,7 @@ import (
 	"stack-bm/internal/database"
 	"stack-bm/internal/service"
 	"stack-bm/pkg/captcha"
+	"stack-bm/pkg/dict"
 	"stack-bm/pkg/jwt"
 	"stack-bm/pkg/response"
 
@@ -42,14 +43,14 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	}
 
 	if !captcha.Verify(req.CaptchaID, req.Captcha) {
-		writeLog("error", "/api/login", req.Username, c.ClientIP(), "验证码错误")
+		writeLog(dict.BM_LOG_LEVEL_ERROR, "/api/login", req.Username, c.ClientIP(), "验证码错误")
 		response.Error(c, http.StatusBadRequest, "验证码错误")
 		return
 	}
 
 	admin, err := h.authService.Login(req.Username, req.Password)
 	if err != nil {
-		writeLog("error", "/api/login", req.Username, c.ClientIP(), err.Error())
+		writeLog(dict.BM_LOG_LEVEL_ERROR, "/api/login", req.Username, c.ClientIP(), err.Error())
 		response.Error(c, http.StatusUnauthorized, err.Error())
 		return
 	}
@@ -60,7 +61,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	writeLog("info", "/api/login", req.Username, c.ClientIP(), "用户登录成功")
+	writeLog(dict.BM_LOG_LEVEL_INFO, "/api/login", req.Username, c.ClientIP(), "用户登录成功")
 	response.Success(c, gin.H{
 		"token": token,
 		"admin": gin.H{
@@ -88,7 +89,7 @@ func (h *AuthHandler) GetUserInfo(c *gin.Context) {
 	})
 }
 
-func writeLog(level, path, username, ip, desc string) {
+func writeLog(level int, path, username, ip, desc string) {
 	if database.DBBM != nil {
 		database.DBBM.Exec(`INSERT INTO sys_logs (level, path, username, ip, `+"`desc`"+`, created_at, updated_at) VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())`,
 			level, path, username, ip, desc)

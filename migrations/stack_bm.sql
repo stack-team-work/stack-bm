@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50744
 File Encoding         : 65001
 
-Date: 2026-05-25 22:49:32
+Date: 2026-05-27 11:07:07
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -68,7 +68,7 @@ CREATE TABLE `sys_admin_group` (
 DROP TABLE IF EXISTS `sys_logs`;
 CREATE TABLE `sys_logs` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '日志表自增id',
-  `level` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `level` tinyint(4) DEFAULT '1' COMMENT '日志等级，1；info，2：error，3：debug',
   `path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '请求地址',
   `username` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `ip` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -77,7 +77,7 @@ CREATE TABLE `sys_logs` (
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `username` (`username`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=163 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='日志表';
+) ENGINE=InnoDB AUTO_INCREMENT=164 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='日志表';
 
 -- ----------------------------
 -- Table structure for sys_menu

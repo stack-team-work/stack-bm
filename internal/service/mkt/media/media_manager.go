@@ -33,7 +33,7 @@ func (s *MediaManagerService) Update(id uint, m *media.MediaManager) error {
 	if m.Account != "" { existing.Account = m.Account }
 	if m.AccountID != "" { existing.AccountID = m.AccountID }
 	existing.AccountNum = m.AccountNum
-	if m.AuthStatus != "" { existing.AuthStatus = m.AuthStatus }
+	if m.AuthStatus > 0 { existing.AuthStatus = m.AuthStatus }
 	if m.Remark != "" { existing.Remark = m.Remark }
 	if m.Extra != "" { existing.Extra = m.Extra }
 	existing.AdminID = m.AdminID

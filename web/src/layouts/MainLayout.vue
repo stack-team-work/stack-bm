@@ -50,7 +50,7 @@
 import { ref, computed, h } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { NIcon } from 'naive-ui'
-import { HomeOutline, SettingsOutline, GameControllerOutline, BarChartOutline } from '@vicons/ionicons5'
+import { HomeOutline, SettingsOutline, GameControllerOutline, BarChartOutline, CashOutline } from '@vicons/ionicons5'
 
 const router = useRouter()
 const route = useRoute()
@@ -110,6 +110,15 @@ const menuOptions = [
       { label: 'mkt应用', key: '/media-application' },
       { label: 'mkt管家', key: '/media-manager' },
       { label: '主体管理', key: '/media-subject' },
+    ],
+  },
+  {
+    label: '财务管理',
+    key: 'pay-mgmt',
+    icon: renderIcon(CashOutline),
+    children: [
+      { label: '支付平台', key: '/pay-platform' },
+      { label: '平台商户', key: '/pay-merchant' },
     ],
   },
 ]

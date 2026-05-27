@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50744
 File Encoding         : 65001
 
-Date: 2026-05-26 19:37:54
+Date: 2026-05-27 11:05:37
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -79,7 +79,7 @@ CREATE TABLE `media_manager` (
   `account` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '管家账号',
   `account_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '管家id',
   `account_num` int(11) NOT NULL DEFAULT '0' COMMENT '绑定账户数',
-  `auth_status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
+  `auth_status` tinyint(4) NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '1',
   `is_deleted` tinyint(4) NOT NULL DEFAULT '0',
   `remark` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,

@@ -7,3 +7,7 @@ export function login(username, password) {
 export function getUserInfo() {
   return request.post('/user/info')
 }
+
+export function getDict() {
+  return request.post('/dict')
+}

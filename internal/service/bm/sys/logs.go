@@ -15,7 +15,7 @@ func NewSysLogService() *SysLogService {
 
 func (s *SysLogService) Create(log *sys.SysLog) error { return s.repo.Create(log) }
 
-func (s *SysLogService) FindPage(page, size int, keyword string, level string) ([]sys.SysLog, int64, error) {
+func (s *SysLogService) FindPage(page, size int, keyword string, level int) ([]sys.SysLog, int64, error) {
 	if page < 1 { page = 1 }
 	if size < 1 { size = 10 }
 	return s.repo.FindPage(page, size, keyword, level)

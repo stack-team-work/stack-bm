@@ -121,6 +121,18 @@ const routes = [
         meta: { title: '主体管理' },
       },
       {
+        path: 'pay-platform',
+        name: 'PayPlatform',
+        component: () => import('../views/pay/PayPlatform.vue'),
+        meta: { title: '支付平台' },
+      },
+      {
+        path: 'pay-merchant',
+        name: 'PayMerchant',
+        component: () => import('../views/pay/PayMerchant.vue'),
+        meta: { title: '平台商户' },
+      },
+      {
         path: 'logs',
         name: 'SysLogs',
         component: () => import('../views/system/SysLogs.vue'),

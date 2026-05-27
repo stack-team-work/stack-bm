@@ -31,11 +31,11 @@ const { loading, tableData, pagination, search, resetSearch, handlePageChange, h
 const searchKeyword = ref('')
 const searchLevel = ref('')
 const clearing = ref(false)
-const levelOptions = [{ label: 'error', value: 'error' }, { label: 'info', value: 'info' }]
+const levelOptions = [{ label: 'info', value: 1 }, { label: 'error', value: 2 }]
 
 const columns = [
   { title: 'ID', key: 'id', width: 60 },
-  { title: '级别', key: 'level', width: 70, render: (row) => h(NTag, { type: row.level === 'error' ? 'error' : 'default', size: 'small' }, { default: () => row.level }) },
+  { title: '级别', key: 'level', width: 70, render: (row) => h(NTag, { type: row.level === 2 ? 'error' : 'default', size: 'small' }, { default: () => row.level === 2 ? 'error' : 'info' }) },
   { title: '路径', key: 'path', width: 180 },
   { title: '用户', key: 'username', width: 90 },
   { title: 'IP', key: 'ip', width: 130 },

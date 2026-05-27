@@ -2,7 +2,7 @@ package sys
 
 type SysLog struct {
 	ID        uint   `gorm:"primarykey" json:"id"`
-	Level     string `gorm:"size:50" json:"level"`
+	Level     int    `gorm:"default:1" json:"level"`
 	Path      string `gorm:"size:255" json:"path"`
 	Username  string `gorm:"size:32;index" json:"username"`
 	IP        string `gorm:"size:255" json:"ip"`

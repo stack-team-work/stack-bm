@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50744
 File Encoding         : 65001
 
-Date: 2026-05-26 18:35:09
+Date: 2026-05-27 14:45:30
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -143,6 +143,40 @@ CREATE TABLE `game_variable` (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `key` (`key`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
+
+-- ----------------------------
+-- Table structure for pay_merchant
+-- ----------------------------
+DROP TABLE IF EXISTS `pay_merchant`;
+CREATE TABLE `pay_merchant` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL COMMENT '对内名称',
+  `show_name` varchar(64) NOT NULL COMMENT '对外名称',
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '支付类型，1、微信，2、支付宝',
+  `platform_mark` tinyint(4) NOT NULL DEFAULT '0' COMMENT '支付平台，来源pay_platform的mark',
+  `mark` varchar(16) NOT NULL COMMENT '标识',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态',
+  `weight` int(4) DEFAULT '0' COMMENT '权重',
+  `url` varchar(50) DEFAULT NULL COMMENT '支付url',
+  `rate` decimal(10,4) DEFAULT '0.0000' COMMENT '费率',
+  `config` mediumtext COMMENT '支付参数配置',
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='支付商户';
+
+-- ----------------------------
+-- Table structure for pay_platform
+-- ----------------------------
+DROP TABLE IF EXISTS `pay_platform`;
+CREATE TABLE `pay_platform` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL COMMENT '对内名称',
+  `mark` varchar(16) NOT NULL COMMENT '标识',
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='支付平台';
 
 -- ----------------------------
 -- Table structure for sys_logs
@@ -411,9 +445,10 @@ CREATE TABLE `user_orders` (
   `pay_status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '支付状态:1：未支付，2：已支付',
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '订单状态:1：未支付，2：未回掉，3：已发货，4：发货失败',
   `pay_domain` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '支付域名',
-  `pay_number` int(11) NOT NULL COMMENT '支付标识(后台读取配置)',
+  `pay_plan_id` int(11) DEFAULT NULL COMMENT '支付方案id',
+  `pay_merchant_id` int(11) NOT NULL COMMENT '支付商户id',
   `pay_way` tinyint(4) NOT NULL DEFAULT '1' COMMENT '支付通道1sdk，2官网',
-  `pay_type` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '支付方式:alipay,wechat',
+  `pay_type` int(11) NOT NULL COMMENT '支付方式',
   `cp_ext` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'cp扩展参数',
   `callback_at` int(11) DEFAULT NULL COMMENT '接受到第三方支付回调时间',
   `reg_at` int(11) DEFAULT '0' COMMENT '玩家注册时间',

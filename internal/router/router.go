@@ -5,6 +5,7 @@ import (
 	"stack-bm/internal/handler/bm/sys"
 	"stack-bm/internal/handler/mkt/media"
 	"stack-bm/internal/handler/sdk/game"
+	"stack-bm/internal/handler/sdk/pay"
 	sdkSys "stack-bm/internal/handler/sdk/sys"
 	"stack-bm/internal/middleware"
 
@@ -19,6 +20,7 @@ func SetupRouter() *gin.Engine {
 
 	authHandler := handler.NewAuthHandler()
 	dashboardHandler := handler.NewDashboardHandler()
+	dictHandler := handler.NewDictHandler()
 	sysAdminHandler := sys.NewSysAdminHandler()
 	sysAdminGroupHandler := sys.NewSysAdminGroupHandler()
 	sysLogHandler := sys.NewSysLogHandler()
@@ -37,8 +39,12 @@ func SetupRouter() *gin.Engine {
 	mediaManagerHandler := media.NewMediaManagerHandler()
 	mediaSubjectHandler := media.NewMediaSubjectHandler()
 
+	payPlatformHandler := pay.NewPayPlatformHandler()
+	payMerchantHandler := pay.NewPayMerchantHandler()
+
 	r.POST("/api/login", authHandler.Login)
 	r.POST("/api/captcha", authHandler.Captcha)
+	r.POST("/api/dict", dictHandler.GetAll)
 
 	api := r.Group("/api")
 	api.Use(middleware.AuthMiddleware())
@@ -154,6 +160,20 @@ func SetupRouter() *gin.Engine {
 		api.POST("/media-subject/detail/:id", mediaSubjectHandler.GetByID)
 		api.POST("/media-subject/update/:id", mediaSubjectHandler.Update)
 		api.POST("/media-subject/delete/:id", mediaSubjectHandler.Delete)
+
+		api.POST("/pay-platform/create", payPlatformHandler.Create)
+		api.POST("/pay-platform/list", payPlatformHandler.GetList)
+		api.POST("/pay-platform/all", payPlatformHandler.GetAll)
+		api.POST("/pay-platform/detail/:id", payPlatformHandler.GetByID)
+		api.POST("/pay-platform/update/:id", payPlatformHandler.Update)
+		api.POST("/pay-platform/delete/:id", payPlatformHandler.Delete)
+
+		api.POST("/pay-merchant/create", payMerchantHandler.Create)
+		api.POST("/pay-merchant/list", payMerchantHandler.GetList)
+		api.POST("/pay-merchant/all", payMerchantHandler.GetAll)
+		api.POST("/pay-merchant/detail/:id", payMerchantHandler.GetByID)
+		api.POST("/pay-merchant/update/:id", payMerchantHandler.Update)
+		api.POST("/pay-merchant/delete/:id", payMerchantHandler.Delete)
 	}
 
 	return r

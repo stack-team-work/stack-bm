@@ -19,14 +19,14 @@ func (r *SysLogRepository) Create(log *sys.SysLog) error {
 	return r.db.Create(log).Error
 }
 
-func (r *SysLogRepository) FindPage(page, size int, keyword string, level string) ([]sys.SysLog, int64, error) {
+func (r *SysLogRepository) FindPage(page, size int, keyword string, level int) ([]sys.SysLog, int64, error) {
 	var logs []sys.SysLog
 	var total int64
 	query := r.db.Model(&sys.SysLog{})
 	if keyword != "" {
 		query = query.Where("path LIKE ? OR username LIKE ? OR `desc` LIKE ?", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%")
 	}
-	if level != "" {
+	if level > 0 {
 		query = query.Where("level = ?", level)
 	}
 	if err := query.Count(&total).Error; err != nil {

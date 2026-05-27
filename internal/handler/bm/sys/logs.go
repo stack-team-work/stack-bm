@@ -20,7 +20,7 @@ func (h *SysLogHandler) GetList(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultPostForm("page", "1"))
 	size, _ := strconv.Atoi(c.DefaultPostForm("size", "10"))
 	keyword := c.DefaultPostForm("keyword", "")
-	level := c.DefaultPostForm("level", "")
+	level, _ := strconv.Atoi(c.DefaultPostForm("level", "0"))
 	logs, total, err := h.service.FindPage(page, size, keyword, level)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error())
