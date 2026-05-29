@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50744
 File Encoding         : 65001
 
-Date: 2026-05-27 11:07:07
+Date: 2026-05-29 17:25:41
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -63,6 +63,26 @@ CREATE TABLE `sys_admin_group` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='用户组';
 
 -- ----------------------------
+-- Table structure for sys_columns
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_columns`;
+CREATE TABLE `sys_columns` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  `report_type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '报表类型:1投放报表',
+  `indicator_type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1：属性指标，2：媒体指标，3，bm指标，4，n日指标',
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '表格列名',
+  `mark` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `field` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '字段名称',
+  `default` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否默认选中',
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  `admin_id` int(11) NOT NULL,
+  `created_at` int(11) DEFAULT '0' COMMENT '创建时间',
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `report_type` (`report_type`,`indicator_type`,`field`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='权限表';
+
+-- ----------------------------
 -- Table structure for sys_logs
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_logs`;
@@ -77,7 +97,7 @@ CREATE TABLE `sys_logs` (
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `username` (`username`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=164 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='日志表';
+) ENGINE=InnoDB AUTO_INCREMENT=169 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='日志表';
 
 -- ----------------------------
 -- Table structure for sys_menu

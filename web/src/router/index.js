@@ -174,6 +174,12 @@ const routes = [
         component: () => import('../views/system/SysMenu.vue'),
         meta: { title: '菜单管理' },
       },
+      {
+        path: 'sys-column',
+        name: 'SysColumn',
+        component: () => import('../views/system/SysColumn.vue'),
+        meta: { title: '报表指标' },
+      },
     ],
   },
 ]

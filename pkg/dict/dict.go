@@ -62,6 +62,17 @@ const (
 	GAME_GIFT_TYPE_PROP = 1
 )
 
+const (
+	SYS_COLUMN_REPORT_TYPE_AD    = 1
+)
+
+const (
+	SYS_COLUMN_INDICATOR_ATTR  = 1
+	SYS_COLUMN_INDICATOR_MEDIA = 2
+	SYS_COLUMN_INDICATOR_BM    = 3
+	SYS_COLUMN_INDICATOR_NDAY  = 4
+)
+
 type Option struct {
 	Label string `json:"label"`
 	Value int    `json:"value"`
@@ -122,5 +133,14 @@ var Dict = map[string]interface{}{
 	},
 	"game_gift_type": []Option{
 		{Label: "道具", Value: GAME_GIFT_TYPE_PROP},
+	},
+	"sys_column_report_type": []Option{
+		{Label: "投放报表", Value: SYS_COLUMN_REPORT_TYPE_AD},
+	},
+	"sys_column_indicator_type": []Option{
+		{Label: "属性指标", Value: SYS_COLUMN_INDICATOR_ATTR},
+		{Label: "媒体指标", Value: SYS_COLUMN_INDICATOR_MEDIA},
+		{Label: "BM指标", Value: SYS_COLUMN_INDICATOR_BM},
+		{Label: "N日指标", Value: SYS_COLUMN_INDICATOR_NDAY},
 	},
 }

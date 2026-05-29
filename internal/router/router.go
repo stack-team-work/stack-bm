@@ -25,6 +25,7 @@ func SetupRouter() *gin.Engine {
 	sysAdminGroupHandler := sys.NewSysAdminGroupHandler()
 	sysLogHandler := sys.NewSysLogHandler()
 	sysMenuHandler := sys.NewSysMenuHandler()
+	sysColumnHandler := sys.NewSysColumnHandler()
 	gameHandler := game.NewGameHandler()
 	gameAppHandler := game.NewGameAppHandler()
 	gameCpHandler := game.NewGameCpHandler()
@@ -145,6 +146,13 @@ func SetupRouter() *gin.Engine {
 		api.POST("/menu/detail/:id", sysMenuHandler.GetByID)
 		api.POST("/menu/update/:id", sysMenuHandler.Update)
 		api.POST("/menu/delete/:id", sysMenuHandler.Delete)
+
+		api.POST("/sys-column/create", sysColumnHandler.Create)
+		api.POST("/sys-column/list", sysColumnHandler.GetList)
+		api.POST("/sys-column/all", sysColumnHandler.GetAll)
+		api.POST("/sys-column/detail/:id", sysColumnHandler.GetByID)
+		api.POST("/sys-column/update/:id", sysColumnHandler.Update)
+		api.POST("/sys-column/delete/:id", sysColumnHandler.Delete)
 
 		api.POST("/sdk-logs/list", sdkSysLogHandler.GetList)
 

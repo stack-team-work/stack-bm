@@ -1,9 +1,5 @@
 import request from '../utils/request'
 
-export function getDashboardStats() {
-  return request.post('/dashboard/stats')
-}
-
 export function getAdminList(params) {
   return request.post('/admin/list', params)
 }
@@ -48,8 +44,8 @@ export function clearLogs() {
   return request.post('/logs/clear')
 }
 
-export function getMenuList(params) {
-  return request.post('/menu/list', params)
+export function getDashboardStats() {
+  return request.post('/dashboard/stats')
 }
 
 export function getMenuAll() {
@@ -66,4 +62,24 @@ export function updateMenu(id, data) {
 
 export function deleteMenu(id) {
   return request.post(`/menu/delete/${id}`)
+}
+
+export function getSysColumnList(params) {
+  return request.post('/sys-column/list', params)
+}
+
+export function getSysColumnAll() {
+  return request.post('/sys-column/all')
+}
+
+export function createSysColumn(data) {
+  return request.post('/sys-column/create', data)
+}
+
+export function updateSysColumn(id, data) {
+  return request.post(`/sys-column/update/${id}`, data)
+}
+
+export function deleteSysColumn(id) {
+  return request.post(`/sys-column/delete/${id}`)
 }
