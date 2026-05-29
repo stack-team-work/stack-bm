@@ -58,6 +58,10 @@ const (
 	GAME_VOUCHER_USE_TYPE_ACCOUNT  = 2
 )
 
+const (
+	GAME_GIFT_TYPE_PROP = 1
+)
+
 type Option struct {
 	Label string `json:"label"`
 	Value int    `json:"value"`
@@ -115,5 +119,8 @@ var Dict = map[string]interface{}{
 	"game_voucher_use_type": []Option{
 		{Label: "玩家角色", Value: GAME_VOUCHER_USE_TYPE_ROLE},
 		{Label: "SDK账户", Value: GAME_VOUCHER_USE_TYPE_ACCOUNT},
+	},
+	"game_gift_type": []Option{
+		{Label: "道具", Value: GAME_GIFT_TYPE_PROP},
 	},
 }

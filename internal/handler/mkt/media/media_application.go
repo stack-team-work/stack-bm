@@ -29,6 +29,11 @@ func (h *MediaApplicationHandler) Create(c *gin.Context) {
 		response.Error(c, http.StatusBadRequest, "名称、媒体和AppID不能为空")
 		return
 	}
+	if m.AdminID == 0 {
+		if uid, ok := c.Get("user_id"); ok {
+			m.AdminID = int(uid.(uint))
+		}
+	}
 	if err := h.service.Create(&m); err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return

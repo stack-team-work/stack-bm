@@ -33,7 +33,7 @@ func (s *MediaApplicationService) Update(id uint, m *media.MediaApplication) err
 	if m.AppSecret > 0 { existing.AppSecret = m.AppSecret }
 	if m.Remark != "" { existing.Remark = m.Remark }
 	if m.Extra != "" { existing.Extra = m.Extra }
-	existing.AdminID = m.AdminID
+	if m.AdminID > 0 { existing.AdminID = m.AdminID }
 	existing.Status = m.Status
 	return s.repo.Update(existing)
 }

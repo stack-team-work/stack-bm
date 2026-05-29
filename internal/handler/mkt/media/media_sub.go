@@ -27,6 +27,11 @@ func (h *MediaSubHandler) Create(c *gin.Context) {
 		response.Error(c, http.StatusBadRequest, "名称和媒体渠道不能为空")
 		return
 	}
+	if s.AdminID == 0 {
+		if uid, ok := c.Get("user_id"); ok {
+			s.AdminID = int(uid.(uint))
+		}
+	}
 	if err := h.service.Create(&s); err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return

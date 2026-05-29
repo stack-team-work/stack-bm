@@ -36,7 +36,7 @@ func (s *MediaManagerService) Update(id uint, m *media.MediaManager) error {
 	if m.AuthStatus > 0 { existing.AuthStatus = m.AuthStatus }
 	if m.Remark != "" { existing.Remark = m.Remark }
 	if m.Extra != "" { existing.Extra = m.Extra }
-	existing.AdminID = m.AdminID
+	if m.AdminID > 0 { existing.AdminID = m.AdminID }
 	existing.Status = m.Status
 	return s.repo.Update(existing)
 }

@@ -26,6 +26,11 @@ func (h *GameGiftHandler) Create(c *gin.Context) {
 		response.Error(c, http.StatusBadRequest, "礼包名称不能为空")
 		return
 	}
+	if g.AdminID == 0 {
+		if uid, ok := c.Get("user_id"); ok {
+			g.AdminID = int(uid.(uint))
+		}
+	}
 	if err := h.service.Create(&g); err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return

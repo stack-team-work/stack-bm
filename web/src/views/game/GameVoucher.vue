@@ -30,10 +30,10 @@
           <n-input v-model:value="formData.desc" placeholder="请输入描述" />
         </n-form-item>
         <n-form-item path="stime" label="开始时间">
-          <n-input-number v-model:value="formData.stime" style="width: 100%" placeholder="Unix时间戳（秒）" />
+          <n-date-picker v-model:formatted-value="formData.stime" type="datetime" value-format="x" :default-value="Date.now()" style="width: 100%" />
         </n-form-item>
         <n-form-item path="etime" label="结束时间">
-          <n-input-number v-model:value="formData.etime" style="width: 100%" placeholder="Unix时间戳（秒）" />
+          <n-date-picker v-model:formatted-value="formData.etime" type="datetime" value-format="x" :default-value="Date.now()" style="width: 100%" />
         </n-form-item>
         <n-form-item path="status" label="状态">
           <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
@@ -50,7 +50,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, h } from 'vue'
+import { ref, reactive, h, toRaw } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, NInputNumber, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
@@ -65,8 +65,8 @@ const searchStatus = ref(null)
 const statusOptions = [{ label: '启用', value: 1 }, { label: '禁用', value: 0 }]
 const useTypeOptions = [{ label: '玩家角色', value: 1 }, { label: 'SDK账户', value: 2 }]
 const useTypeLabel = { 1: '玩家角色', 2: 'SDK账户' }
-const formData = reactive({ name: '', use_type: 1, use_limit: 1, total: 0, total_fee: 0, desc: '', stime: 0, etime: 0, status: 1 })
-function resetForm() { Object.assign(formData, { name: '', use_type: 1, use_limit: 1, total: 0, total_fee: 0, desc: '', stime: 0, etime: 0, status: 1 }) }
+const formData = reactive({ name: '', use_type: 1, use_limit: 1, total: 0, total_fee: 0, desc: '', stime: null, etime: null, status: 1 })
+function resetForm() { Object.assign(formData, { name: '', use_type: 1, use_limit: 1, total: 0, total_fee: 0, desc: '', stime: null, etime: null, status: 1 }) }
 const rules = { name: [{ required: true, message: '请输入券名称', trigger: 'blur' }] }
 const columns = [
   { title: 'ID', key: 'id', width: 60 },
@@ -85,8 +85,13 @@ const columns = [
 ]
 function doSearch() { search({ keyword: searchKeyword.value, status: searchStatus.value ?? -1 }) }
 function handleAdd() { resetForm(); open() }
-function handleEdit(row) { resetForm(); formData.name = row.name; formData.use_type = row.use_type; formData.use_limit = row.use_limit; formData.total = row.total; formData.total_fee = row.total_fee; formData.desc = row.desc; formData.stime = row.stime; formData.etime = row.etime; formData.status = row.status; openEdit(row) }
-async function handleSubmit() { if (await submit(formData, createGameVoucher, updateGameVoucher)) search({ keyword: searchKeyword.value, status: searchStatus.value ?? -1 }) }
+function handleEdit(row) { resetForm(); formData.name = row.name; formData.use_type = row.use_type; formData.use_limit = row.use_limit; formData.total = row.total; formData.total_fee = row.total_fee; formData.desc = row.desc; formData.stime = row.stime ? row.stime * 1000 : null; formData.etime = row.etime ? row.etime * 1000 : null; formData.status = row.status; openEdit(row) }
+async function handleSubmit() {
+  const data = toRaw(formData)
+  if (data.stime) data.stime = Math.floor(Number(data.stime) / 1000)
+  if (data.etime) data.etime = Math.floor(Number(data.etime) / 1000)
+  if (await submit(data, createGameVoucher, updateGameVoucher)) search({ keyword: searchKeyword.value, status: searchStatus.value ?? -1 })
+}
 async function onDelete(id) { if (await doDelete(id, deleteGameVoucher)) search({ keyword: searchKeyword.value, status: searchStatus.value ?? -1 }) }
 async function handleStatusChange(row, val) {
   try { await updateGameVoucher(row.id, { ...row, status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新') } catch { message.error('更新失败') }

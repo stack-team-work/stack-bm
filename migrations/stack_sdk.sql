@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50744
 File Encoding         : 65001
 
-Date: 2026-05-29 01:47:19
+Date: 2026-05-29 16:54:42
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -103,7 +103,7 @@ CREATE TABLE `game_gift` (
   `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `get_type` tinyint(4) NOT NULL COMMENT '1单次领取，2每日领取',
   `is_code` tinyint(4) NOT NULL COMMENT '是否需要激活码',
-  `type` int(11) NOT NULL DEFAULT '1' COMMENT '礼包码类型',
+  `type` int(11) NOT NULL DEFAULT '1' COMMENT '礼包码类型，1道具',
   `cond` text COLLATE utf8mb4_unicode_ci COMMENT '领取条件',
   `desc` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status` tinyint(4) DEFAULT '1' COMMENT '状态，1有效，0，无效',
@@ -113,7 +113,7 @@ CREATE TABLE `game_gift` (
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='礼包配置表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='礼包配置表';
 
 -- ----------------------------
 -- Table structure for game_gift_code
@@ -128,7 +128,7 @@ CREATE TABLE `game_gift_code` (
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `code` (`code`,`gift_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='礼包码表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='礼包码表';
 
 -- ----------------------------
 -- Table structure for game_gift_user_code
@@ -160,6 +160,7 @@ CREATE TABLE `game_platform` (
   `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '1',
   `is_deleted` tinyint(4) NOT NULL,
+  `admin_id` int(44) NOT NULL,
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
@@ -176,6 +177,7 @@ CREATE TABLE `game_tags` (
   `mark` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` int(11) NOT NULL DEFAULT '1',
+  `admin_id` int(11) NOT NULL,
   `is_deleted` tinyint(4) DEFAULT '0',
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,

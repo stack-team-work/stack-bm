@@ -20,8 +20,8 @@
         <n-form-item path="is_code" label="是否需要激活码">
           <n-switch v-model:value="formData.is_code" :checked-value="1" :unchecked-value="0" checked-text="需要" unchecked-text="不需要" />
         </n-form-item>
-        <n-form-item path="type" label="礼包码类型">
-          <n-input-number v-model:value="formData.type" style="width: 100%" placeholder="请输入礼包码类型" />
+        <n-form-item path="type" label="礼包类型">
+          <n-select v-model:value="formData.type" :options="typeOptions" placeholder="请选择礼包类型" />
         </n-form-item>
         <n-form-item path="cond" label="领取条件">
           <n-input v-model:value="formData.cond" type="textarea" placeholder="请输入领取条件" />
@@ -30,10 +30,10 @@
           <n-input v-model:value="formData.desc" placeholder="请输入描述" />
         </n-form-item>
         <n-form-item path="stime" label="开始时间">
-          <n-input-number v-model:value="formData.stime" style="width: 100%" placeholder="Unix时间戳（秒）" />
+          <n-date-picker v-model:formatted-value="formData.stime" type="datetime" value-format="x" :default-value="Date.now()" style="width: 100%" />
         </n-form-item>
         <n-form-item path="etime" label="结束时间">
-          <n-input-number v-model:value="formData.etime" style="width: 100%" placeholder="Unix时间戳（秒）" />
+          <n-date-picker v-model:formatted-value="formData.etime" type="datetime" value-format="x" :default-value="Date.now()" style="width: 100%" />
         </n-form-item>
         <n-form-item path="status" label="状态">
           <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="有效" unchecked-text="无效" />
@@ -50,7 +50,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, h } from 'vue'
+import { ref, reactive, h, toRaw } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, NInputNumber, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
@@ -65,8 +65,9 @@ const searchStatus = ref(null)
 const statusOptions = [{ label: '有效', value: 1 }, { label: '无效', value: 0 }]
 const getTypeOptions = [{ label: '单次领取', value: 1 }, { label: '每日领取', value: 2 }]
 const getTypeLabel = { 1: '单次', 2: '每日' }
-const formData = reactive({ name: '', get_type: 1, is_code: 0, type: 1, cond: '', desc: '', stime: 0, etime: 0, status: 1 })
-function resetForm() { Object.assign(formData, { name: '', get_type: 1, is_code: 0, type: 1, cond: '', desc: '', stime: 0, etime: 0, status: 1 }) }
+const typeOptions = [{ label: '道具', value: 1 }]
+const formData = reactive({ name: '', get_type: 1, is_code: 0, type: 1, cond: '', desc: '', stime: null, etime: null, status: 1 })
+function resetForm() { Object.assign(formData, { name: '', get_type: 1, is_code: 0, type: 1, cond: '', desc: '', stime: null, etime: null, status: 1 }) }
 const rules = { name: [{ required: true, message: '请输入礼包名称', trigger: 'blur' }] }
 const columns = [
   { title: 'ID', key: 'id', width: 60 },
@@ -84,8 +85,13 @@ const columns = [
 ]
 function doSearch() { search({ keyword: searchKeyword.value, status: searchStatus.value ?? -1 }) }
 function handleAdd() { resetForm(); open() }
-function handleEdit(row) { resetForm(); formData.name = row.name; formData.get_type = row.get_type; formData.is_code = row.is_code; formData.type = row.type; formData.cond = row.cond; formData.desc = row.desc; formData.stime = row.stime; formData.etime = row.etime; formData.status = row.status; openEdit(row) }
-async function handleSubmit() { if (await submit(formData, createGameGift, updateGameGift)) search({ keyword: searchKeyword.value, status: searchStatus.value ?? -1 }) }
+function handleEdit(row) { resetForm(); formData.name = row.name; formData.get_type = row.get_type; formData.is_code = row.is_code; formData.type = row.type; formData.cond = row.cond; formData.desc = row.desc; formData.stime = row.stime ? row.stime * 1000 : null; formData.etime = row.etime ? row.etime * 1000 : null; formData.status = row.status; openEdit(row) }
+async function handleSubmit() {
+  const data = toRaw(formData)
+  if (data.stime) data.stime = Math.floor(Number(data.stime) / 1000)
+  if (data.etime) data.etime = Math.floor(Number(data.etime) / 1000)
+  if (await submit(data, createGameGift, updateGameGift)) search({ keyword: searchKeyword.value, status: searchStatus.value ?? -1 })
+}
 async function onDelete(id) { if (await doDelete(id, deleteGameGift)) search({ keyword: searchKeyword.value, status: searchStatus.value ?? -1 }) }
 async function handleStatusChange(row, val) {
   try { await updateGameGift(row.id, { ...row, status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新') } catch { message.error('更新失败') }
