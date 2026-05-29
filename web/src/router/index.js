@@ -85,6 +85,36 @@ const routes = [
         meta: { title: '游戏日志' },
       },
       {
+        path: 'game-gift',
+        name: 'GameGift',
+        component: () => import('../views/game/GameGift.vue'),
+        meta: { title: '礼包配置' },
+      },
+      {
+        path: 'game-gift-code',
+        name: 'GameGiftCode',
+        component: () => import('../views/game/GameGiftCode.vue'),
+        meta: { title: '礼包码配置' },
+      },
+      {
+        path: 'game-gift-user-code',
+        name: 'GameGiftUserCode',
+        component: () => import('../views/game/GameGiftUserCode.vue'),
+        meta: { title: '领取记录' },
+      },
+      {
+        path: 'game-voucher',
+        name: 'GameVoucher',
+        component: () => import('../views/game/GameVoucher.vue'),
+        meta: { title: '代金券配置' },
+      },
+      {
+        path: 'game-voucher-use',
+        name: 'GameVoucherUse',
+        component: () => import('../views/game/GameVoucherUse.vue'),
+        meta: { title: '领取记录' },
+      },
+      {
         path: 'media',
         name: 'Media',
         component: () => import('../views/mkt/Media.vue'),

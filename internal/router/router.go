@@ -31,6 +31,11 @@ func SetupRouter() *gin.Engine {
 	gameTagHandler := game.NewGameTagHandler()
 	gameVariableHandler := game.NewGameVariableHandler()
 	gamePlatformHandler := game.NewGamePlatformHandler()
+	gameGiftHandler := game.NewGameGiftHandler()
+	gameGiftCodeHandler := game.NewGameGiftCodeHandler()
+	gameGiftUserCodeHandler := game.NewGameGiftUserCodeHandler()
+	gameVoucherHandler := game.NewGameVoucherHandler()
+	gameVoucherUseHandler := game.NewGameVoucherUseHandler()
 	sdkSysLogHandler := sdkSys.NewSysLogHandler()
 	mediaHandler := media.NewMediaHandler()
 	mediaSubHandler := media.NewMediaSubHandler()
@@ -106,6 +111,30 @@ func SetupRouter() *gin.Engine {
 		api.POST("/game-platform/detail/:id", gamePlatformHandler.GetByID)
 		api.POST("/game-platform/update/:id", gamePlatformHandler.Update)
 		api.POST("/game-platform/delete/:id", gamePlatformHandler.Delete)
+
+		api.POST("/game-gift/create", gameGiftHandler.Create)
+		api.POST("/game-gift/list", gameGiftHandler.GetList)
+		api.POST("/game-gift/all", gameGiftHandler.GetAll)
+		api.POST("/game-gift/detail/:id", gameGiftHandler.GetByID)
+		api.POST("/game-gift/update/:id", gameGiftHandler.Update)
+		api.POST("/game-gift/delete/:id", gameGiftHandler.Delete)
+
+		api.POST("/game-gift-code/create", gameGiftCodeHandler.Create)
+		api.POST("/game-gift-code/list", gameGiftCodeHandler.GetList)
+		api.POST("/game-gift-code/detail/:id", gameGiftCodeHandler.GetByID)
+		api.POST("/game-gift-code/update/:id", gameGiftCodeHandler.Update)
+		api.POST("/game-gift-code/delete/:id", gameGiftCodeHandler.Delete)
+
+		api.POST("/game-gift-user-code/list", gameGiftUserCodeHandler.GetList)
+
+		api.POST("/game-voucher/create", gameVoucherHandler.Create)
+		api.POST("/game-voucher/list", gameVoucherHandler.GetList)
+		api.POST("/game-voucher/all", gameVoucherHandler.GetAll)
+		api.POST("/game-voucher/detail/:id", gameVoucherHandler.GetByID)
+		api.POST("/game-voucher/update/:id", gameVoucherHandler.Update)
+		api.POST("/game-voucher/delete/:id", gameVoucherHandler.Delete)
+
+		api.POST("/game-voucher-use/list", gameVoucherUseHandler.GetList)
 
 		api.POST("/logs/list", sysLogHandler.GetList)
 		api.POST("/logs/clear", sysLogHandler.ClearAll)

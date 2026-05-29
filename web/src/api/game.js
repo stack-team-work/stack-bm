@@ -119,3 +119,67 @@ export function deleteGamePlatform(id) {
 export function getSdkLogList(params) {
   return request.post('/sdk-logs/list', params)
 }
+
+export function getGameGiftList(params) {
+  return request.post('/game-gift/list', params)
+}
+
+export function getGameGiftAll() {
+  return request.post('/game-gift/all')
+}
+
+export function createGameGift(data) {
+  return request.post('/game-gift/create', data)
+}
+
+export function updateGameGift(id, data) {
+  return request.post(`/game-gift/update/${id}`, data)
+}
+
+export function deleteGameGift(id) {
+  return request.post(`/game-gift/delete/${id}`)
+}
+
+export function getGameGiftCodeList(params) {
+  return request.post('/game-gift-code/list', params)
+}
+
+export function createGameGiftCode(data) {
+  return request.post('/game-gift-code/create', data)
+}
+
+export function updateGameGiftCode(id, data) {
+  return request.post(`/game-gift-code/update/${id}`, data)
+}
+
+export function deleteGameGiftCode(id) {
+  return request.post(`/game-gift-code/delete/${id}`)
+}
+
+export function getGameGiftUserCodeList(params) {
+  return request.post('/game-gift-user-code/list', params)
+}
+
+export function getGameVoucherList(params) {
+  return request.post('/game-voucher/list', params)
+}
+
+export function getGameVoucherAll() {
+  return request.post('/game-voucher/all')
+}
+
+export function createGameVoucher(data) {
+  return request.post('/game-voucher/create', data)
+}
+
+export function updateGameVoucher(id, data) {
+  return request.post(`/game-voucher/update/${id}`, data)
+}
+
+export function deleteGameVoucher(id) {
+  return request.post(`/game-voucher/delete/${id}`)
+}
+
+export function getGameVoucherUseList(params) {
+  return request.post('/game-voucher-use/list', params)
+}

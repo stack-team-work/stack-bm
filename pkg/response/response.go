@@ -36,7 +36,11 @@ func SuccessWithMessage(c *gin.Context, message string, data interface{}) {
 }
 
 func Error(c *gin.Context, code int, message string) {
-	c.JSON(http.StatusOK, Response{
+	httpStatus := code
+	if httpStatus < 400 {
+		httpStatus = http.StatusOK
+	}
+	c.JSON(httpStatus, Response{
 		Code:    code,
 		Message: message,
 	})

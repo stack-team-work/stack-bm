@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50744
 File Encoding         : 65001
 
-Date: 2026-05-27 14:45:30
+Date: 2026-05-29 01:47:19
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -95,6 +95,62 @@ CREATE TABLE `game_cp` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
+-- Table structure for game_gift
+-- ----------------------------
+DROP TABLE IF EXISTS `game_gift`;
+CREATE TABLE `game_gift` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '礼包id',
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `get_type` tinyint(4) NOT NULL COMMENT '1单次领取，2每日领取',
+  `is_code` tinyint(4) NOT NULL COMMENT '是否需要激活码',
+  `type` int(11) NOT NULL DEFAULT '1' COMMENT '礼包码类型',
+  `cond` text COLLATE utf8mb4_unicode_ci COMMENT '领取条件',
+  `desc` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '1' COMMENT '状态，1有效，0，无效',
+  `stime` int(11) NOT NULL COMMENT '开始时间',
+  `etime` int(11) NOT NULL COMMENT '结束时间',
+  `admin_id` int(11) NOT NULL COMMENT '操作人',
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='礼包配置表';
+
+-- ----------------------------
+-- Table structure for game_gift_code
+-- ----------------------------
+DROP TABLE IF EXISTS `game_gift_code`;
+CREATE TABLE `game_gift_code` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '激活码',
+  `gift_id` int(11) NOT NULL DEFAULT '0' COMMENT '礼包id',
+  `status` tinyint(4) DEFAULT '0',
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `code` (`code`,`gift_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='礼包码表';
+
+-- ----------------------------
+-- Table structure for game_gift_user_code
+-- ----------------------------
+DROP TABLE IF EXISTS `game_gift_user_code`;
+CREATE TABLE `game_gift_user_code` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(11) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '礼包码',
+  `gift_id` int(11) NOT NULL COMMENT '礼包id',
+  `user_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '用户id',
+  `role_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '角色id',
+  `role_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '角色名',
+  `server_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '服务器id',
+  `server_name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '服务器名字',
+  `app_id` int(11) NOT NULL,
+  `created_at` int(11) NOT NULL COMMENT '使用时间',
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `code_unique` (`code`,`role_id`(8),`gift_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='领取记录表';
+
+-- ----------------------------
 -- Table structure for game_platform
 -- ----------------------------
 DROP TABLE IF EXISTS `game_platform`;
@@ -145,6 +201,50 @@ CREATE TABLE `game_variable` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
+-- Table structure for game_voucher
+-- ----------------------------
+DROP TABLE IF EXISTS `game_voucher`;
+CREATE TABLE `game_voucher` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '礼包id',
+  `name` varchar(50) NOT NULL COMMENT '礼包名称',
+  `use_type` int(4) DEFAULT '1' COMMENT '使用角色类型：1：玩家角色，2：sdk账户',
+  `use_limit` tinyint(4) NOT NULL COMMENT '可领取次数',
+  `total` int(11) NOT NULL COMMENT '库存',
+  `total_fee` int(11) NOT NULL COMMENT '价值',
+  `desc` varchar(255) NOT NULL DEFAULT '' COMMENT '描述',
+  `stime` int(11) NOT NULL COMMENT '开始时间',
+  `etime` int(11) NOT NULL COMMENT '结束时间',
+  `status` tinyint(4) DEFAULT '1' COMMENT '状态',
+  `admin_id` int(11) NOT NULL COMMENT '操作人id',
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='代金券配置表';
+
+-- ----------------------------
+-- Table structure for game_voucher_use
+-- ----------------------------
+DROP TABLE IF EXISTS `game_voucher_use`;
+CREATE TABLE `game_voucher_use` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `voucher_id` int(11) NOT NULL COMMENT '代金券id',
+  `user_id` varchar(50) NOT NULL COMMENT '玩家id',
+  `app_id` int(11) NOT NULL COMMENT '子游戏',
+  `role_id` varchar(50) NOT NULL COMMENT '角色id',
+  `role_name` varchar(50) NOT NULL COMMENT '角色名',
+  `server_name` varchar(50) DEFAULT NULL,
+  `server_id` varchar(50) NOT NULL,
+  `is_use` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否已经使用',
+  `stime` int(11) NOT NULL COMMENT '开始时间',
+  `etime` int(11) NOT NULL COMMENT '结束时间',
+  `created_at` int(11) NOT NULL COMMENT '使用时间',
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `player_id` (`user_id`) USING BTREE,
+  KEY `voucher_id` (`voucher_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='玩家领取代金券记录表';
+
+-- ----------------------------
 -- Table structure for pay_merchant
 -- ----------------------------
 DROP TABLE IF EXISTS `pay_merchant`;
@@ -176,7 +276,7 @@ CREATE TABLE `pay_platform` (
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='支付平台';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT COMMENT='支付平台';
 
 -- ----------------------------
 -- Table structure for sys_logs

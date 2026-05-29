@@ -48,6 +48,16 @@ const (
 	PAY_MERCHANT_TYPE_ALIPAY  = 2
 )
 
+const (
+	GAME_GIFT_GET_TYPE_ONCE  = 1
+	GAME_GIFT_GET_TYPE_DAILY = 2
+)
+
+const (
+	GAME_VOUCHER_USE_TYPE_ROLE     = 1
+	GAME_VOUCHER_USE_TYPE_ACCOUNT  = 2
+)
+
 type Option struct {
 	Label string `json:"label"`
 	Value int    `json:"value"`
@@ -97,5 +107,13 @@ var Dict = map[string]interface{}{
 	"pay_merchant_type": []Option{
 		{Label: "微信", Value: PAY_MERCHANT_TYPE_WECHAT},
 		{Label: "支付宝", Value: PAY_MERCHANT_TYPE_ALIPAY},
+	},
+	"game_gift_get_type": []Option{
+		{Label: "单次领取", Value: GAME_GIFT_GET_TYPE_ONCE},
+		{Label: "每日领取", Value: GAME_GIFT_GET_TYPE_DAILY},
+	},
+	"game_voucher_use_type": []Option{
+		{Label: "玩家角色", Value: GAME_VOUCHER_USE_TYPE_ROLE},
+		{Label: "SDK账户", Value: GAME_VOUCHER_USE_TYPE_ACCOUNT},
 	},
 }

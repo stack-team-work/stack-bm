@@ -50,7 +50,7 @@
 import { ref, computed, h } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { NIcon } from 'naive-ui'
-import { HomeOutline, SettingsOutline, GameControllerOutline, BarChartOutline, CashOutline } from '@vicons/ionicons5'
+import { HomeOutline, SettingsOutline, GameControllerOutline, BarChartOutline, CashOutline, GiftOutline, TicketOutline } from '@vicons/ionicons5'
 
 const router = useRouter()
 const route = useRoute()
@@ -119,6 +119,25 @@ const menuOptions = [
     children: [
       { label: '支付平台', key: '/pay-platform' },
       { label: '平台商户', key: '/pay-merchant' },
+    ],
+  },
+  {
+    label: '礼包管理',
+    key: 'gift-mgmt',
+    icon: renderIcon(GiftOutline),
+    children: [
+      { label: '礼包配置', key: '/game-gift' },
+      { label: '礼包码配置', key: '/game-gift-code' },
+      { label: '使用记录', key: '/game-gift-user-code' },
+    ],
+  },
+  {
+    label: '代金券',
+    key: 'voucher-mgmt',
+    icon: renderIcon(TicketOutline),
+    children: [
+      { label: '代金券配置', key: '/game-voucher' },
+      { label: '使用记录', key: '/game-voucher-use' },
     ],
   },
 ]

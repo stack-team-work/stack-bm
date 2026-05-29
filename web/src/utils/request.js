@@ -21,7 +21,11 @@ request.interceptors.response.use(
   (response) => {
     const { data } = response
     if (data.code !== 0) {
-      console.error('API Error:', data.message)
+      if (data.code === 401) {
+        localStorage.removeItem('token')
+        localStorage.removeItem('userInfo')
+        window.location.hash = '#/login'
+      }
       return Promise.reject(new Error(data.message))
     }
     return data
