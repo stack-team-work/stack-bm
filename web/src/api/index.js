@@ -11,3 +11,11 @@ export function getUserInfo() {
 export function getDict() {
   return request.post('/dict')
 }
+
+export function getDictByKey(key) {
+  return request.post(`/dict/${key}`)
+}
+
+export function getOptions(type) {
+  return request.post('/options', { type })
+}

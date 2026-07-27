@@ -54,22 +54,24 @@
 </template>
 
 <script setup>
-import { ref, reactive, h, onMounted } from 'vue'
+import { ref, reactive, h, onMounted, computed } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, NInputNumber, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
 import { getPayMerchantList, createPayMerchant, updatePayMerchant, deletePayMerchant, getPayPlatformAll } from '../../api/pay'
 import { formatTime } from '../../utils/format'
+import { useDict } from '../../composables/useDict'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getPayMerchantList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
+const { load: loadDict, options } = useDict()
 const message = useMessage()
 const searchKeyword = ref('')
 const searchType = ref(null)
 const searchStatus = ref(null)
 const platformOptions = ref([])
-const typeOptions = [{ label: '微信', value: 1 }, { label: '支付宝', value: 2 }]
-const statusOptions = [{ label: '启用', value: 1 }, { label: '禁用', value: 0 }]
+const typeOptions = computed(() => options('pay_merchant_type'))
+const statusOptions = computed(() => options('status'))
 const formData = reactive({ name: '', show_name: '', type: 1, platform_mark: 0, mark: '', url: '', rate: 0, weight: 0, config: '', status: 1 })
 function resetForm() { Object.assign(formData, { name: '', show_name: '', type: 1, platform_mark: 0, mark: '', url: '', rate: 0, weight: 0, config: '', status: 1 }) }
 const rules = {
@@ -81,7 +83,7 @@ const columns = [
   { title: 'ID', key: 'id', width: 60 },
   { title: '对内名称', key: 'name' },
   { title: '对外名称', key: 'show_name' },
-  { title: '类型', key: 'type', width: 80, render: (row) => { const t = typeOptions.find(o => o.value === row.type); return t ? t.label : row.type } },
+  { title: '类型', key: 'type', width: 80, render: (row) => { const t = typeOptions.value.find(o => o.value === row.type); return t ? t.label : row.type } },
   { title: '平台', key: 'platform_mark', width: 100, render: (row) => { const p = platformOptions.value.find(o => o.value === row.platform_mark); return p ? p.label : '' } },
   { title: '费率', key: 'rate', width: 70 },
   { title: '权重', key: 'weight', width: 60 },
@@ -101,5 +103,5 @@ async function handleStatusChange(row, val) {
   try { await updatePayMerchant(row.id, { ...row, status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新') } catch { message.error('更新失败') }
 }
 async function loadPlatforms() { try { const res = await getPayPlatformAll(); platformOptions.value = (res.data || []).map(p => ({ label: p.name, value: p.id })) } catch { /* */ } }
-onMounted(() => { loadPlatforms(); search({}) })
+onMounted(async () => { await loadDict(); loadPlatforms(); search({}) })
 </script>

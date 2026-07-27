@@ -3,6 +3,7 @@ package pay
 import (
 	"stack-bm/internal/database"
 	"stack-bm/internal/model/sdk/pay"
+	"stack-bm/pkg/dict"
 
 	"gorm.io/gorm"
 )
@@ -53,4 +54,10 @@ func (r *PayPlatformRepository) Update(p *pay.PayPlatform) error { return r.db.S
 
 func (r *PayPlatformRepository) Delete(id uint) error {
 	return r.db.Delete(&pay.PayPlatform{}, id).Error
+}
+
+func (r *PayPlatformRepository) FindOptions() ([]dict.Option, error) {
+	var list []dict.Option
+	err := r.db.Model(&pay.PayPlatform{}).Select("name as label, id as value").Order("id ASC").Find(&list).Error
+	return list, err
 }

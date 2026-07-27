@@ -110,6 +110,7 @@ const topNavRouteMap = {
   '/game-voucher': 'operation', '/game-voucher-use': 'operation',
   '/pay-platform': 'finance', '/pay-merchant': 'finance',
   '/admin': 'system', '/admin-group': 'system', '/menu': 'system', '/sys-column': 'system', '/logs': 'system',
+  '/feishu-user': 'system', '/feishu-app': 'system', '/feishu-chat': 'system',
 }
 
 const activeTopNav = ref(topNavRouteMap[route.path] || 'publish')
@@ -205,6 +206,14 @@ const sidebarMenu = computed(() => {
           ],
         },
         { label: '后台日志', key: '/logs', icon: renderIcon(DocumentTextOutline) },
+        {
+          label: '飞书管理', key: 'feishu-mgmt', icon: renderIcon(SettingsOutline),
+          children: [
+            { label: '飞书绑定', key: '/feishu-user' },
+            { label: '飞书应用', key: '/feishu-app' },
+            { label: '飞书聊天', key: '/feishu-chat' },
+          ],
+        },
       ]
     default:
       return []

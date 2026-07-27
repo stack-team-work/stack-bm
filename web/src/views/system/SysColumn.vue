@@ -46,23 +46,25 @@
 </template>
 
 <script setup>
-import { ref, reactive, h } from 'vue'
+import { ref, reactive, h, computed, onMounted } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
 import { getSysColumnList, createSysColumn, updateSysColumn, deleteSysColumn } from '../../api/system'
 import { formatTime } from '../../utils/format'
+import { useDict } from '../../composables/useDict'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getSysColumnList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
+const { load: loadDict, options } = useDict()
 const message = useMessage()
 const searchKeyword = ref('')
 const searchReportType = ref(null)
 const searchIndicatorType = ref(null)
 const searchStatus = ref(null)
-const statusOptions = [{ label: '启用', value: 1 }, { label: '禁用', value: 0 }]
-const reportTypeOptions = [{ label: '投放报表', value: 1 }]
-const indicatorTypeOptions = [{ label: '属性指标', value: 1 }, { label: '媒体指标', value: 2 }, { label: 'BM指标', value: 3 }, { label: 'N日指标', value: 4 }]
+const statusOptions = computed(() => options('status'))
+const reportTypeOptions = computed(() => options('bm_column_report_type'))
+const indicatorTypeOptions = computed(() => options('bm_column_indicator_type'))
 const reportTypeLabel = { 1: '投放报表' }
 const indicatorTypeLabel = { 1: '属性指标', 2: '媒体指标', 3: 'BM指标', 4: 'N日指标' }
 const formData = reactive({ report_type: 1, indicator_type: 1, name: '', field: '', mark: '', default: 0, status: 1 })
@@ -90,4 +92,6 @@ async function onDelete(id) { if (await doDelete(id, deleteSysColumn)) search({ 
 async function handleStatusChange(row, val) {
   try { await updateSysColumn(row.id, { ...row, status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新') } catch { message.error('更新失败') }
 }
+
+onMounted(async () => { await loadDict(); search({}) })
 </script>

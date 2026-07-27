@@ -33,10 +33,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, h, onMounted } from 'vue'
+import { ref, reactive, h, onMounted, computed } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
+import { useDict } from '../../composables/useDict'
 import { getGameGiftCodeList, createGameGiftCode, updateGameGiftCode, deleteGameGiftCode, getGameGiftAll } from '../../api/game'
 import { formatTime } from '../../utils/format'
 
@@ -47,7 +48,8 @@ const searchKeyword = ref('')
 const searchGiftId = ref(null)
 const searchStatus = ref(null)
 const giftOptions = ref([])
-const statusOptions = [{ label: '已使用', value: 1 }, { label: '未使用', value: 0 }]
+const { load: loadDict, options } = useDict()
+const statusOptions = computed(() => options('status'))
 const formData = reactive({ gift_id: null, code: '', status: 0 })
 function resetForm() { Object.assign(formData, { gift_id: null, code: '', status: 0 }) }
 const rules = { code: [{ required: true, message: '请输入激活码', trigger: 'blur' }], gift_id: [{ required: true, type: 'number', message: '请选择礼包', trigger: 'change' }] }
@@ -71,5 +73,5 @@ async function handleStatusChange(row, val) {
   try { await updateGameGiftCode(row.id, { ...row, status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新') } catch { message.error('更新失败') }
 }
 async function loadGifts() { try { const res = await getGameGiftAll(); giftOptions.value = (res.data || []).map(g => ({ label: g.name, value: g.id })) } catch { /* */ } }
-onMounted(() => { loadGifts(); search({}) })
+onMounted(async () => { await loadDict(); loadGifts(); search({}) })
 </script>

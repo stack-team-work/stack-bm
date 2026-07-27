@@ -36,21 +36,23 @@
 </template>
 
 <script setup>
-import { ref, reactive, h, onMounted } from 'vue'
+import { ref, reactive, h, onMounted, computed } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
 import { getMediaAgentList, createMediaAgent, updateMediaAgent, deleteMediaAgent, getMediaSubjectAll } from '../../api/mkt'
 import { formatTime } from '../../utils/format'
+import { useDict } from '../../composables/useDict'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getMediaAgentList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
+const { load: loadDict, options } = useDict()
 const message = useMessage()
 const searchKeyword = ref('')
 const searchSubjectId = ref(null)
 const searchStatus = ref(null)
 const subjectOptions = ref([])
-const statusOptions = [{ label: '启用', value: 1 }, { label: '禁用', value: 0 }]
+const statusOptions = computed(() => options('status'))
 const formData = reactive({ subject_id: null, name: '', mark: '', status: 1 })
 function resetForm() { Object.assign(formData, { subject_id: null, name: '', mark: '', status: 1 }) }
 const rules = {
@@ -78,5 +80,5 @@ async function handleStatusChange(row, val) {
   try { await updateMediaAgent(row.id, { ...row, status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新') } catch { message.error('更新失败') }
 }
 async function loadSubjects() { try { const res = await getMediaSubjectAll(); subjectOptions.value = (res.data || []).map(s => ({ label: s.name, value: s.id })) } catch { /* */ } }
-onMounted(() => { loadSubjects(); search({}) })
+onMounted(async () => { await loadDict(); loadSubjects(); search({}) })
 </script>

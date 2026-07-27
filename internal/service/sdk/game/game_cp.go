@@ -5,6 +5,7 @@ import (
 
 	"stack-bm/internal/model/sdk/game"
 	gameRepo "stack-bm/internal/repository/sdk/game"
+	"stack-bm/pkg/dict"
 	"stack-bm/pkg/utils"
 )
 
@@ -49,3 +50,5 @@ func (s *GameCpService) Delete(id uint) error {
 	if err != nil { return errors.New("CP不存在") }
 	return s.repo.Delete(id)
 }
+
+func (s *GameCpService) FindOptions() ([]dict.Option, error) { return s.repo.FindOptions() }

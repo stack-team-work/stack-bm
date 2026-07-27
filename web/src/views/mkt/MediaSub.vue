@@ -38,22 +38,24 @@
 </template>
 
 <script setup>
-import { ref, reactive, h, onMounted } from 'vue'
+import { ref, reactive, h, onMounted, computed } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
 import { getMediaSubList, createMediaSub, updateMediaSub, deleteMediaSub, getMediaAll } from '../../api/mkt'
 import { formatTime } from '../../utils/format'
+import { useDict } from '../../composables/useDict'
 
 const { loading, tableData, pagination, search, resetSearch, handlePageChange, handlePageSizeChange } = useTable(getMediaSubList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
+const { load: loadDict, options } = useDict()
 const message = useMessage()
 
 const searchKeyword = ref('')
 const searchMediaId = ref(null)
 const searchStatus = ref(null)
 const mediaOptions = ref([])
-const statusOptions = [{ label: '启用', value: 1 }, { label: '禁用', value: 0 }]
+const statusOptions = computed(() => options('status'))
 
 const formData = reactive({ media_id: null, name: '', mark: '', status: 1 })
 function resetForm() { Object.assign(formData, { media_id: null, name: '', mark: '', status: 1 }) }
@@ -92,5 +94,5 @@ async function handleStatusChange(row, val) {
 }
 
 async function loadMedia() { try { const res = await getMediaAll(); mediaOptions.value = (res.data || []).map(m => ({ label: m.name, value: m.id })) } catch { /* */ } }
-onMounted(() => { loadMedia(); search({}) })
+onMounted(async () => { await loadDict(); loadMedia(); search({}) })
 </script>

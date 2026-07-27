@@ -5,6 +5,7 @@ import (
 
 	"stack-bm/internal/model/mkt/media"
 	mediaRepo "stack-bm/internal/repository/mkt/media"
+	"stack-bm/pkg/dict"
 )
 
 type MediaApplicationService struct {
@@ -43,3 +44,5 @@ func (s *MediaApplicationService) Delete(id uint) error {
 	if err != nil { return errors.New("mkt应用不存在") }
 	return s.repo.Delete(id)
 }
+
+func (s *MediaApplicationService) FindOptions() ([]dict.Option, error) { return s.repo.FindOptions() }

@@ -3,6 +3,7 @@ package game
 import (
 	"stack-bm/internal/database"
 	"stack-bm/internal/model/sdk/game"
+	"stack-bm/pkg/dict"
 	"gorm.io/gorm"
 )
 
@@ -52,3 +53,9 @@ func (r *GameVoucherRepository) FindAll() ([]game.GameVoucher, error) {
 func (r *GameVoucherRepository) Update(v *game.GameVoucher) error { return r.db.Save(v).Error }
 
 func (r *GameVoucherRepository) Delete(id uint) error { return r.db.Delete(&game.GameVoucher{}, id).Error }
+
+func (r *GameVoucherRepository) FindOptions() ([]dict.Option, error) {
+	var list []dict.Option
+	err := r.db.Model(&game.GameVoucher{}).Select("name as label, id as value").Where("status = 1").Order("id ASC").Find(&list).Error
+	return list, err
+}

@@ -53,8 +53,10 @@ import { ref, reactive, h, onMounted, computed } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, NTag } from 'naive-ui'
 import { useModal } from '../../composables/useModal'
 import { getMenuAll, createMenu, updateMenu, deleteMenu } from '../../api/system'
+import { useDict } from '../../composables/useDict'
 
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
+const { load: loadDict, options } = useDict()
 const loading = ref(false)
 const tableData = ref([])
 const searchKeyword = ref('')
@@ -65,6 +67,10 @@ const parentSearchOptions = computed(() => {
 })
 
 const parentOptions = computed(() => [{ label: '顶级菜单', value: 0 }, ...allMenus.value.filter(m => m.id !== editId.value && m.is_deleted !== 1).map(m => ({ label: m.name, value: m.id }))])
+
+const typeOptions = computed(() => options('bm_menu_type'))
+const formData = reactive({ type: 1, name: '', path: '', parent: 0, icon: '', sort: 0, author: '', status: 1 })
+function resetForm() { Object.assign(formData, { type: 1, name: '', path: '', parent: 0, icon: '', sort: 0, author: '', status: 1 }) }
 
 const columns = [
   { title: 'ID', key: 'id', width: 60 },
@@ -99,5 +105,5 @@ async function handleSubmit() { if (await submit(formData, createMenu, updateMen
 async function onDelete(id) { if (await doDelete(id, deleteMenu)) loadAll() }
 
 async function loadAll() { try { const res = await getMenuAll(); allMenus.value = res.data || []; doSearch() } catch { /* */ } }
-onMounted(() => { loadAll() })
+onMounted(async () => { await loadDict(); loadAll() })
 </script>

@@ -3,6 +3,7 @@ package sys
 import (
 	"stack-bm/internal/database"
 	"stack-bm/internal/model/bm/sys"
+	"stack-bm/pkg/dict"
 
 	"gorm.io/gorm"
 )
@@ -63,4 +64,10 @@ func (r *SysAdminRepository) Update(admin *sys.SysAdmin) error {
 
 func (r *SysAdminRepository) Delete(id uint) error {
 	return r.db.Model(&sys.SysAdmin{}).Where("id = ?", id).Update("is_deleted", 1).Error
+}
+
+func (r *SysAdminRepository) FindOptions() ([]dict.Option, error) {
+	var list []dict.Option
+	err := r.db.Model(&sys.SysAdmin{}).Select("name as label, id as value").Where("is_deleted = 0 AND status = 1").Order("id ASC").Find(&list).Error
+	return list, err
 }

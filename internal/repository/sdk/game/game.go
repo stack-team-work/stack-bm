@@ -3,6 +3,7 @@ package game
 import (
 	"stack-bm/internal/database"
 	"stack-bm/internal/model/sdk/game"
+	"stack-bm/pkg/dict"
 
 	"gorm.io/gorm"
 )
@@ -62,4 +63,10 @@ func (r *GameRepository) Update(g *game.Game) error {
 
 func (r *GameRepository) Delete(id uint) error {
 	return r.db.Model(&game.Game{}).Where("id = ?", id).Update("is_deleted", 1).Error
+}
+
+func (r *GameRepository) FindOptions() ([]dict.Option, error) {
+	var list []dict.Option
+	err := r.db.Model(&game.Game{}).Select("name as label, id as value").Where("is_deleted = 0 AND status = 1").Order("id ASC").Find(&list).Error
+	return list, err
 }

@@ -34,10 +34,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, h } from 'vue'
+import { ref, reactive, h, computed, onMounted } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
+import { useDict } from '../../composables/useDict'
 import { getGamePlatformList, createGamePlatform, updateGamePlatform, deleteGamePlatform } from '../../api/game'
 import { formatTime } from '../../utils/format'
 
@@ -47,7 +48,8 @@ const message = useMessage()
 
 const searchKeyword = ref('')
 const searchStatus = ref(null)
-const statusOptions = [{ label: '启用', value: 1 }, { label: '禁用', value: 0 }]
+const { load: loadDict, options } = useDict()
+const statusOptions = computed(() => options('status'))
 
 const formData = reactive({ name: '', mark: '', status: 1 })
 function resetForm() { Object.assign(formData, { name: '', mark: '', status: 1 }) }
@@ -80,4 +82,6 @@ async function handleStatusChange(row, val) {
     message.error('更新失败')
   }
 }
+
+onMounted(async () => { await loadDict(); search({}) })
 </script>

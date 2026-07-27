@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"stack-bm/internal/database"
-	"stack-bm/pkg/dict"
+	"stack-bm/pkg/constants"
 	"stack-bm/pkg/jwt"
 	"stack-bm/pkg/response"
 
@@ -87,7 +87,7 @@ func LoggingMiddleware() gin.HandlerFunc {
 		db := database.DBBM
 		if db != nil {
 			db.Exec(`INSERT INTO sys_logs (level, path, username, ip, `+"`desc`"+`, created_at, updated_at) VALUES (?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())`,
-				dict.BM_LOG_LEVEL_ERROR, c.Request.URL.Path, uname, c.ClientIP(), desc)
+				constants.BM_LOG_LEVEL_ERROR, c.Request.URL.Path, uname, c.ClientIP(), desc)
 		}
 
 		_ = json.Unmarshal

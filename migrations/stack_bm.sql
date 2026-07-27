@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50744
 File Encoding         : 65001
 
-Date: 2026-05-29 17:25:41
+Date: 2026-07-27 21:37:56
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -41,7 +41,7 @@ CREATE TABLE `sys_admin` (
   `is_deleted` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `username` (`username`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=387 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=390 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='用户表';
 
 -- ----------------------------
 -- Table structure for sys_admin_group
@@ -63,10 +63,10 @@ CREATE TABLE `sys_admin_group` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='用户组';
 
 -- ----------------------------
--- Table structure for sys_columns
+-- Table structure for sys_column
 -- ----------------------------
-DROP TABLE IF EXISTS `sys_columns`;
-CREATE TABLE `sys_columns` (
+DROP TABLE IF EXISTS `sys_column`;
+CREATE TABLE `sys_column` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
   `report_type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '报表类型:1投放报表',
   `indicator_type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1：属性指标，2：媒体指标，3，bm指标，4，n日指标',
@@ -80,7 +80,59 @@ CREATE TABLE `sys_columns` (
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `report_type` (`report_type`,`indicator_type`,`field`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='权限表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='权限表';
+
+-- ----------------------------
+-- Table structure for sys_feishu_apps
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_feishu_apps`;
+CREATE TABLE `sys_feishu_apps` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `app_id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '应用id',
+  `app_secret` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '应用密钥',
+  `app_name` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '应用名称',
+  `admin_id` int(11) NOT NULL COMMENT '创建人',
+  `mark` varchar(100) CHARACTER SET utf8mb4 NOT NULL COMMENT '应用标识',
+  `status` int(11) NOT NULL DEFAULT '1' COMMENT '应用状态',
+  `created_at` int(11) DEFAULT NULL COMMENT '创建时间',
+  `updated_at` int(11) DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='飞书应用表';
+
+-- ----------------------------
+-- Table structure for sys_feishu_chats
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_feishu_chats`;
+CREATE TABLE `sys_feishu_chats` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` int(11) NOT NULL COMMENT '机器人类型：1：普通机器人，2：应用机器人',
+  `chat_id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '群聊天id',
+  `default_at_list` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '默认艾特飞书用户，格式{sys_user_id:飞书用户id}',
+  `at_list` text COLLATE utf8mb4_unicode_ci COMMENT '选择艾特飞书用户，格式{sys_user_id:飞书用户id}',
+  `at_type` int(11) NOT NULL COMMENT '艾特方式：1：艾特所配置的全部，2：艾特所配置对应的数据负责人',
+  `created_at` int(11) DEFAULT NULL COMMENT '创建时间',
+  `updated_at` int(11) DEFAULT NULL COMMENT '更新时间',
+  `status` int(11) NOT NULL DEFAULT '1' COMMENT '状态：1启用，0关闭',
+  `feishu_app_id` int(11) DEFAULT NULL COMMENT '对应飞书应用app_id,关联表sys_feishu_apps的id',
+  `call_action` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '读取配置key',
+  `admin_id` int(11) NOT NULL COMMENT '创建人',
+  `action_title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '对话标题',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='飞书机器人';
+
+-- ----------------------------
+-- Table structure for sys_feishu_users
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_feishu_users`;
+CREATE TABLE `sys_feishu_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `admin_id` int(11) NOT NULL DEFAULT '0' COMMENT 'BM用户id',
+  `feishu_user_id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '飞书用户id',
+  `created_at` int(11) DEFAULT NULL COMMENT '创建时间',
+  `updated_at` int(11) DEFAULT NULL COMMENT '更新时间',
+  `status` int(11) NOT NULL DEFAULT '1' COMMENT '状态：1正常，0：异常',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Table structure for sys_logs
@@ -97,7 +149,7 @@ CREATE TABLE `sys_logs` (
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `username` (`username`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=169 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='日志表';
+) ENGINE=InnoDB AUTO_INCREMENT=183 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='日志表';
 
 -- ----------------------------
 -- Table structure for sys_menu

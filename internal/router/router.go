@@ -21,11 +21,16 @@ func SetupRouter() *gin.Engine {
 	authHandler := handler.NewAuthHandler()
 	dashboardHandler := handler.NewDashboardHandler()
 	dictHandler := handler.NewDictHandler()
+	optionsHandler := handler.NewOptionsHandler()
 	sysAdminHandler := sys.NewSysAdminHandler()
 	sysAdminGroupHandler := sys.NewSysAdminGroupHandler()
 	sysLogHandler := sys.NewSysLogHandler()
 	sysMenuHandler := sys.NewSysMenuHandler()
 	sysColumnHandler := sys.NewSysColumnHandler()
+
+	feishuAppHandler := sys.NewFeishuAppHandler()
+	feishuChatHandler := sys.NewFeishuChatHandler()
+	feishuUserHandler := sys.NewFeishuUserHandler()
 	gameHandler := game.NewGameHandler()
 	gameAppHandler := game.NewGameAppHandler()
 	gameCpHandler := game.NewGameCpHandler()
@@ -51,11 +56,13 @@ func SetupRouter() *gin.Engine {
 	r.POST("/api/login", authHandler.Login)
 	r.POST("/api/captcha", authHandler.Captcha)
 	r.POST("/api/dict", dictHandler.GetAll)
+	r.POST("/api/dict/:key", dictHandler.GetByKey)
 
 	api := r.Group("/api")
 	api.Use(middleware.AuthMiddleware())
 	{
 		api.POST("/user/info", authHandler.GetUserInfo)
+		api.POST("/options", optionsHandler.Get)
 
 		api.POST("/dashboard/stats", dashboardHandler.Stats)
 
@@ -153,6 +160,27 @@ func SetupRouter() *gin.Engine {
 		api.POST("/sys-column/detail/:id", sysColumnHandler.GetByID)
 		api.POST("/sys-column/update/:id", sysColumnHandler.Update)
 		api.POST("/sys-column/delete/:id", sysColumnHandler.Delete)
+
+		api.POST("/feishu-app/create", feishuAppHandler.Create)
+		api.POST("/feishu-app/list", feishuAppHandler.GetList)
+		api.POST("/feishu-app/all", feishuAppHandler.GetAll)
+		api.POST("/feishu-app/detail/:id", feishuAppHandler.GetByID)
+		api.POST("/feishu-app/update/:id", feishuAppHandler.Update)
+		api.POST("/feishu-app/status/:id", feishuAppHandler.UpdateStatus)
+
+		api.POST("/feishu-chat/create", feishuChatHandler.Create)
+		api.POST("/feishu-chat/list", feishuChatHandler.GetList)
+		api.POST("/feishu-chat/all", feishuChatHandler.GetAll)
+		api.POST("/feishu-chat/detail/:id", feishuChatHandler.GetByID)
+		api.POST("/feishu-chat/update/:id", feishuChatHandler.Update)
+		api.POST("/feishu-chat/status/:id", feishuChatHandler.UpdateStatus)
+
+		api.POST("/feishu-user/create", feishuUserHandler.Create)
+		api.POST("/feishu-user/list", feishuUserHandler.GetList)
+		api.POST("/feishu-user/all", feishuUserHandler.GetAll)
+		api.POST("/feishu-user/detail/:id", feishuUserHandler.GetByID)
+		api.POST("/feishu-user/update/:id", feishuUserHandler.Update)
+		api.POST("/feishu-user/status/:id", feishuUserHandler.UpdateStatus)
 
 		api.POST("/sdk-logs/list", sdkSysLogHandler.GetList)
 

@@ -14,9 +14,10 @@
 </template>
 
 <script setup>
-import { ref, h, onMounted } from 'vue'
+import { ref, h, onMounted, computed } from 'vue'
 import { NTag } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
+import { useDict } from '../../composables/useDict'
 import { getSdkLogList } from '../../api/game'
 import { formatTime } from '../../utils/format'
 
@@ -25,18 +26,10 @@ const { loading, tableData, pagination, search, handlePageChange, handlePageSize
 const searchKeyword = ref('')
 const searchType = ref(null)
 const searchLevel = ref(null)
+const { load: loadDict, options } = useDict()
 
-const typeOptions = [
-  { label: '注册日志', value: 1 },
-  { label: '登录日志', value: 2 },
-  { label: '支付日志', value: 3 },
-]
-
-const levelOptions = [
-  { label: 'info', value: 1 },
-  { label: 'warning', value: 2 },
-  { label: 'error', value: 3 },
-]
+const typeOptions = computed(() => options('sdk_log_type'))
+const levelOptions = computed(() => options('sdk_log_level'))
 
 const typeLabel = { 1: '注册日志', 2: '登录日志', 3: '支付日志' }
 const levelLabel = { 1: 'info', 2: 'warning', 3: 'error' }
@@ -56,5 +49,5 @@ function doSearch() {
   search({ keyword: searchKeyword.value, type: searchType.value ?? 0, level: searchLevel.value ?? 0 })
 }
 
-onMounted(() => search({}))
+onMounted(async () => { await loadDict(); search({}) })
 </script>

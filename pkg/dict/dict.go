@@ -1,146 +1,78 @@
 package dict
 
-const (
-	STATUS_ENABLE  = 1
-	STATUS_DISABLE = 0
-)
-
-const (
-	GAME_TAG_TYPE_STYLE = 1
-	GAME_TAG_TYPE_TYPE  = 2
-)
-
-const (
-	GAME_APP_OS_ANDROID = 1
-	GAME_APP_OS_IOS     = 2
-	GAME_APP_OS_BOTH    = 3
-)
-
-const (
-	SDK_LOG_TYPE_REGISTER = 1
-	SDK_LOG_TYPE_LOGIN    = 2
-	SDK_LOG_TYPE_PAY      = 3
-)
-
-const (
-	SDK_LOG_LEVEL_INFO    = 1
-	SDK_LOG_LEVEL_WARNING = 2
-	SDK_LOG_LEVEL_ERROR   = 3
-)
-
-const (
-	BM_LOG_LEVEL_INFO  = 1
-	BM_LOG_LEVEL_ERROR = 2
-)
-
-const (
-	MENU_TYPE_MENU   = 1
-	MENU_TYPE_BUTTON = 2
-)
-
-const (
-	MEDIA_MANAGER_AUTH_STATUS_NO  = 0
-	MEDIA_MANAGER_AUTH_STATUS_YES = 1
-)
-
-const (
-	PAY_MERCHANT_TYPE_WECHAT  = 1
-	PAY_MERCHANT_TYPE_ALIPAY  = 2
-)
-
-const (
-	GAME_GIFT_GET_TYPE_ONCE  = 1
-	GAME_GIFT_GET_TYPE_DAILY = 2
-)
-
-const (
-	GAME_VOUCHER_USE_TYPE_ROLE     = 1
-	GAME_VOUCHER_USE_TYPE_ACCOUNT  = 2
-)
-
-const (
-	GAME_GIFT_TYPE_PROP = 1
-)
-
-const (
-	SYS_COLUMN_REPORT_TYPE_AD    = 1
-)
-
-const (
-	SYS_COLUMN_INDICATOR_ATTR  = 1
-	SYS_COLUMN_INDICATOR_MEDIA = 2
-	SYS_COLUMN_INDICATOR_BM    = 3
-	SYS_COLUMN_INDICATOR_NDAY  = 4
-)
+import "stack-bm/pkg/constants"
 
 type Option struct {
 	Label string `json:"label"`
 	Value int    `json:"value"`
 }
 
-type OptionStr struct {
-	Label string `json:"label"`
-	Value string `json:"value"`
-}
-
 var Dict = map[string]interface{}{
 	"status": []Option{
-		{Label: "启用", Value: STATUS_ENABLE},
-		{Label: "禁用", Value: STATUS_DISABLE},
+		{Label: "启用", Value: constants.STATUS_ENABLE},
+		{Label: "禁用", Value: constants.STATUS_DISABLE},
 	},
 	"game_tag_type": []Option{
-		{Label: "风格", Value: GAME_TAG_TYPE_STYLE},
-		{Label: "类型", Value: GAME_TAG_TYPE_TYPE},
+		{Label: "风格", Value: constants.GAME_TAG_TYPE_STYLE},
+		{Label: "类型", Value: constants.GAME_TAG_TYPE_TYPE},
 	},
 	"game_app_os": []Option{
-		{Label: "安卓", Value: GAME_APP_OS_ANDROID},
-		{Label: "iOS", Value: GAME_APP_OS_IOS},
-		{Label: "双端", Value: GAME_APP_OS_BOTH},
+		{Label: "安卓", Value: constants.GAME_APP_OS_ANDROID},
+		{Label: "iOS", Value: constants.GAME_APP_OS_IOS},
+		{Label: "双端", Value: constants.GAME_APP_OS_BOTH},
 	},
 	"sdk_log_type": []Option{
-		{Label: "注册日志", Value: SDK_LOG_TYPE_REGISTER},
-		{Label: "登录日志", Value: SDK_LOG_TYPE_LOGIN},
-		{Label: "支付日志", Value: SDK_LOG_TYPE_PAY},
+		{Label: "注册日志", Value: constants.SDK_LOG_TYPE_REGISTER},
+		{Label: "登录日志", Value: constants.SDK_LOG_TYPE_LOGIN},
+		{Label: "支付日志", Value: constants.SDK_LOG_TYPE_PAY},
 	},
 	"sdk_log_level": []Option{
-		{Label: "info", Value: SDK_LOG_LEVEL_INFO},
-		{Label: "warning", Value: SDK_LOG_LEVEL_WARNING},
-		{Label: "error", Value: SDK_LOG_LEVEL_ERROR},
+		{Label: "info", Value: constants.SDK_LOG_LEVEL_INFO},
+		{Label: "warning", Value: constants.SDK_LOG_LEVEL_WARNING},
+		{Label: "error", Value: constants.SDK_LOG_LEVEL_ERROR},
 	},
 	"bm_log_level": []Option{
-		{Label: "info", Value: BM_LOG_LEVEL_INFO},
-		{Label: "error", Value: BM_LOG_LEVEL_ERROR},
+		{Label: "info", Value: constants.BM_LOG_LEVEL_INFO},
+		{Label: "error", Value: constants.BM_LOG_LEVEL_ERROR},
 	},
 	"menu_type": []Option{
-		{Label: "菜单", Value: MENU_TYPE_MENU},
-		{Label: "按钮", Value: MENU_TYPE_BUTTON},
+		{Label: "菜单", Value: constants.MENU_TYPE_MENU},
+		{Label: "按钮", Value: constants.MENU_TYPE_BUTTON},
 	},
 	"media_manager_auth_status": []Option{
-		{Label: "未授权", Value: MEDIA_MANAGER_AUTH_STATUS_NO},
-		{Label: "已授权", Value: MEDIA_MANAGER_AUTH_STATUS_YES},
+		{Label: "未授权", Value: constants.MEDIA_MANAGER_AUTH_STATUS_NO},
+		{Label: "已授权", Value: constants.MEDIA_MANAGER_AUTH_STATUS_YES},
 	},
 	"pay_merchant_type": []Option{
-		{Label: "微信", Value: PAY_MERCHANT_TYPE_WECHAT},
-		{Label: "支付宝", Value: PAY_MERCHANT_TYPE_ALIPAY},
+		{Label: "微信", Value: constants.PAY_MERCHANT_TYPE_WECHAT},
+		{Label: "支付宝", Value: constants.PAY_MERCHANT_TYPE_ALIPAY},
 	},
 	"game_gift_get_type": []Option{
-		{Label: "单次领取", Value: GAME_GIFT_GET_TYPE_ONCE},
-		{Label: "每日领取", Value: GAME_GIFT_GET_TYPE_DAILY},
+		{Label: "单次领取", Value: constants.GAME_GIFT_GET_TYPE_ONCE},
+		{Label: "每日领取", Value: constants.GAME_GIFT_GET_TYPE_DAILY},
 	},
 	"game_voucher_use_type": []Option{
-		{Label: "玩家角色", Value: GAME_VOUCHER_USE_TYPE_ROLE},
-		{Label: "SDK账户", Value: GAME_VOUCHER_USE_TYPE_ACCOUNT},
+		{Label: "玩家角色", Value: constants.GAME_VOUCHER_USE_TYPE_ROLE},
+		{Label: "SDK账户", Value: constants.GAME_VOUCHER_USE_TYPE_ACCOUNT},
 	},
 	"game_gift_type": []Option{
-		{Label: "道具", Value: GAME_GIFT_TYPE_PROP},
+		{Label: "道具", Value: constants.GAME_GIFT_TYPE_PROP},
 	},
 	"sys_column_report_type": []Option{
-		{Label: "投放报表", Value: SYS_COLUMN_REPORT_TYPE_AD},
+		{Label: "投放报表", Value: constants.SYS_COLUMN_REPORT_TYPE_AD},
 	},
 	"sys_column_indicator_type": []Option{
-		{Label: "属性指标", Value: SYS_COLUMN_INDICATOR_ATTR},
-		{Label: "媒体指标", Value: SYS_COLUMN_INDICATOR_MEDIA},
-		{Label: "BM指标", Value: SYS_COLUMN_INDICATOR_BM},
-		{Label: "N日指标", Value: SYS_COLUMN_INDICATOR_NDAY},
+		{Label: "属性指标", Value: constants.SYS_COLUMN_INDICATOR_ATTR},
+		{Label: "媒体指标", Value: constants.SYS_COLUMN_INDICATOR_MEDIA},
+		{Label: "BM指标", Value: constants.SYS_COLUMN_INDICATOR_BM},
+		{Label: "N日指标", Value: constants.SYS_COLUMN_INDICATOR_NDAY},
+	},
+	"feishu_chat_type": []Option{
+		{Label: "普通机器人", Value: constants.FEISHU_CHAT_TYPE_NORMAL},
+		{Label: "应用机器人", Value: constants.FEISHU_CHAT_TYPE_APP},
+	},
+	"feishu_chat_at_type": []Option{
+		{Label: "艾特全部", Value: constants.FEISHU_CHAT_AT_TYPE_ALL},
+		{Label: "艾特负责人", Value: constants.FEISHU_CHAT_AT_TYPE_OWNER},
 	},
 }

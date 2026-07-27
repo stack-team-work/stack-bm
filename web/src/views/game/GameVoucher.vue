@@ -50,10 +50,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, h, toRaw } from 'vue'
+import { ref, reactive, h, toRaw, computed, onMounted } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, NInputNumber, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
+import { useDict } from '../../composables/useDict'
 import { getGameVoucherList, createGameVoucher, updateGameVoucher, deleteGameVoucher } from '../../api/game'
 import { formatTime } from '../../utils/format'
 
@@ -62,8 +63,9 @@ const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submi
 const message = useMessage()
 const searchKeyword = ref('')
 const searchStatus = ref(null)
-const statusOptions = [{ label: '启用', value: 1 }, { label: '禁用', value: 0 }]
-const useTypeOptions = [{ label: '玩家角色', value: 1 }, { label: 'SDK账户', value: 2 }]
+const { load: loadDict, options } = useDict()
+const statusOptions = computed(() => options('status'))
+const useTypeOptions = computed(() => options('game_voucher_use_type'))
 const useTypeLabel = { 1: '玩家角色', 2: 'SDK账户' }
 const formData = reactive({ name: '', use_type: 1, use_limit: 1, total: 0, total_fee: 0, desc: '', stime: null, etime: null, status: 1 })
 function resetForm() { Object.assign(formData, { name: '', use_type: 1, use_limit: 1, total: 0, total_fee: 0, desc: '', stime: null, etime: null, status: 1 }) }
@@ -94,6 +96,8 @@ async function handleSubmit() {
 }
 async function onDelete(id) { if (await doDelete(id, deleteGameVoucher)) search({ keyword: searchKeyword.value, status: searchStatus.value ?? -1 }) }
 async function handleStatusChange(row, val) {
-  try { await updateGameVoucher(row.id, { ...row, status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新') } catch { message.error('更新失败') }
+  try { await updateGameVoucher(row.id, { ...row, status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新')   } catch { message.error('更新失败') }
 }
+
+onMounted(async () => { await loadDict(); search({}) })
 </script>

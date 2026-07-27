@@ -20,6 +20,7 @@ import { useRouter } from 'vue-router'
 import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
+import { useDict } from '../../composables/useDict'
 import { getGameAppList, deleteGameApp, updateGameApp, getGameAll } from '../../api/game'
 import { formatTime } from '../../utils/format'
 
@@ -32,7 +33,8 @@ const searchKeyword = ref('')
 const searchGameId = ref(null)
 const searchStatus = ref(null)
 const gameOptions = ref([])
-const statusOptions = [{ label: '启用', value: 1 }, { label: '禁用', value: 0 }]
+const { load: loadDict, options } = useDict()
+const statusOptions = computed(() => options('status'))
 const gameSearchOptions = computed(() => [{ label: '全部游戏', value: 0 }, ...gameOptions.value])
 
 const columns = [
@@ -77,5 +79,5 @@ async function handleStatusChange(row, val) {
 }
 
 async function loadGames() { try { const res = await getGameAll(); gameOptions.value = (res.data || []).map(g => ({ label: g.name, value: g.id })) } catch { /* */ } }
-onMounted(() => { loadGames(); search({}) })
+onMounted(async () => { await loadDict(); loadGames(); search({}) })
 </script>

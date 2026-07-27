@@ -54,23 +54,25 @@
 </template>
 
 <script setup>
-import { ref, reactive, h, onMounted } from 'vue'
+import { ref, reactive, h, onMounted, computed } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, NInputNumber, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
 import { getMediaManagerList, createMediaManager, updateMediaManager, deleteMediaManager, getMediaAll, getMediaApplicationAll } from '../../api/mkt'
 import { formatTime } from '../../utils/format'
+import { useDict } from '../../composables/useDict'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getMediaManagerList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
+const { load: loadDict, options } = useDict()
 const message = useMessage()
 const searchKeyword = ref('')
 const searchMediaId = ref(null)
 const searchStatus = ref(null)
 const mediaOptions = ref([])
 const appOptions = ref([])
-const statusOptions = [{ label: '启用', value: 1 }, { label: '禁用', value: 0 }]
-const authOptions = [{ label: '未授权', value: 0 }, { label: '已授权', value: 1 }]
+const statusOptions = computed(() => options('status'))
+const authOptions = computed(() => options('media_manager_auth_status'))
 const formData = reactive({ media_id: null, application_id: null, name: '', account: '', account_id: '', account_num: 0, auth_status: 0, remark: '', extra: '', status: 1 })
 function resetForm() { Object.assign(formData, { media_id: null, application_id: null, name: '', account: '', account_id: '', account_num: 0, auth_status: 0, remark: '', extra: '', status: 1 }) }
 const rules = {
@@ -105,5 +107,5 @@ async function loadData() {
   try { const mediaRes = await getMediaAll(); mediaOptions.value = (mediaRes.data || []).map(m => ({ label: m.name, value: m.id })) } catch { /* */ }
   try { const appRes = await getMediaApplicationAll(); appOptions.value = (appRes.data || []).map(a => ({ label: a.name, value: a.id })) } catch { /* */ }
 }
-onMounted(() => { loadData(); search({}) })
+onMounted(async () => { await loadDict(); loadData(); search({}) })
 </script>

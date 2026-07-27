@@ -2,8 +2,10 @@ package game
 
 import (
 	"errors"
+
 	"stack-bm/internal/model/sdk/game"
 	gameRepo "stack-bm/internal/repository/sdk/game"
+	"stack-bm/pkg/dict"
 )
 
 type GameGiftService struct{ repo *gameRepo.GameGiftRepository }
@@ -57,3 +59,5 @@ func (s *GameGiftService) Delete(id uint) error {
 	}
 	return s.repo.Delete(id)
 }
+
+func (s *GameGiftService) FindOptions() ([]dict.Option, error) { return s.repo.FindOptions() }

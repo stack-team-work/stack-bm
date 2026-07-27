@@ -32,19 +32,21 @@
 </template>
 
 <script setup>
-import { ref, reactive, h } from 'vue'
+import { ref, reactive, h, computed, onMounted } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
 import { getMediaSubjectList, createMediaSubject, updateMediaSubject, deleteMediaSubject } from '../../api/mkt'
 import { formatTime } from '../../utils/format'
+import { useDict } from '../../composables/useDict'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getMediaSubjectList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
+const { load: loadDict, options } = useDict()
 const message = useMessage()
 const searchKeyword = ref('')
 const searchStatus = ref(null)
-const statusOptions = [{ label: '启用', value: 1 }, { label: '禁用', value: 0 }]
+const statusOptions = computed(() => options('status'))
 const formData = reactive({ name: '', mark: '', status: 1 })
 function resetForm() { Object.assign(formData, { name: '', mark: '', status: 1 }) }
 const rules = { name: [{ required: true, message: '请输入主体名称', trigger: 'blur' }] }
@@ -67,4 +69,6 @@ async function onDelete(id) { if (await doDelete(id, deleteMediaSubject)) search
 async function handleStatusChange(row, val) {
   try { await updateMediaSubject(row.id, { ...row, status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新') } catch { message.error('更新失败') }
 }
+
+onMounted(async () => { await loadDict(); search({}) })
 </script>

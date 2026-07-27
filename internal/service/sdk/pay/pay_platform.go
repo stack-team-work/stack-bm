@@ -5,6 +5,7 @@ import (
 
 	"stack-bm/internal/model/sdk/pay"
 	payRepo "stack-bm/internal/repository/sdk/pay"
+	"stack-bm/pkg/dict"
 	"stack-bm/pkg/utils"
 )
 
@@ -44,3 +45,5 @@ func (s *PayPlatformService) Delete(id uint) error {
 	if err != nil { return errors.New("支付平台不存在") }
 	return s.repo.Delete(id)
 }
+
+func (s *PayPlatformService) FindOptions() ([]dict.Option, error) { return s.repo.FindOptions() }

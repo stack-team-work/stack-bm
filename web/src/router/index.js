@@ -180,6 +180,24 @@ const routes = [
         component: () => import('../views/system/SysColumn.vue'),
         meta: { title: '报表指标' },
       },
+      {
+        path: 'feishu-user',
+        name: 'FeishuUser',
+        component: () => import('../views/system/FeishuUser.vue'),
+        meta: { title: '飞书绑定' },
+      },
+      {
+        path: 'feishu-app',
+        name: 'FeishuApp',
+        component: () => import('../views/system/FeishuApp.vue'),
+        meta: { title: '飞书应用' },
+      },
+      {
+        path: 'feishu-chat',
+        name: 'FeishuChat',
+        component: () => import('../views/system/FeishuChat.vue'),
+        meta: { title: '飞书聊天' },
+      },
     ],
   },
 ]

@@ -19,19 +19,21 @@
 </template>
 
 <script setup>
-import { ref, h, onMounted } from 'vue'
+import { ref, h, onMounted, computed } from 'vue'
 import { NTag, NPopconfirm, NButton, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { getLogList, clearLogs } from '../../api/system'
 import { formatTime } from '../../utils/format'
+import { useDict } from '../../composables/useDict'
 
 const message = useMessage()
 const { loading, tableData, pagination, search, resetSearch, handlePageChange, handlePageSizeChange } = useTable(getLogList)
+const { load: loadDict, options } = useDict()
 
 const searchKeyword = ref('')
 const searchLevel = ref('')
 const clearing = ref(false)
-const levelOptions = [{ label: 'info', value: 1 }, { label: 'error', value: 2 }]
+const levelOptions = computed(() => options('bm_log_level'))
 
 const columns = [
   { title: 'ID', key: 'id', width: 60 },
@@ -58,5 +60,5 @@ async function handleClear() {
   }
 }
 
-onMounted(() => search({}))
+onMounted(async () => { await loadDict(); search({}) })
 </script>

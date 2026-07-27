@@ -50,10 +50,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, h, toRaw } from 'vue'
+import { ref, reactive, h, toRaw, computed, onMounted } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, NInputNumber, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
+import { useDict } from '../../composables/useDict'
 import { getGameGiftList, createGameGift, updateGameGift, deleteGameGift } from '../../api/game'
 import { formatTime } from '../../utils/format'
 
@@ -62,10 +63,11 @@ const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submi
 const message = useMessage()
 const searchKeyword = ref('')
 const searchStatus = ref(null)
-const statusOptions = [{ label: '有效', value: 1 }, { label: '无效', value: 0 }]
-const getTypeOptions = [{ label: '单次领取', value: 1 }, { label: '每日领取', value: 2 }]
+const { load: loadDict, options } = useDict()
+const statusOptions = computed(() => options('status'))
+const getTypeOptions = computed(() => options('game_gift_get_type'))
 const getTypeLabel = { 1: '单次', 2: '每日' }
-const typeOptions = [{ label: '道具', value: 1 }]
+const typeOptions = computed(() => options('game_gift_type'))
 const formData = reactive({ name: '', get_type: 1, is_code: 0, type: 1, cond: '', desc: '', stime: null, etime: null, status: 1 })
 function resetForm() { Object.assign(formData, { name: '', get_type: 1, is_code: 0, type: 1, cond: '', desc: '', stime: null, etime: null, status: 1 }) }
 const rules = { name: [{ required: true, message: '请输入礼包名称', trigger: 'blur' }] }
@@ -94,6 +96,8 @@ async function handleSubmit() {
 }
 async function onDelete(id) { if (await doDelete(id, deleteGameGift)) search({ keyword: searchKeyword.value, status: searchStatus.value ?? -1 }) }
 async function handleStatusChange(row, val) {
-  try { await updateGameGift(row.id, { ...row, status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新') } catch { message.error('更新失败') }
+  try { await updateGameGift(row.id, { ...row, status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新')   } catch { message.error('更新失败') }
 }
+
+onMounted(async () => { await loadDict(); search({}) })
 </script>

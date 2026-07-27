@@ -5,6 +5,7 @@ import (
 
 	"stack-bm/internal/model/bm/sys"
 	bmSysRepo "stack-bm/internal/repository/bm/sys"
+	"stack-bm/pkg/dict"
 	"stack-bm/pkg/utils"
 )
 
@@ -58,3 +59,5 @@ func (s *SysAdminService) Delete(id uint) error {
 	if err != nil { return errors.New("管理员不存在") }
 	return s.repo.Delete(id)
 }
+
+func (s *SysAdminService) FindOptions() ([]dict.Option, error) { return s.repo.FindOptions() }
