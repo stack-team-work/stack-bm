@@ -58,9 +58,10 @@ import { ref, reactive, h, onMounted, computed } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, NInputNumber, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
-import { getPayMerchantList, createPayMerchant, updatePayMerchant, deletePayMerchant, getPayPlatformAll } from '../../api/pay'
+import { getPayMerchantList, createPayMerchant, updatePayMerchant, deletePayMerchant } from '../../api/pay'
 import { formatTime } from '../../utils/format'
 import { useDict } from '../../composables/useDict'
+import { useOptions } from '../../composables/useOptions'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getPayMerchantList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
@@ -70,6 +71,7 @@ const searchKeyword = ref('')
 const searchType = ref(null)
 const searchStatus = ref(null)
 const platformOptions = ref([])
+const { loadOptions } = useOptions()
 const typeOptions = computed(() => options('pay_merchant_type'))
 const statusOptions = computed(() => options('status'))
 const formData = reactive({ name: '', show_name: '', type: 1, platform_mark: 0, mark: '', url: '', rate: 0, weight: 0, config: '', status: 1 })
@@ -102,6 +104,5 @@ async function onDelete(id) { if (await doDelete(id, deletePayMerchant)) search(
 async function handleStatusChange(row, val) {
   try { await updatePayMerchant(row.id, { ...row, status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新') } catch { message.error('更新失败') }
 }
-async function loadPlatforms() { try { const res = await getPayPlatformAll(); platformOptions.value = (res.data || []).map(p => ({ label: p.name, value: p.id })) } catch { /* */ } }
-onMounted(async () => { await loadDict(); loadPlatforms(); search({}) })
+onMounted(async () => { await loadDict(); platformOptions.value = await loadOptions('pay_platform'); search({}) })
 </script>

@@ -49,9 +49,10 @@ import { ref, reactive, h, onMounted, computed } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, NInputNumber, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
-import { getMediaApplicationList, createMediaApplication, updateMediaApplication, deleteMediaApplication, getMediaAll } from '../../api/mkt'
+import { getMediaApplicationList, createMediaApplication, updateMediaApplication, deleteMediaApplication } from '../../api/mkt'
 import { formatTime } from '../../utils/format'
 import { useDict } from '../../composables/useDict'
+import { useOptions } from '../../composables/useOptions'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getMediaApplicationList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
@@ -61,6 +62,7 @@ const searchKeyword = ref('')
 const searchMediaId = ref(null)
 const searchStatus = ref(null)
 const mediaOptions = ref([])
+const { loadOptions } = useOptions()
 const statusOptions = computed(() => options('status'))
 const formData = reactive({ media_id: null, name: '', app_id: null, app_secret: null, remark: '', extra: '', status: 1 })
 function resetForm() { Object.assign(formData, { media_id: null, name: '', app_id: null, app_secret: null, remark: '', extra: '', status: 1 }) }
@@ -90,6 +92,5 @@ async function onDelete(id) { if (await doDelete(id, deleteMediaApplication)) se
 async function handleStatusChange(row, val) {
   try { await updateMediaApplication(row.id, { ...row, status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新') } catch { message.error('更新失败') }
 }
-async function loadMedia() { try { const res = await getMediaAll(); mediaOptions.value = (res.data || []).map(m => ({ label: m.name, value: m.id })) } catch { /* */ } }
-onMounted(async () => { await loadDict(); loadMedia(); search({}) })
+onMounted(async () => { await loadDict(); mediaOptions.value = await loadOptions('media'); search({}) })
 </script>

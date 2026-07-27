@@ -68,7 +68,7 @@ const parentSearchOptions = computed(() => {
 
 const parentOptions = computed(() => [{ label: '顶级菜单', value: 0 }, ...allMenus.value.filter(m => m.id !== editId.value && m.is_deleted !== 1).map(m => ({ label: m.name, value: m.id }))])
 
-const typeOptions = computed(() => options('bm_menu_type'))
+const typeOptions = computed(() => options('menu_type'))
 const formData = reactive({ type: 1, name: '', path: '', parent: 0, icon: '', sort: 0, author: '', status: 1 })
 function resetForm() { Object.assign(formData, { type: 1, name: '', path: '', parent: 0, icon: '', sort: 0, author: '', status: 1 }) }
 

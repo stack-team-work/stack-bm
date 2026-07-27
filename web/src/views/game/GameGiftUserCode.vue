@@ -14,13 +14,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useTable } from '../../composables/useTable'
-import { getGameGiftUserCodeList, getGameGiftAll } from '../../api/game'
+import { useOptions } from '../../composables/useOptions'
+import { getGameGiftUserCodeList } from '../../api/game'
 import { formatTime } from '../../utils/format'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getGameGiftUserCodeList)
 const searchKeyword = ref('')
 const searchGiftId = ref(null)
 const giftOptions = ref([])
+const { loadOptions } = useOptions()
 const columns = [
   { title: 'ID', key: 'id', width: 60 },
   { title: '激活码', key: 'code', width: 130 },
@@ -32,6 +34,5 @@ const columns = [
   { title: '使用时间', key: 'created_at', width: 160, render: (row) => formatTime(row.created_at) },
 ]
 function doSearch() { search({ keyword: searchKeyword.value, gift_id: searchGiftId.value ?? 0 }) }
-async function loadGifts() { try { const res = await getGameGiftAll(); giftOptions.value = (res.data || []).map(g => ({ label: g.name, value: g.id })) } catch { /* */ } }
-onMounted(() => { loadGifts(); search({}) })
+onMounted(async () => { giftOptions.value = await loadOptions('game_gift'); search({}) })
 </script>

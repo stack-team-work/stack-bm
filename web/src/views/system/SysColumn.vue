@@ -63,8 +63,8 @@ const searchReportType = ref(null)
 const searchIndicatorType = ref(null)
 const searchStatus = ref(null)
 const statusOptions = computed(() => options('status'))
-const reportTypeOptions = computed(() => options('bm_column_report_type'))
-const indicatorTypeOptions = computed(() => options('bm_column_indicator_type'))
+const reportTypeOptions = computed(() => options('sys_column_report_type'))
+const indicatorTypeOptions = computed(() => options('sys_column_indicator_type'))
 const reportTypeLabel = { 1: '投放报表' }
 const indicatorTypeLabel = { 1: '属性指标', 2: '媒体指标', 3: 'BM指标', 4: 'N日指标' }
 const formData = reactive({ report_type: 1, indicator_type: 1, name: '', field: '', mark: '', default: 0, status: 1 })

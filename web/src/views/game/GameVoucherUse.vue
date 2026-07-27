@@ -15,13 +15,15 @@
 import { ref, h, onMounted } from 'vue'
 import { NTag } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
-import { getGameVoucherUseList, getGameVoucherAll } from '../../api/game'
+import { useOptions } from '../../composables/useOptions'
+import { getGameVoucherUseList } from '../../api/game'
 import { formatTime } from '../../utils/format'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getGameVoucherUseList)
 const searchKeyword = ref('')
 const searchVoucherId = ref(null)
 const voucherOptions = ref([])
+const { loadOptions } = useOptions()
 const columns = [
   { title: 'ID', key: 'id', width: 60 },
   { title: '券ID', key: 'voucher_id', width: 70 },
@@ -33,6 +35,5 @@ const columns = [
   { title: '结束时间', key: 'etime', width: 160, render: (row) => formatTime(row.etime) },
 ]
 function doSearch() { search({ keyword: searchKeyword.value, voucher_id: searchVoucherId.value ?? 0 }) }
-async function loadVouchers() { try { const res = await getGameVoucherAll(); voucherOptions.value = (res.data || []).map(v => ({ label: v.name, value: v.id })) } catch { /* */ } }
-onMounted(() => { loadVouchers(); search({}) })
+onMounted(async () => { voucherOptions.value = await loadOptions('game_voucher'); search({}) })
 </script>

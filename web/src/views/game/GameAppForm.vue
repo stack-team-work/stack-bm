@@ -111,12 +111,14 @@ import { ref, reactive, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useMessage } from 'naive-ui'
 import { useModal } from '../../composables/useModal'
-import { getGameAll, createGameApp, updateGameApp } from '../../api/game'
+import { useOptions } from '../../composables/useOptions'
+import { createGameApp, updateGameApp } from '../../api/game'
 
 const router = useRouter()
 const route = useRoute()
 const message = useMessage()
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
+const { loadOptions } = useOptions()
 const gameOptions = ref([])
 const appKey = ref('')
 const appSecret = ref('')
@@ -149,7 +151,7 @@ async function handleSubmit() {
 }
 
 onMounted(async () => {
-  try { const res = await getGameAll(); gameOptions.value = (res.data || []).map(g => ({ label: g.name, value: g.id })) } catch { /* */ }
+  gameOptions.value = await loadOptions('game')
   const id = route.params.id
   if (id && id !== 'create') { isEdit.value = true; editId.value = Number(id)
     const res = await fetch(`/api/game-app/detail/${id}`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': `Bearer ${localStorage.getItem('token')}` } })

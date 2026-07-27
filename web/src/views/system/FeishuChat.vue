@@ -10,7 +10,7 @@
       </n-space>
       <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
     </n-space>
-    <n-modal v-model:show="showModal" :title="isEdit ? '编辑飞书聊天' : '新增飞书聊天'" preset="card" style="width: 580px" :mask-closable="false">
+    <n-modal v-model:show="showModal" :title="isEdit ? '编辑飞书聊天' : '新增飞书聊天'" preset="card" style="width: 640px" :mask-closable="false">
       <n-form ref="formRef" :model="formData" :rules="rules">
         <n-form-item path="type" label="机器人类型">
           <n-select v-model:value="formData.type" :options="chatTypeOptions" placeholder="请选择机器人类型" />
@@ -31,10 +31,10 @@
           <n-select v-model:value="formData.at_type" :options="atTypeOptions" placeholder="请选择艾特方式" />
         </n-form-item>
         <n-form-item path="default_at_list" label="默认艾特列表">
-          <n-input v-model:value="formData.default_at_list" type="textarea" placeholder="格式: {sys_user_id:飞书用户id}" />
+          <n-select v-model:value="formData.default_at_list" :options="atUserOptions" multiple placeholder="请选择默认艾特用户" />
         </n-form-item>
         <n-form-item path="at_list" label="选择艾特列表">
-          <n-input v-model:value="formData.at_list" type="textarea" placeholder="格式: {sys_user_id:飞书用户id}" />
+          <n-select v-model:value="formData.at_list" :options="atUserOptions" multiple placeholder="请选择艾特用户" />
         </n-form-item>
         <n-form-item path="status" label="状态">
           <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="关闭" />
@@ -57,7 +57,7 @@ import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
 import { useDict } from '../../composables/useDict'
 import { useOptions } from '../../composables/useOptions'
-import { getFeishuChatList, createFeishuChat, updateFeishuChat, updateFeishuChatStatus } from '../../api/system'
+import { getFeishuChatList, createFeishuChat, updateFeishuChat, updateFeishuChatStatus, getFeishuUserAll } from '../../api/system'
 import { formatTime } from '../../utils/format'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getFeishuChatList)
@@ -69,12 +69,18 @@ const searchKeyword = ref('')
 const searchFeishuAppId = ref(null)
 const searchStatus = ref(null)
 const feishuAppOptions = ref([])
+const atUserOptions = ref([])
+const feishuUserIdMap = ref({})
 const statusOptions = computed(() => options('status'))
 const chatTypeOptions = computed(() => options('feishu_chat_type'))
 const atTypeOptions = computed(() => options('feishu_chat_at_type'))
-const formData = reactive({ type: 1, chat_id: '', feishu_app_id: null, call_action: '', action_title: '', at_type: 1, default_at_list: '', at_list: '', status: 1 })
-function resetForm() { Object.assign(formData, { type: 1, chat_id: '', feishu_app_id: null, call_action: '', action_title: '', at_type: 1, default_at_list: '', at_list: '', status: 1 }) }
-const rules = { chat_id: [{ required: true, message: '请输入群聊天ID', trigger: 'blur' }], call_action: [{ required: true, message: '请输入Call Action', trigger: 'blur' }] }
+const formData = reactive({ type: 1, chat_id: '', feishu_app_id: null, call_action: '', action_title: '', at_type: 1, default_at_list: [], at_list: [], status: 1 })
+function resetForm() { Object.assign(formData, { type: 1, chat_id: '', feishu_app_id: null, call_action: '', action_title: '', at_type: 1, default_at_list: [], at_list: [], status: 1 }) }
+const rules = {
+  chat_id: [{ required: true, message: '请输入群聊天ID', trigger: 'blur' }],
+  call_action: [{ required: true, message: '请输入Call Action', trigger: 'blur' }],
+  default_at_list: [{ required: true, type: 'array', min: 1, message: '请至少选择一个默认艾特用户', trigger: 'change' }],
+}
 const columns = [
   { title: 'ID', key: 'id', width: 60 },
   { title: 'Chat ID', key: 'chat_id', width: 140 },
@@ -90,10 +96,39 @@ const columns = [
 ]
 function doSearch() { search({ keyword: searchKeyword.value, feishu_app_id: searchFeishuAppId.value ?? 0, status: searchStatus.value ?? -1 }) }
 function handleAdd() { resetForm(); open() }
-function handleEdit(row) { resetForm(); formData.type = row.type; formData.chat_id = row.chat_id; formData.feishu_app_id = row.feishu_app_id; formData.call_action = row.call_action; formData.action_title = row.action_title; formData.at_type = row.at_type; formData.default_at_list = row.default_at_list; formData.at_list = row.at_list; formData.status = row.status; openEdit(row) }
-async function handleSubmit() { if (await submit(formData, createFeishuChat, updateFeishuChat)) search({ keyword: searchKeyword.value, feishu_app_id: searchFeishuAppId.value ?? 0, status: searchStatus.value ?? -1 }) }
+function handleEdit(row) {
+  resetForm()
+  formData.type = row.type; formData.chat_id = row.chat_id; formData.feishu_app_id = row.feishu_app_id
+  formData.call_action = row.call_action; formData.action_title = row.action_title; formData.at_type = row.at_type
+  formData.status = row.status
+  try { formData.default_at_list = Object.keys(JSON.parse(row.default_at_list || '{}')).map(Number) } catch { formData.default_at_list = [] }
+  try { formData.at_list = Object.keys(JSON.parse(row.at_list || '{}')).map(Number) } catch { formData.at_list = [] }
+  openEdit(row)
+}
+async function handleSubmit() {
+  const data = { ...formData }
+  data.default_at_list = JSON.stringify(Object.fromEntries(
+    (formData.default_at_list || []).map(id => [id, feishuUserIdMap.value[id] || ''])
+  ))
+  data.at_list = JSON.stringify(Object.fromEntries(
+    (formData.at_list || []).map(id => [id, feishuUserIdMap.value[id] || ''])
+  ))
+  if (await submit(data, createFeishuChat, updateFeishuChat)) search({ keyword: searchKeyword.value, feishu_app_id: searchFeishuAppId.value ?? 0, status: searchStatus.value ?? -1 })
+}
 async function handleStatusChange(row, val) {
   try { await updateFeishuChatStatus(row.id, { status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新') } catch { message.error('更新失败') }
 }
-onMounted(async () => { await loadDict(); feishuAppOptions.value = await loadOptions('feishu_app'); search({}) })
+async function loadAtUsers() {
+  try {
+    const res = await getFeishuUserAll()
+    const users = res.data || []
+    feishuUserIdMap.value = {}
+    atUserOptions.value = []
+    users.filter(u => u.status === 1).forEach(u => {
+      feishuUserIdMap.value[u.admin_id] = u.feishu_user_id
+      atUserOptions.value.push({ label: u.admin_name || `用户${u.admin_id}`, value: u.admin_id })
+    })
+  } catch { /* */ }
+}
+onMounted(async () => { await loadDict(); feishuAppOptions.value = await loadOptions('feishu_app'); await loadAtUsers(); search({}) })
 </script>

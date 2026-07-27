@@ -58,9 +58,10 @@ import { ref, reactive, h, onMounted, computed } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, NInputNumber, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
-import { getMediaManagerList, createMediaManager, updateMediaManager, deleteMediaManager, getMediaAll, getMediaApplicationAll } from '../../api/mkt'
+import { getMediaManagerList, createMediaManager, updateMediaManager, deleteMediaManager } from '../../api/mkt'
 import { formatTime } from '../../utils/format'
 import { useDict } from '../../composables/useDict'
+import { useOptions } from '../../composables/useOptions'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getMediaManagerList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
@@ -71,6 +72,7 @@ const searchMediaId = ref(null)
 const searchStatus = ref(null)
 const mediaOptions = ref([])
 const appOptions = ref([])
+const { loadOptions } = useOptions()
 const statusOptions = computed(() => options('status'))
 const authOptions = computed(() => options('media_manager_auth_status'))
 const formData = reactive({ media_id: null, application_id: null, name: '', account: '', account_id: '', account_num: 0, auth_status: 0, remark: '', extra: '', status: 1 })
@@ -104,8 +106,8 @@ async function handleStatusChange(row, val) {
   try { await updateMediaManager(row.id, { ...row, status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新') } catch { message.error('更新失败') }
 }
 async function loadData() {
-  try { const mediaRes = await getMediaAll(); mediaOptions.value = (mediaRes.data || []).map(m => ({ label: m.name, value: m.id })) } catch { /* */ }
-  try { const appRes = await getMediaApplicationAll(); appOptions.value = (appRes.data || []).map(a => ({ label: a.name, value: a.id })) } catch { /* */ }
+  mediaOptions.value = await loadOptions('media')
+  appOptions.value = await loadOptions('media_application')
 }
 onMounted(async () => { await loadDict(); loadData(); search({}) })
 </script>

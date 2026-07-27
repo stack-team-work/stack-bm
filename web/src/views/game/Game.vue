@@ -48,7 +48,8 @@ import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
 import { useDict } from '../../composables/useDict'
-import { getGameList, createGame, updateGame, deleteGame, getGameCpAll } from '../../api/game'
+import { useOptions } from '../../composables/useOptions'
+import { getGameList, createGame, updateGame, deleteGame } from '../../api/game'
 import { formatTime } from '../../utils/format'
 
 const { loading, tableData, pagination, search, resetSearch, handlePageChange, handlePageSizeChange } = useTable(getGameList)
@@ -58,6 +59,7 @@ const message = useMessage()
 const searchKeyword = ref('')
 const searchStatus = ref(null)
 const cpOptions = ref([])
+const { loadOptions } = useOptions()
 const { load: loadDict, options } = useDict()
 const statusOptions = computed(() => options('status'))
 
@@ -95,6 +97,5 @@ async function handleStatusChange(row, val) {
   }
 }
 
-async function loadCps() { try { const res = await getGameCpAll(); cpOptions.value = (res.data || []).map(c => ({ label: c.name, value: c.id })) } catch { /* */ } }
-onMounted(async () => { await loadDict(); loadCps(); search({}) })
+onMounted(async () => { await loadDict(); cpOptions.value = await loadOptions('game_cp'); search({}) })
 </script>

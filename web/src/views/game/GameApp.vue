@@ -21,7 +21,8 @@ import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
 import { useDict } from '../../composables/useDict'
-import { getGameAppList, deleteGameApp, updateGameApp, getGameAll } from '../../api/game'
+import { useOptions } from '../../composables/useOptions'
+import { getGameAppList, deleteGameApp, updateGameApp } from '../../api/game'
 import { formatTime } from '../../utils/format'
 
 const router = useRouter()
@@ -33,6 +34,7 @@ const searchKeyword = ref('')
 const searchGameId = ref(null)
 const searchStatus = ref(null)
 const gameOptions = ref([])
+const { loadOptions } = useOptions()
 const { load: loadDict, options } = useDict()
 const statusOptions = computed(() => options('status'))
 const gameSearchOptions = computed(() => [{ label: '全部游戏', value: 0 }, ...gameOptions.value])
@@ -78,6 +80,5 @@ async function handleStatusChange(row, val) {
   }
 }
 
-async function loadGames() { try { const res = await getGameAll(); gameOptions.value = (res.data || []).map(g => ({ label: g.name, value: g.id })) } catch { /* */ } }
-onMounted(async () => { await loadDict(); loadGames(); search({}) })
+onMounted(async () => { await loadDict(); gameOptions.value = await loadOptions('game'); search({}) })
 </script>

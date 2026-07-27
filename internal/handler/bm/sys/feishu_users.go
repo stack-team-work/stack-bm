@@ -47,10 +47,26 @@ func (h *FeishuUserHandler) GetList(c *gin.Context) {
 }
 
 func (h *FeishuUserHandler) GetAll(c *gin.Context) {
-	list, err := h.service.FindAll()
+	users, err := h.service.FindAll()
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return
+	}
+	adminSvc := bmSysSvc.NewSysAdminService()
+	type Item struct {
+		ID           uint   `json:"id"`
+		AdminID      int    `json:"admin_id"`
+		FeishuUserID string `json:"feishu_user_id"`
+		AdminName    string `json:"admin_name"`
+		Status       int    `json:"status"`
+	}
+	list := make([]Item, 0, len(users))
+	for _, u := range users {
+		item := Item{ID: u.ID, AdminID: u.AdminID, FeishuUserID: u.FeishuUserID, Status: u.Status}
+		if admin, err := adminSvc.FindByID(uint(u.AdminID)); err == nil {
+			item.AdminName = admin.Name
+		}
+		list = append(list, item)
 	}
 	response.Success(c, list)
 }

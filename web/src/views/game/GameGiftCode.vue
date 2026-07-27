@@ -38,7 +38,8 @@ import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
 import { useTable } from '../../composables/useTable'
 import { useModal } from '../../composables/useModal'
 import { useDict } from '../../composables/useDict'
-import { getGameGiftCodeList, createGameGiftCode, updateGameGiftCode, deleteGameGiftCode, getGameGiftAll } from '../../api/game'
+import { useOptions } from '../../composables/useOptions'
+import { getGameGiftCodeList, createGameGiftCode, updateGameGiftCode, deleteGameGiftCode } from '../../api/game'
 import { formatTime } from '../../utils/format'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getGameGiftCodeList)
@@ -48,6 +49,7 @@ const searchKeyword = ref('')
 const searchGiftId = ref(null)
 const searchStatus = ref(null)
 const giftOptions = ref([])
+const { loadOptions } = useOptions()
 const { load: loadDict, options } = useDict()
 const statusOptions = computed(() => options('status'))
 const formData = reactive({ gift_id: null, code: '', status: 0 })
@@ -72,6 +74,5 @@ async function onDelete(id) { if (await doDelete(id, deleteGameGiftCode)) search
 async function handleStatusChange(row, val) {
   try { await updateGameGiftCode(row.id, { ...row, status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新') } catch { message.error('更新失败') }
 }
-async function loadGifts() { try { const res = await getGameGiftAll(); giftOptions.value = (res.data || []).map(g => ({ label: g.name, value: g.id })) } catch { /* */ } }
-onMounted(async () => { await loadDict(); loadGifts(); search({}) })
+onMounted(async () => { await loadDict(); giftOptions.value = await loadOptions('game_gift'); search({}) })
 </script>
