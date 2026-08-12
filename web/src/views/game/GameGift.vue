@@ -9,35 +9,41 @@
       </n-space>
       <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
     </n-space>
-    <n-modal v-model:show="showModal" :title="isEdit ? '编辑礼包' : '新增礼包'" preset="card" style="width: 560px" :mask-closable="false">
-      <n-form ref="formRef" :model="formData" :rules="rules">
-        <n-form-item path="name" label="礼包名称">
-          <n-input v-model:value="formData.name" placeholder="请输入礼包名称" />
-        </n-form-item>
-        <n-form-item path="get_type" label="领取类型">
-          <n-select v-model:value="formData.get_type" :options="getTypeOptions" placeholder="请选择领取类型" />
-        </n-form-item>
-        <n-form-item path="is_code" label="是否需要激活码">
-          <n-switch v-model:value="formData.is_code" :checked-value="1" :unchecked-value="0" checked-text="需要" unchecked-text="不需要" />
-        </n-form-item>
-        <n-form-item path="type" label="礼包类型">
-          <n-select v-model:value="formData.type" :options="typeOptions" placeholder="请选择礼包类型" />
-        </n-form-item>
-        <n-form-item path="cond" label="领取条件">
-          <n-input v-model:value="formData.cond" type="textarea" placeholder="请输入领取条件" />
-        </n-form-item>
-        <n-form-item path="desc" label="描述">
-          <n-input v-model:value="formData.desc" placeholder="请输入描述" />
-        </n-form-item>
-        <n-form-item path="stime" label="开始时间">
-          <n-date-picker v-model:formatted-value="formData.stime" type="datetime" value-format="x" :default-value="Date.now()" style="width: 100%" />
-        </n-form-item>
-        <n-form-item path="etime" label="结束时间">
-          <n-date-picker v-model:formatted-value="formData.etime" type="datetime" value-format="x" :default-value="Date.now()" style="width: 100%" />
-        </n-form-item>
-        <n-form-item path="status" label="状态">
-          <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="有效" unchecked-text="无效" />
-        </n-form-item>
+    <n-modal v-model:show="showModal" :title="isEdit ? '编辑礼包' : '新增礼包'" preset="card" style="width: 720px" :mask-closable="false">
+      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="110">
+        <n-grid :cols="2" :x-gap="16">
+          <n-form-item-gi path="name" label="礼包名称">
+            <n-input v-model:value="formData.name" placeholder="请输入礼包名称" />
+          </n-form-item-gi>
+          <n-form-item-gi path="get_type" label="领取类型">
+            <n-select v-model:value="formData.get_type" :options="getTypeOptions" placeholder="请选择领取类型" />
+          </n-form-item-gi>
+          <n-form-item-gi path="type" label="礼包类型">
+            <n-select v-model:value="formData.type" :options="typeOptions" placeholder="请选择礼包类型" />
+          </n-form-item-gi>
+          <n-grid-item>
+            <n-form-item path="is_code" label="需要激活码" label-placement="left">
+              <n-switch v-model:value="formData.is_code" :checked-value="1" :unchecked-value="0" checked-text="需要" unchecked-text="不需要" />
+            </n-form-item>
+          </n-grid-item>
+          <n-form-item-gi path="stime" label="开始时间">
+            <n-date-picker v-model:formatted-value="formData.stime" type="datetime" value-format="x" :default-value="Date.now()" style="width: 100%" />
+          </n-form-item-gi>
+          <n-form-item-gi path="etime" label="结束时间">
+            <n-date-picker v-model:formatted-value="formData.etime" type="datetime" value-format="x" :default-value="Date.now()" style="width: 100%" />
+          </n-form-item-gi>
+          <n-form-item-gi path="cond" label="领取条件" :span="2">
+            <n-input v-model:value="formData.cond" type="textarea" :rows="2" placeholder="请输入领取条件" />
+          </n-form-item-gi>
+          <n-form-item-gi path="desc" label="描述">
+            <n-input v-model:value="formData.desc" placeholder="请输入描述" />
+          </n-form-item-gi>
+          <n-grid-item>
+            <n-form-item path="status" label="状态" label-placement="left">
+              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="有效" unchecked-text="无效" />
+            </n-form-item>
+          </n-grid-item>
+        </n-grid>
       </n-form>
       <template #footer>
         <n-space justify="end">

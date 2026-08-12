@@ -11,23 +11,27 @@
       <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
     </n-space>
 
-    <n-modal v-model:show="showModal" :title="isEdit ? '编辑变量' : '新增变量'" preset="card" style="width: 600px" :mask-closable="false">
-      <n-form ref="formRef" :model="formData" :rules="rules">
-        <n-form-item path="name" label="变量名称">
-          <n-input v-model:value="formData.name" placeholder="请输入变量名称" />
-        </n-form-item>
-        <n-form-item path="key" label="变量Key">
-          <n-input v-model:value="formData.key" placeholder="请输入变量Key" :disabled="isEdit" />
-        </n-form-item>
-        <n-form-item path="value" label="变量值">
-          <n-input v-model:value="formData.value" type="textarea" :rows="4" placeholder="请输入变量值，多行输入自动保存为JSON数组" />
-        </n-form-item>
-        <n-form-item path="mark" label="备注">
-          <n-input v-model:value="formData.mark" placeholder="请输入备注" />
-        </n-form-item>
-        <n-form-item path="status" label="状态">
-          <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
-        </n-form-item>
+    <n-modal v-model:show="showModal" :title="isEdit ? '编辑变量' : '新增变量'" preset="card" style="width: 640px" :mask-closable="false">
+      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="100">
+        <n-grid :cols="2" :x-gap="16">
+          <n-form-item-gi path="name" label="变量名称">
+            <n-input v-model:value="formData.name" placeholder="请输入变量名称" />
+          </n-form-item-gi>
+          <n-form-item-gi path="key" label="变量Key">
+            <n-input v-model:value="formData.key" placeholder="请输入变量Key" :disabled="isEdit" />
+          </n-form-item-gi>
+          <n-form-item-gi path="value" label="变量值" :span="2">
+            <n-input v-model:value="formData.value" type="textarea" :rows="4" placeholder="请输入变量值，多行输入自动保存为JSON数组" />
+          </n-form-item-gi>
+          <n-form-item-gi path="mark" label="备注">
+            <n-input v-model:value="formData.mark" placeholder="请输入备注" />
+          </n-form-item-gi>
+          <n-grid-item>
+            <n-form-item path="status" label="状态" label-placement="left">
+              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
+            </n-form-item>
+          </n-grid-item>
+        </n-grid>
       </n-form>
       <template #footer>
         <n-space justify="end">

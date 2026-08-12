@@ -10,17 +10,21 @@
       </n-space>
       <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
     </n-space>
-    <n-modal v-model:show="showModal" :title="isEdit ? '编辑礼包码' : '新增礼包码'" preset="card" style="width: 500px" :mask-closable="false">
-      <n-form ref="formRef" :model="formData" :rules="rules">
-        <n-form-item path="gift_id" label="所属礼包">
-          <n-select v-model:value="formData.gift_id" :options="giftOptions" placeholder="请选择礼包" clearable />
-        </n-form-item>
-        <n-form-item path="code" label="激活码">
-          <n-input v-model:value="formData.code" placeholder="请输入激活码" :disabled="isEdit" />
-        </n-form-item>
-        <n-form-item path="status" label="状态">
-          <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="已使用" unchecked-text="未使用" />
-        </n-form-item>
+    <n-modal v-model:show="showModal" :title="isEdit ? '编辑礼包码' : '新增礼包码'" preset="card" style="width: 560px" :mask-closable="false">
+      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="100">
+        <n-grid :cols="2" :x-gap="16">
+          <n-form-item-gi path="gift_id" label="所属礼包">
+            <n-select v-model:value="formData.gift_id" :options="giftOptions" placeholder="请选择礼包" clearable />
+          </n-form-item-gi>
+          <n-form-item-gi path="code" label="激活码">
+            <n-input v-model:value="formData.code" placeholder="请输入激活码" :disabled="isEdit" />
+          </n-form-item-gi>
+          <n-grid-item :span="2">
+            <n-form-item path="status" label="状态" label-placement="left">
+              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="已使用" unchecked-text="未使用" />
+            </n-form-item>
+          </n-grid-item>
+        </n-grid>
       </n-form>
       <template #footer>
         <n-space justify="end">

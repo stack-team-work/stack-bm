@@ -1,81 +1,86 @@
 <template>
   <div>
-    <n-space>
+    <n-space align="center" :size="12">
       <n-button @click="goBack" size="small">返回列表</n-button>
+      <n-text style="font-size: 18px; font-weight: 600">{{ isEdit ? '编辑子游戏' : '新增子游戏' }}</n-text>
     </n-space>
 
-    <n-form ref="formRef" :model="formData" :rules="rules" label-width="120" style="max-width: 800px; margin-top: 12px">
-      <n-space vertical>
-        <n-space>
-          <n-form-item path="pid" label="所属游戏" style="width: 280px">
+    <n-card style="max-width: 900px; margin-top: 16px">
+      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="120">
+        <n-grid :cols="2" :x-gap="20">
+          <n-form-item-gi path="pid" label="所属游戏">
             <n-select v-model:value="formData.pid" :options="gameOptions" placeholder="请选择父游戏" />
-          </n-form-item>
-          <n-form-item path="name" label="子游戏名称" style="width: 280px">
+          </n-form-item-gi>
+          <n-form-item-gi path="name" label="子游戏名称">
             <n-input v-model:value="formData.name" placeholder="请输入子游戏名称" />
-          </n-form-item>
-        </n-space>
-        <n-space>
-          <n-form-item path="package_name" label="包名" style="width: 280px">
+          </n-form-item-gi>
+          <n-form-item-gi path="package_name" label="包名">
             <n-input v-model:value="formData.package_name" placeholder="请输入包名" :disabled="isEdit" />
-          </n-form-item>
-          <n-form-item path="app_name" label="App名称" style="width: 280px">
+          </n-form-item-gi>
+          <n-form-item-gi path="app_name" label="App名称">
             <n-input v-model:value="formData.app_name" placeholder="请输入App名称" />
-          </n-form-item>
-        </n-space>
-        <n-space>
-          <n-form-item path="os" label="操作系统" style="width: 280px">
+          </n-form-item-gi>
+          <n-form-item-gi path="os" label="操作系统">
             <n-select v-model:value="formData.os" :options="osOptions" />
-          </n-form-item>
-          <n-form-item path="sdk_ver" label="SDK版本" style="width: 280px">
-            <n-input v-model:value="formData.sdk_ver" placeholder="请输入SDK版本" />
-          </n-form-item>
-        </n-space>
-        <n-space>
-          <n-form-item path="app_ver" label="应用版本" style="width: 280px">
-            <n-input v-model:value="formData.app_ver" placeholder="请输入应用版本" />
-          </n-form-item>
-          <n-form-item path="app_template_id" label="SDK模板" style="width: 280px">
+          </n-form-item-gi>
+          <n-form-item-gi path="app_template_id" label="SDK模板">
             <n-select v-model:value="formData.app_template_id" :options="templateOptions" placeholder="请选择SDK模板" filterable />
-          </n-form-item>
-        </n-space>
-        <n-space>
-          <n-form-item path="callback_url" label="回调地址" style="width: 280px">
+          </n-form-item-gi>
+          <n-form-item-gi path="sdk_ver" label="SDK版本">
+            <n-input v-model:value="formData.sdk_ver" placeholder="请输入SDK版本" />
+          </n-form-item-gi>
+          <n-form-item-gi path="app_ver" label="应用版本">
+            <n-input v-model:value="formData.app_ver" placeholder="请输入应用版本" />
+          </n-form-item-gi>
+          <n-form-item-gi path="callback_url" label="回调地址">
             <n-input v-model:value="formData.callback_url" placeholder="请输入回调地址" />
-          </n-form-item>
-          <n-form-item path="api_domain" label="API域名" style="width: 280px">
+          </n-form-item-gi>
+          <n-form-item-gi path="api_domain" label="API域名">
             <n-input v-model:value="formData.api_domain" placeholder="请输入API域名" />
-          </n-form-item>
-        </n-space>
-        <n-form-item path="pay_domain" label="支付域名" style="width: 280px">
-          <n-input v-model:value="formData.pay_domain" placeholder="请输入支付域名" />
+          </n-form-item-gi>
+          <n-form-item-gi path="pay_domain" label="支付域名">
+            <n-input v-model:value="formData.pay_domain" placeholder="请输入支付域名" />
+          </n-form-item-gi>
+          <n-grid-item>
+            <n-form-item path="status" label="状态" label-placement="left">
+              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
+            </n-form-item>
+          </n-grid-item>
+        </n-grid>
+
+        <n-divider style="margin-top: 8px">扩展参数</n-divider>
+        <n-form-item path="cs_params" label="客服参数">
+          <n-input v-model:value="formData.cs_params" type="textarea" :rows="3" placeholder="请输入客服参数(JSON)" />
         </n-form-item>
-      </n-space>
+        <n-form-item path="pay_params" label="支付参数">
+          <n-input v-model:value="formData.pay_params" type="textarea" :rows="3" placeholder="请输入支付参数(JSON)" />
+        </n-form-item>
+        <n-form-item path="h5_params" label="H5参数">
+          <n-input v-model:value="formData.h5_params" type="textarea" :rows="3" placeholder="请输入H5参数(JSON)" />
+        </n-form-item>
 
-      <n-divider>扩展参数</n-divider>
-      <n-form-item path="cs_params" label="客服参数">
-        <n-input v-model:value="formData.cs_params" type="textarea" placeholder="请输入客服参数(JSON)" />
-      </n-form-item>
-      <n-form-item path="pay_params" label="支付参数">
-        <n-input v-model:value="formData.pay_params" type="textarea" placeholder="请输入支付参数(JSON)" />
-      </n-form-item>
-      <n-form-item path="h5_params" label="H5参数">
-        <n-input v-model:value="formData.h5_params" type="textarea" placeholder="请输入H5参数(JSON)" />
-      </n-form-item>
+        <n-alert v-if="isEdit && appKey" type="info" :show-icon="false" style="margin-bottom: 16px">
+          <n-space vertical :size="6">
+            <n-space align="center">
+              <n-text depth="3">AppKey:</n-text>
+              <n-text code>{{ appKey }}</n-text>
+            </n-space>
+            <n-space align="center">
+              <n-text depth="3">AppSecret:</n-text>
+              <n-text code>{{ appSecret }}</n-text>
+            </n-space>
+            <n-text depth="3" style="font-size: 12px">(自动生成，不可修改)</n-text>
+          </n-space>
+        </n-alert>
 
-      <n-form-item path="status" label="状态">
-        <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
-      </n-form-item>
-
-      <div v-if="isEdit && appKey" style="margin-bottom: 16px; padding: 12px; background: #f5f7fa; border-radius: 4px">
-        <n-text depth="3">AppKey: </n-text><n-text code>{{ appKey }}</n-text>
-        <n-text depth="3" style="margin-left: 24px">AppSecret: </n-text><n-text code>{{ appSecret }}</n-text>
-        <n-text depth="3" style="margin-left: 12px; font-size: 12px">(自动生成，不可修改)</n-text>
-      </div>
-
-      <n-button type="primary" :loading="submitLoading" @click="handleSubmit" size="small">
-        {{ isEdit ? '保存修改' : '确认创建' }}
-      </n-button>
-    </n-form>
+        <n-space>
+          <n-button type="primary" :loading="submitLoading" @click="handleSubmit" size="medium">
+            {{ isEdit ? '保存修改' : '确认创建' }}
+          </n-button>
+          <n-button @click="goBack" size="medium">取消</n-button>
+        </n-space>
+      </n-form>
+    </n-card>
   </div>
 </template>
 

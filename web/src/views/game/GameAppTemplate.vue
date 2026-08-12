@@ -11,46 +11,56 @@
       <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
     </n-space>
 
-    <n-modal v-model:show="showModal" :title="isEdit ? '编辑SDK模板' : '新增SDK模板'" preset="card" style="width: 640px" :mask-closable="false">
-      <n-form ref="formRef" :model="formData" :rules="rules" label-width="120">
-        <n-form-item path="name" label="模板名称">
-          <n-input v-model:value="formData.name" placeholder="请输入模板名称" />
-        </n-form-item>
-        <n-space>
-          <n-form-item path="is_open_realname" label="实名认证" label-placement="left" style="width: 240px">
-            <n-switch v-model:value="formData.is_open_realname" :checked-value="1" :unchecked-value="0" />
-          </n-form-item>
-          <n-form-item path="is_open_register" label="开启注册" label-placement="left" style="width: 240px">
-            <n-switch v-model:value="formData.is_open_register" :checked-value="1" :unchecked-value="0" />
-          </n-form-item>
-        </n-space>
-        <n-space>
-          <n-form-item path="is_open_charge" label="开启充值" label-placement="left" style="width: 240px">
-            <n-switch v-model:value="formData.is_open_charge" :checked-value="1" :unchecked-value="0" />
-          </n-form-item>
-          <n-form-item path="is_open_float" label="悬浮窗" label-placement="left" style="width: 240px">
-            <n-switch v-model:value="formData.is_open_float" :checked-value="1" :unchecked-value="0" />
-          </n-form-item>
-        </n-space>
-        <n-space>
-          <n-form-item path="is_alert_email" label="绑定邮箱提醒" label-placement="left" style="width: 240px">
-            <n-switch v-model:value="formData.is_alert_email" :checked-value="1" :unchecked-value="0" />
-          </n-form-item>
-          <n-form-item path="is_alert_phone" label="绑定手机提醒" label-placement="left" style="width: 240px">
-            <n-switch v-model:value="formData.is_alert_phone" :checked-value="1" :unchecked-value="0" />
-          </n-form-item>
-        </n-space>
-        <n-space>
-          <n-form-item path="is_alert_auth" label="自定义授权" label-placement="left" style="width: 240px">
-            <n-switch v-model:value="formData.is_alert_auth" :checked-value="1" :unchecked-value="0" />
-          </n-form-item>
-          <n-form-item path="allow_age" label="可玩年龄" style="width: 240px">
+    <n-modal v-model:show="showModal" :title="isEdit ? '编辑SDK模板' : '新增SDK模板'" preset="card" style="width: 680px" :mask-closable="false">
+      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="110">
+        <n-grid :cols="2" :x-gap="16">
+          <n-form-item-gi path="name" label="模板名称">
+            <n-input v-model:value="formData.name" placeholder="请输入模板名称" />
+          </n-form-item-gi>
+          <n-form-item-gi path="allow_age" label="可玩年龄">
             <n-input-number v-model:value="formData.allow_age" :min="0" style="width: 100%" />
-          </n-form-item>
-        </n-space>
-        <n-form-item path="status" label="状态">
-          <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
-        </n-form-item>
+          </n-form-item-gi>
+          <n-grid-item>
+            <n-form-item path="is_open_realname" label="实名认证" label-placement="left">
+              <n-switch v-model:value="formData.is_open_realname" :checked-value="1" :unchecked-value="0" />
+            </n-form-item>
+          </n-grid-item>
+          <n-grid-item>
+            <n-form-item path="is_open_register" label="开启注册" label-placement="left">
+              <n-switch v-model:value="formData.is_open_register" :checked-value="1" :unchecked-value="0" />
+            </n-form-item>
+          </n-grid-item>
+          <n-grid-item>
+            <n-form-item path="is_open_charge" label="开启充值" label-placement="left">
+              <n-switch v-model:value="formData.is_open_charge" :checked-value="1" :unchecked-value="0" />
+            </n-form-item>
+          </n-grid-item>
+          <n-grid-item>
+            <n-form-item path="is_open_float" label="悬浮窗" label-placement="left">
+              <n-switch v-model:value="formData.is_open_float" :checked-value="1" :unchecked-value="0" />
+            </n-form-item>
+          </n-grid-item>
+          <n-grid-item>
+            <n-form-item path="is_alert_email" label="绑定邮箱提醒" label-placement="left">
+              <n-switch v-model:value="formData.is_alert_email" :checked-value="1" :unchecked-value="0" />
+            </n-form-item>
+          </n-grid-item>
+          <n-grid-item>
+            <n-form-item path="is_alert_phone" label="绑定手机提醒" label-placement="left">
+              <n-switch v-model:value="formData.is_alert_phone" :checked-value="1" :unchecked-value="0" />
+            </n-form-item>
+          </n-grid-item>
+          <n-grid-item>
+            <n-form-item path="is_alert_auth" label="自定义授权" label-placement="left">
+              <n-switch v-model:value="formData.is_alert_auth" :checked-value="1" :unchecked-value="0" />
+            </n-form-item>
+          </n-grid-item>
+          <n-grid-item>
+            <n-form-item path="status" label="状态" label-placement="left">
+              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
+            </n-form-item>
+          </n-grid-item>
+        </n-grid>
       </n-form>
       <template #footer>
         <n-space justify="end">

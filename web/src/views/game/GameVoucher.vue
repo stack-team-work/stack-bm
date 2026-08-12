@@ -9,35 +9,39 @@
       </n-space>
       <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
     </n-space>
-    <n-modal v-model:show="showModal" :title="isEdit ? '编辑代金券' : '新增代金券'" preset="card" style="width: 560px" :mask-closable="false">
-      <n-form ref="formRef" :model="formData" :rules="rules">
-        <n-form-item path="name" label="券名称">
-          <n-input v-model:value="formData.name" placeholder="请输入券名称" />
-        </n-form-item>
-        <n-form-item path="use_type" label="使用类型">
-          <n-select v-model:value="formData.use_type" :options="useTypeOptions" placeholder="请选择使用类型" />
-        </n-form-item>
-        <n-form-item path="use_limit" label="可领取次数">
-          <n-input-number v-model:value="formData.use_limit" :min="1" style="width: 100%" placeholder="可领取次数" />
-        </n-form-item>
-        <n-form-item path="total" label="库存">
-          <n-input-number v-model:value="formData.total" :min="0" style="width: 100%" placeholder="库存数量" />
-        </n-form-item>
-        <n-form-item path="total_fee" label="价值">
-          <n-input-number v-model:value="formData.total_fee" :min="0" style="width: 100%" placeholder="价值金额" />
-        </n-form-item>
-        <n-form-item path="desc" label="描述">
-          <n-input v-model:value="formData.desc" placeholder="请输入描述" />
-        </n-form-item>
-        <n-form-item path="stime" label="开始时间">
-          <n-date-picker v-model:formatted-value="formData.stime" type="datetime" value-format="x" :default-value="Date.now()" style="width: 100%" />
-        </n-form-item>
-        <n-form-item path="etime" label="结束时间">
-          <n-date-picker v-model:formatted-value="formData.etime" type="datetime" value-format="x" :default-value="Date.now()" style="width: 100%" />
-        </n-form-item>
-        <n-form-item path="status" label="状态">
-          <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
-        </n-form-item>
+    <n-modal v-model:show="showModal" :title="isEdit ? '编辑代金券' : '新增代金券'" preset="card" style="width: 720px" :mask-closable="false">
+      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="110">
+        <n-grid :cols="2" :x-gap="16">
+          <n-form-item-gi path="name" label="券名称">
+            <n-input v-model:value="formData.name" placeholder="请输入券名称" />
+          </n-form-item-gi>
+          <n-form-item-gi path="use_type" label="使用类型">
+            <n-select v-model:value="formData.use_type" :options="useTypeOptions" placeholder="请选择使用类型" />
+          </n-form-item-gi>
+          <n-form-item-gi path="use_limit" label="可领取次数">
+            <n-input-number v-model:value="formData.use_limit" :min="1" style="width: 100%" placeholder="可领取次数" />
+          </n-form-item-gi>
+          <n-form-item-gi path="total" label="库存">
+            <n-input-number v-model:value="formData.total" :min="0" style="width: 100%" placeholder="库存数量" />
+          </n-form-item-gi>
+          <n-form-item-gi path="total_fee" label="价值">
+            <n-input-number v-model:value="formData.total_fee" :min="0" style="width: 100%" placeholder="价值金额" />
+          </n-form-item-gi>
+          <n-form-item-gi path="desc" label="描述">
+            <n-input v-model:value="formData.desc" placeholder="请输入描述" />
+          </n-form-item-gi>
+          <n-form-item-gi path="stime" label="开始时间">
+            <n-date-picker v-model:formatted-value="formData.stime" type="datetime" value-format="x" :default-value="Date.now()" style="width: 100%" />
+          </n-form-item-gi>
+          <n-form-item-gi path="etime" label="结束时间">
+            <n-date-picker v-model:formatted-value="formData.etime" type="datetime" value-format="x" :default-value="Date.now()" style="width: 100%" />
+          </n-form-item-gi>
+          <n-grid-item :span="2">
+            <n-form-item path="status" label="状态" label-placement="left">
+              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
+            </n-form-item>
+          </n-grid-item>
+        </n-grid>
       </n-form>
       <template #footer>
         <n-space justify="end">
