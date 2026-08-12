@@ -1,10 +1,10 @@
 # Stack BM - 游戏发行后台管理系统
 
 ## 项目简介
-游戏发行后台管理系统，提供管理员管理、游戏管理和游戏应用管理等基础功能。
+游戏发行后台管理系统，提供管理员管理、游戏管理、游戏应用管理，以及 B站(BiliAds) / 快手(KsAds) 的广告模板、定向包模板、标题包模板等投放配置管理。
 
 ## 技术栈
-- **后端**: Go 1.25+, Gin, GORM, MySQL 5.7+
+- **后端**: Go 1.25+, Gin, GORM, MySQL 5.7+, MongoDB
 - **前端**: Vue 3, Naive UI, Vite
 - **认证**: JWT + MD5(password + salt)
 
@@ -13,74 +13,28 @@
 ### 环境要求
 - Go 1.25+
 - MySQL 5.7+
+- MongoDB（用于 B站/快手 模板，默认 127.0.0.1:27017，未安装时后端可正常启动，仅模板相关接口不可用）
 - Node.js 18+
 
 ### 数据库初始化
-确保 MySQL 中存在以下数据库和表：
-- `stack_bm` 库: `sys_admin`, `sys_admin_group`
-- `stack_api` 库: `game`, `game_app`
+共 3 个 MySQL 库 + 1 个 MongoDB 库，表结构以 `migrations/` 下 SQL 为准：
 
-```sql
--- stack_bm
-CREATE TABLE `sys_admin` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(100) NOT NULL,
-  `salt` varchar(10) NOT NULL,
-  `realname` varchar(50) DEFAULT '',
-  `email` varchar(100) DEFAULT '',
-  `phone` varchar(20) DEFAULT '',
-  `group_id` int unsigned DEFAULT 0,
-  `status` tinyint DEFAULT 1,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `deleted_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_username` (`username`)
-);
+| 数据库 | 说明 | 主要表 |
+|--------|------|--------|
+| `stack_bm` | 后台管理 | sys_admin, sys_admin_group, sys_logs, sys_menu |
+| `stack_sdk` | SDK / 游戏 | game, game_app, game_app_template, game_gift, game_voucher 等 |
+| `stack_mkt` | 发行渠道 | media, media_sub, media_agent, media_application 等 |
+| `channel_template`(MongoDB) | 投放模板 | bili_ad_template, bili_audience_template, bili_title_template, ks_ad_template, ks_audience_template, ks_title_template |
 
-CREATE TABLE `sys_admin_group` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `description` varchar(200) DEFAULT '',
-  `status` tinyint DEFAULT 1,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `deleted_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-);
+MySQL 表结构执行：
 
--- stack_api
-CREATE TABLE `game` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `code` varchar(50) NOT NULL,
-  `description` varchar(500) DEFAULT '',
-  `icon` varchar(255) DEFAULT '',
-  `status` tinyint DEFAULT 1,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `deleted_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_code` (`code`)
-);
-
-CREATE TABLE `game_app` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `game_id` int unsigned NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `code` varchar(50) NOT NULL,
-  `app_key` varchar(100) DEFAULT '',
-  `description` varchar(500) DEFAULT '',
-  `status` tinyint DEFAULT 1,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `deleted_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_code` (`code`),
-  KEY `idx_game_id` (`game_id`)
-);
+```bash
+mysql -uroot -p < migrations/stack_bm.sql
+mysql -uroot -p < migrations/stack_sdk.sql
+mysql -uroot -p < migrations/stack_mkt.sql
 ```
+
+MongoDB 集合由程序自动创建，无需手动建表；如从参考项目迁移历史数据，可将 `channel_template` 库下 `bili_*_template` / `ks_*_template` 集合直接导入。
 
 ### 启动后端服务
 
@@ -162,6 +116,27 @@ npm run build
 | /api/game-app/update/:id | 更新应用 |
 | /api/game-app/delete/:id | 删除应用 |
 
+### B站模板（数据存 MongoDB channel_template.bili_*_template）
+三类模板接口一致，以广告模板为例（定向包、标题包同理，前缀分别为 `bili-audience-template` / `bili-title-template`）：
+
+| 接口 | 说明 |
+|------|------|
+| /api/bili-ad-template/create | 创建广告模板 |
+| /api/bili-ad-template/list | 模板列表（分页 + 名称模糊） |
+| /api/bili-ad-template/detail/:id | 模板详情 |
+| /api/bili-ad-template/update/:id | 更新模板 |
+| /api/bili-ad-template/delete/:id | 删除模板（软删 display=0） |
+| /api/bili-ad-template/copy | 复制模板 |
+
+### 快手模板（数据存 MongoDB channel_template.ks_*_template）
+同 B站，前缀分别为 `ks-ad-template` / `ks-audience-template` / `ks-title-template`。
+
+### 字典
+| 接口 | 说明 |
+|------|------|
+| /api/dict | 全部字典（状态、游戏类型、B站/快手枚举等） |
+| /api/dict/:key | 指定字典 |
+
 ## 部署
 
 ### 交叉编译
@@ -189,18 +164,25 @@ $env:GOOS="windows"; $env:GOARCH="amd64"; go build -o build/stack-bm.exe cmd/ser
 | `APP_ENV` | 运行环境 | dev |
 | `SERVER_PORT` | 服务端口 | 8080 |
 | `SERVER_MODE` | 运行模式(dev/prod) | dev |
-| `DB_BM_HOST` | stack-bm 数据库主机 | 127.0.0.1 |
-| `DB_BM_PORT` | stack-bm 数据库端口 | 3306 |
-| `DB_BM_USER` | stack-bm 数据库用户 | root |
-| `DB_BM_PASSWORD` | stack-bm 数据库密码 | root |
+| `DB_BM_HOST` | stack_bm 数据库主机 | 127.0.0.1 |
+| `DB_BM_PORT` | stack_bm 数据库端口 | 3306 |
+| `DB_BM_USER` | stack_bm 数据库用户 | root |
+| `DB_BM_PASSWORD` | stack_bm 数据库密码 | root |
 | `DB_BM_NAME` | stack_bm 数据库名 | stack_bm |
-| `DB_API_HOST` | stack_api 数据库主机 | 127.0.0.1 |
-| `DB_API_PORT` | stack_api 数据库端口 | 3306 |
-| `DB_API_USER` | stack_api 数据库用户 | root |
-| `DB_API_PASSWORD` | stack_api 数据库密码 | root |
-| `DB_API_NAME` | stack_api 数据库名 | stack_api |
+| `DB_SDK_HOST` | stack_sdk 数据库主机 | 127.0.0.1 |
+| `DB_SDK_PORT` | stack_sdk 数据库端口 | 3306 |
+| `DB_SDK_USER` | stack_sdk 数据库用户 | root |
+| `DB_SDK_PASSWORD` | stack_sdk 数据库密码 | root |
+| `DB_SDK_NAME` | stack_sdk 数据库名 | stack_sdk |
+| `DB_MKT_HOST` | stack_mkt 数据库主机 | 127.0.0.1 |
+| `DB_MKT_PORT` | stack_mkt 数据库端口 | 3306 |
+| `DB_MKT_USER` | stack_mkt 数据库用户 | root |
+| `DB_MKT_PASSWORD` | stack_mkt 数据库密码 | root |
+| `DB_MKT_NAME` | stack_mkt 数据库名 | stack_mkt |
 | `JWT_SECRET` | JWT 签名密钥 | - |
 | `JWT_EXPIRE_HOURS` | Token 过期时间(小时) | 24 |
+| `MONGO_URI` | MongoDB 连接串 | mongodb://127.0.0.1:27017 |
+| `MONGO_CHANNEL_DB` | 投放模板 MongoDB 库名 | channel_template |
 
 ## 项目结构
 
