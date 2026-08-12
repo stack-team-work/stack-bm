@@ -133,7 +133,7 @@ web/src/
 │   ├── sdk/pay/             PayPlatform, PayMerchant
 │   ├── sdk/sys/             GameLog (SDK 日志)
 │   ├── mkt/media/           Media, MediaSub, MediaAgent, MediaApplication, MediaManager, MediaSubject
-│   ├── mkt/bili/            AdTemplate, AudienceTemplate, TitleTemplate
+│   ├── mkt/bili/            BiliAds (tab 页), AdTemplate*, AudienceTemplate*, TitleTemplate*
 │   ├── dashboard/           Dashboard
 │   ├── Login.vue
 │   └── layouts/             MainLayout.vue

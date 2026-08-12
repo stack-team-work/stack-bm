@@ -4,6 +4,10 @@ export function getBiliAdTemplateList(params) {
   return request.post('/bili-ad-template/list', params)
 }
 
+export function getBiliAdTemplateDetail(id) {
+  return request.post(`/bili-ad-template/detail/${id}`)
+}
+
 export function createBiliAdTemplate(data) {
   return request.post('/bili-ad-template/create', data)
 }
@@ -24,6 +28,10 @@ export function getBiliAudienceTemplateList(params) {
   return request.post('/bili-audience-template/list', params)
 }
 
+export function getBiliAudienceTemplateDetail(id) {
+  return request.post(`/bili-audience-template/detail/${id}`)
+}
+
 export function createBiliAudienceTemplate(data) {
   return request.post('/bili-audience-template/create', data)
 }
@@ -42,6 +50,10 @@ export function copyBiliAudienceTemplate(data) {
 
 export function getBiliTitleTemplateList(params) {
   return request.post('/bili-title-template/list', params)
+}
+
+export function getBiliTitleTemplateDetail(id) {
+  return request.post(`/bili-title-template/detail/${id}`)
 }
 
 export function createBiliTitleTemplate(data) {

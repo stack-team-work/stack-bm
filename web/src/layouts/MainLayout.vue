@@ -42,13 +42,6 @@
           </span>
         </n-dropdown>
       </n-layout-header>
-      <div style="padding: 8px 24px; background: #fff; border-bottom: 1px solid #f0f0f0">
-        <n-breadcrumb>
-          <n-breadcrumb-item v-for="item in breadcrumbs" :key="item.path">
-            {{ item.label }}
-          </n-breadcrumb-item>
-        </n-breadcrumb>
-      </div>
       <n-layout-content style="padding: 24px; background: #fff; min-height: calc(100vh - 56px - 32px)">
         <router-view />
       </n-layout-content>
@@ -104,6 +97,9 @@ const topNavRouteMap = {
   '/media': 'publish', '/media-sub': 'publish', '/media-agent': 'publish',
   '/media-application': 'publish', '/media-manager': 'publish', '/media-subject': 'publish',
   '/bili-ads': 'publish',
+  '/bili-ads/ad-template/create': 'publish', '/bili-ads/ad-template/edit': 'publish',
+  '/bili-ads/audience-template/create': 'publish', '/bili-ads/audience-template/edit': 'publish',
+  '/bili-ads/title-template/create': 'publish', '/bili-ads/title-template/edit': 'publish',
   '/game': 'game', '/game-app': 'game', '/game-app/create': 'game', '/game-app/edit': 'game',
   '/game-app-template': 'game',
   '/game-cp': 'game', '/game-tag': 'game', '/game-variable': 'game',
@@ -156,9 +152,7 @@ const sidebarMenu = computed(() => {
         {
           label: 'B站Ads', key: 'bili-ads', icon: renderIcon(GameControllerOutline),
           children: [
-            { label: '广告模板', key: '/bili-ads/ad-template' },
-            { label: '定向包模板', key: '/bili-ads/audience-template' },
-            { label: '标题包模板', key: '/bili-ads/title-template' },
+            { label: '模板列表', key: '/bili-ads' },
           ],
         },
       ]
@@ -232,12 +226,6 @@ const sidebarMenu = computed(() => {
 })
 
 const currentRoute = computed(() => route.path)
-
-const breadcrumbs = computed(() => {
-  return route.matched
-    .filter(r => r.meta?.title)
-    .map(r => ({ label: r.meta.title, path: r.path }))
-})
 
 function handleMenuSelect(key) {
   if (key !== 'empty') router.push(key)
