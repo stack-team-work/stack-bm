@@ -12,7 +12,6 @@ type Config struct {
 	DBSdk  DBConfig
 	DBMkt  DBConfig
 	JWT    JWTConfig
-	Dev    DevConfig
 }
 
 type ServerConfig struct {
@@ -31,11 +30,6 @@ type DBConfig struct {
 type JWTConfig struct {
 	Secret      string
 	ExpireHours int
-}
-
-type DevConfig struct {
-	DefaultUsername string
-	DefaultPassword string
 }
 
 var AppConfig *Config
@@ -79,10 +73,6 @@ func LoadConfig() *Config {
 		JWT: JWTConfig{
 			Secret:      viper.GetString("JWT_SECRET"),
 			ExpireHours: viper.GetInt("JWT_EXPIRE_HOURS"),
-		},
-		Dev: DevConfig{
-			DefaultUsername: viper.GetString("DEV_DEFAULT_USERNAME"),
-			DefaultPassword: viper.GetString("DEV_DEFAULT_PASSWORD"),
 		},
 	}
 

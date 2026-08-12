@@ -21,7 +21,7 @@ func (r *GameAppRepository) Create(app *game.GameApp) error {
 
 func (r *GameAppRepository) FindByID(id uint) (*game.GameApp, error) {
 	var app game.GameApp
-	err := r.db.Where("id = ? AND is_deleted = 0", id).First(&app).Error
+	err := r.db.First(&app, id).Error
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +32,7 @@ func (r *GameAppRepository) FindPage(page, size int, keyword string, gameID int,
 	var apps []game.GameApp
 	var total int64
 
-	query := r.db.Model(&game.GameApp{}).Where("is_deleted = 0")
+	query := r.db.Model(&game.GameApp{})
 	if keyword != "" {
 		query = query.Where("name LIKE ? OR package_name LIKE ?", "%"+keyword+"%", "%"+keyword+"%")
 	}
@@ -55,7 +55,7 @@ func (r *GameAppRepository) FindPage(page, size int, keyword string, gameID int,
 
 func (r *GameAppRepository) FindAll() ([]game.GameApp, error) {
 	var apps []game.GameApp
-	err := r.db.Where("is_deleted = 0").Order("id DESC").Find(&apps).Error
+	err := r.db.Where("status = 1").Order("id DESC").Find(&apps).Error
 	return apps, err
 }
 
@@ -64,5 +64,5 @@ func (r *GameAppRepository) Update(app *game.GameApp) error {
 }
 
 func (r *GameAppRepository) Delete(id uint) error {
-	return r.db.Model(&game.GameApp{}).Where("id = ?", id).Update("is_deleted", 1).Error
+	return r.db.Delete(&game.GameApp{}, id).Error
 }

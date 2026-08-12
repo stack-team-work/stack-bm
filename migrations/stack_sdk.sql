@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50744
 File Encoding         : 65001
 
-Date: 2026-05-29 16:54:42
+Date: 2026-08-12 18:03:22
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -39,7 +39,7 @@ CREATE TABLE `game` (
   `is_deleted` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `m` (`mark`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='父级游戏表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='父级游戏表';
 
 -- ----------------------------
 -- Table structure for game_app
@@ -51,16 +51,8 @@ CREATE TABLE `game_app` (
   `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '包名称对内',
   `package_name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '应用包名',
   `app_name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '应用名称',
+  `app_template_id` int(11) NOT NULL,
   `os` int(11) NOT NULL DEFAULT '1' COMMENT '系统1：安卓，2ios:3:双端',
-  `is_verify` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否开启实名认证，1是：0：否',
-  `age` int(11) NOT NULL DEFAULT '18' COMMENT '可玩年龄',
-  `is_open_charge` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否开启支付，1是：0：否',
-  `is_open_register` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否开启登录，1是：0：否',
-  `is_alert_email` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否弹出绑定邮箱：1:是；0：否',
-  `is_alert_phone` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否弹出绑定手机：1:是；0：否',
-  `is_alert_auth` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否弹出自定义授权：1:是；0：否',
-  `is_open_float` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否开启悬浮窗：1:是；0：否',
-  `is_deleted` tinyint(4) DEFAULT '0',
   `sdk_ver` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'sdk_ver版本',
   `app_ver` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'app_ver版本',
   `app_key` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'app_key',
@@ -68,14 +60,36 @@ CREATE TABLE `game_app` (
   `callback_url` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '回调地址',
   `api_domain` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'api域名',
   `pay_domain` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '支付域名',
-  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态：1正常，2：下线',
   `cs_params` mediumtext COLLATE utf8mb4_unicode_ci COMMENT '客服参数',
   `pay_params` mediumtext COLLATE utf8mb4_unicode_ci COMMENT '支付参数配置',
   `h5_params` mediumtext COLLATE utf8mb4_unicode_ci COMMENT 'H5参数',
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='子游戏表';
+) ENGINE=InnoDB AUTO_INCREMENT=1003 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='子游戏表';
+
+-- ----------------------------
+-- Table structure for game_app_template
+-- ----------------------------
+DROP TABLE IF EXISTS `game_app_template`;
+CREATE TABLE `game_app_template` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '模板名称',
+  `is_open_realname` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否开启实名认证，1是：0：否',
+  `is_open_register` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否开启注册，1是：0：否',
+  `is_open_charge` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否开启充值，1是：0：否',
+  `is_alert_email` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否弹出绑定邮箱：1:是；0：否',
+  `is_alert_phone` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否弹出绑定手机：1:是；0：否',
+  `is_alert_auth` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否弹出自定义授权：1:是；0：否',
+  `is_open_float` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否开启悬浮窗：1:是；0：否',
+  `allow_age` int(11) NOT NULL DEFAULT '18' COMMENT '可玩年龄',
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  `admin_id` int(11) NOT NULL DEFAULT '0' COMMENT '操作后台用户id',
+  `created_at` int(11) NOT NULL,
+  `updated_at` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Table structure for game_cp
@@ -92,7 +106,7 @@ CREATE TABLE `game_cp` (
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Table structure for game_gift
@@ -182,7 +196,7 @@ CREATE TABLE `game_tags` (
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Table structure for game_variable
@@ -200,7 +214,7 @@ CREATE TABLE `game_variable` (
   `created_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `key` (`key`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
 -- Table structure for game_voucher
@@ -221,7 +235,7 @@ CREATE TABLE `game_voucher` (
   `created_at` int(11) DEFAULT NULL,
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='代金券配置表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='代金券配置表';
 
 -- ----------------------------
 -- Table structure for game_voucher_use
@@ -244,7 +258,7 @@ CREATE TABLE `game_voucher_use` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `player_id` (`user_id`) USING BTREE,
   KEY `voucher_id` (`voucher_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='玩家领取代金券记录表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='玩家领取代金券记录表';
 
 -- ----------------------------
 -- Table structure for pay_merchant
@@ -296,7 +310,7 @@ CREATE TABLE `sys_logs` (
   `updated_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `create_time` (`created_at`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=138 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='日志表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='日志表';
 
 -- ----------------------------
 -- Table structure for user
@@ -380,6 +394,7 @@ CREATE TABLE `user_actives` (
   `app_ver` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '应用包版本',
   `sdk_ver` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'sdk版本',
   `ad_id` int(11) NOT NULL DEFAULT '0' COMMENT '分包标识/广告位id',
+  `package_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '包名，ios为bundleid',
   `account_id` int(11) NOT NULL DEFAULT '0' COMMENT '渠道账号id',
   `media_id` int(11) NOT NULL DEFAULT '0' COMMENT '媒体渠道id',
   `media_sub_id` int(11) NOT NULL DEFAULT '0' COMMENT '媒体渠道子id',
@@ -389,28 +404,36 @@ CREATE TABLE `user_actives` (
   `tid` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0' COMMENT '渠道计划投放位置',
   `ip` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ip',
   `mac` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'mac',
-  `sys_brand` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '设备品牌',
+  `sys_brand` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '设备品牌-手机品牌，ios固定为Apple',
   `sys_model` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '设备机型',
   `sys_name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '设备系统名称',
   `sys_ver` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '设备版本',
   `screen_size` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '屏幕尺寸',
   `network` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '网络',
+  `network_name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `op` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ip运营商',
   `country` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '国家',
   `province` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '省份',
   `city` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '城市',
-  `idfa` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'idfa',
-  `idfv` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'idfv',
+  `idfa` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'idfa-iOS必需，如果无法获取或没有，传空值',
+  `idfv` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'idfv-iOS必需',
+  `idfd` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'iOS的CAID，如果有接入',
+  `idfd1` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'iOS的CAID1，如果有接入（最新）',
+  `idfd2` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'iOS的CAID2，如果有接入',
   `odid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'odid',
-  `oaid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'oaid',
+  `oaid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'oaid-andorid 10以上的oaid，如果无法获取或没有，传空值',
   `udid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'udid',
-  `vaid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'vaid',
-  `aaid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'aaid',
+  `vaid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'vaid-andorid 10以上的vaid，如果无法获取或没有，传空值',
+  `aaid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'aaid-andorid 10以上的aaid，如果无法获取或没有，传空值',
   `gaid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'gaid',
   `caid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'caid',
-  `imei` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'imei',
-  `ua` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ua`',
-  `android_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'android_id',
+  `imei` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'imei-andorid的imei，如果无法获取或没有，传空值',
+  `ua` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ua-系统内部webview ua',
+  `is_emulator` tinyint(4) DEFAULT NULL COMMENT '是否模拟器：1是，0否',
+  `is_root` tinyint(4) DEFAULT NULL COMMENT '是否root：1是，0否；Android必需',
+  `android_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'android_id-android必需',
+  `os` tinyint(4) DEFAULT '2' COMMENT '平台：1：iOS，2：Android',
+  `unixtime` int(11) DEFAULT NULL COMMENT '本地当前时间戳，单位秒',
   `created_at` int(11) NOT NULL COMMENT '流水时间',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `created_at` (`created_at`) USING BTREE
@@ -594,3 +617,18 @@ CREATE TABLE `user_orders` (
   KEY `status` (`status`) USING BTREE,
   KEY `reg_at` (`reg_at`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='用户订单表';
+
+-- ----------------------------
+-- Table structure for user_token
+-- ----------------------------
+DROP TABLE IF EXISTS `user_token`;
+CREATE TABLE `user_token` (
+  `user_id` varchar(50) DEFAULT NULL,
+  `login_token` varchar(64) DEFAULT NULL,
+  `tick` int(11) DEFAULT NULL,
+  `expired_at` int(11) DEFAULT NULL,
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL,
+  UNIQUE KEY `token` (`user_id`) USING BTREE,
+  KEY `player_id` (`user_id`,`login_token`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;

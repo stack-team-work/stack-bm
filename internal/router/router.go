@@ -33,6 +33,7 @@ func SetupRouter() *gin.Engine {
 	feishuUserHandler := sys.NewFeishuUserHandler()
 	gameHandler := game.NewGameHandler()
 	gameAppHandler := game.NewGameAppHandler()
+	gameAppTemplateHandler := game.NewGameAppTemplateHandler()
 	gameCpHandler := game.NewGameCpHandler()
 	gameTagHandler := game.NewGameTagHandler()
 	gameVariableHandler := game.NewGameVariableHandler()
@@ -92,6 +93,13 @@ func SetupRouter() *gin.Engine {
 		api.POST("/game-app/detail/:id", gameAppHandler.GetByID)
 		api.POST("/game-app/update/:id", gameAppHandler.Update)
 		api.POST("/game-app/delete/:id", gameAppHandler.Delete)
+
+		api.POST("/game-app-template/create", gameAppTemplateHandler.Create)
+		api.POST("/game-app-template/list", gameAppTemplateHandler.GetList)
+		api.POST("/game-app-template/all", gameAppTemplateHandler.GetAll)
+		api.POST("/game-app-template/detail/:id", gameAppTemplateHandler.GetByID)
+		api.POST("/game-app-template/update/:id", gameAppTemplateHandler.Update)
+		api.POST("/game-app-template/delete/:id", gameAppTemplateHandler.Delete)
 
 		api.POST("/game-cp/create", gameCpHandler.Create)
 		api.POST("/game-cp/list", gameCpHandler.GetList)

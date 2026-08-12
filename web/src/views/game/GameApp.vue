@@ -34,6 +34,7 @@ const searchKeyword = ref('')
 const searchGameId = ref(null)
 const searchStatus = ref(null)
 const gameOptions = ref([])
+const templateOptions = ref([])
 const { loadOptions } = useOptions()
 const { load: loadDict, options } = useDict()
 const statusOptions = computed(() => options('status'))
@@ -44,6 +45,7 @@ const columns = [
   { title: '父游戏', key: 'pid', width: 90, render: (row) => { const g = gameOptions.value.find(o => o.value === row.pid); return g ? g.label : row.pid } },
   { title: '子游戏名称', key: 'name' },
   { title: '包名', key: 'package_name' },
+  { title: 'SDK模板', key: 'app_template_id', width: 100, render: (row) => { const t = templateOptions.value.find(o => o.value === row.app_template_id); return t ? t.label : `SDK模板#${row.app_template_id}` } },
   { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, onUpdateValue: (val) => handleStatusChange(row, val), size: 'small' }) },
   { title: '创建时间', key: 'created_at', width: 170, render: (row) => formatTime(row.created_at) },
   { title: '操作', key: 'actions', width: 180, render: (row) => h(NSpace, null, { default: () => [
@@ -80,5 +82,5 @@ async function handleStatusChange(row, val) {
   }
 }
 
-onMounted(async () => { await loadDict(); gameOptions.value = await loadOptions('game'); search({}) })
+onMounted(async () => { await loadDict(); gameOptions.value = await loadOptions('game'); templateOptions.value = await loadOptions('game_app_template'); search({}) })
 </script>

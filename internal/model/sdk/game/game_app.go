@@ -6,15 +6,8 @@ type GameApp struct {
 	Name           string `gorm:"size:50;not null" json:"name"`
 	PackageName    string `gorm:"column:package_name;size:50" json:"package_name"`
 	AppName        string `gorm:"column:app_name;size:50" json:"app_name"`
+	AppTemplateID  int    `gorm:"column:app_template_id;not null" json:"app_template_id"`
 	Os             int    `gorm:"default:1" json:"os"`
-	IsVerify       int8   `gorm:"column:is_verify;default:0" json:"is_verify"`
-	Age            int    `gorm:"default:18" json:"age"`
-	IsOpenCharge   int8   `gorm:"column:is_open_charge;default:1" json:"is_open_charge"`
-	IsOpenRegister int8   `gorm:"column:is_open_register;default:1" json:"is_open_register"`
-	IsAlertEmail   int8   `gorm:"column:is_alert_email;default:1" json:"is_alert_email"`
-	IsAlertPhone   int8   `gorm:"column:is_alert_phone;default:1" json:"is_alert_phone"`
-	IsAlertAuth    int8   `gorm:"column:is_alert_auth;default:0" json:"is_alert_auth"`
-	IsOpenFloat    int8   `gorm:"column:is_open_float;default:1" json:"is_open_float"`
 	SdkVer         string `gorm:"column:sdk_ver;size:50" json:"sdk_ver"`
 	AppVer         string `gorm:"column:app_ver;size:50" json:"app_ver"`
 	AppKey         string `gorm:"column:app_key;size:50;not null" json:"app_key"`
@@ -26,7 +19,6 @@ type GameApp struct {
 	CsParams       string `gorm:"column:cs_params;type:mediumtext" json:"cs_params"`
 	PayParams      string `gorm:"column:pay_params;type:mediumtext" json:"pay_params"`
 	H5Params       string `gorm:"column:h5_params;type:mediumtext" json:"h5_params"`
-	IsDeleted      int8   `gorm:"column:is_deleted;default:0" json:"is_deleted"`
 	CreatedAt      int64  `gorm:"column:created_at;autoCreateTime" json:"created_at"`
 	UpdatedAt      int64  `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`
 }

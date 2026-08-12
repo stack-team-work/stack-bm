@@ -11,91 +11,93 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type GameAppHandler struct {
-	service *gameSvc.GameAppService
+type GameAppTemplateHandler struct {
+	service *gameSvc.GameAppTemplateService
 }
 
-func NewGameAppHandler() *GameAppHandler { return &GameAppHandler{service: gameSvc.NewGameAppService()} }
+func NewGameAppTemplateHandler() *GameAppTemplateHandler {
+	return &GameAppTemplateHandler{service: gameSvc.NewGameAppTemplateService()}
+}
 
-func (h *GameAppHandler) Create(c *gin.Context) {
-	var app game.GameApp
-	if err := c.ShouldBindJSON(&app); err != nil {
+func (h *GameAppTemplateHandler) Create(c *gin.Context) {
+	var t game.GameAppTemplate
+	if err := c.ShouldBindJSON(&t); err != nil {
 		response.Error(c, http.StatusBadRequest, "参数错误: "+err.Error())
 		return
 	}
-	if app.Name == "" || app.Pid == 0 {
-		response.Error(c, http.StatusBadRequest, "应用名称和游戏ID不能为空")
+	if t.Name == "" {
+		response.Error(c, http.StatusBadRequest, "模板名称不能为空")
 		return
 	}
-	if app.AppTemplateID == 0 {
-		response.Error(c, http.StatusBadRequest, "请选择SDK模板")
-		return
+	if t.AdminID == 0 {
+		if uid, ok := c.Get("user_id"); ok {
+			t.AdminID = int(uid.(uint))
+		}
 	}
-	if err := h.service.Create(&app); err != nil {
+	if err := h.service.Create(&t); err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	response.Success(c, app)
+	response.Success(c, t)
 }
 
-func (h *GameAppHandler) GetList(c *gin.Context) {
+func (h *GameAppTemplateHandler) GetList(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultPostForm("page", "1"))
 	size, _ := strconv.Atoi(c.DefaultPostForm("size", "10"))
 	keyword := c.DefaultPostForm("keyword", "")
-	gameID, _ := strconv.Atoi(c.DefaultPostForm("game_id", "0"))
 	status, _ := strconv.Atoi(c.DefaultPostForm("status", "-1"))
-	apps, total, err := h.service.FindPage(page, size, keyword, gameID, status)
+	list, total, err := h.service.FindPage(page, size, keyword, status)
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	response.PageSuccess(c, apps, total, page, size)
+	response.PageSuccess(c, list, total, page, size)
 }
 
-func (h *GameAppHandler) GetAll(c *gin.Context) {
-	apps, err := h.service.FindAll()
+func (h *GameAppTemplateHandler) GetAll(c *gin.Context) {
+	list, err := h.service.FindAll()
 	if err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	response.Success(c, apps)
+	response.Success(c, list)
 }
 
-func (h *GameAppHandler) GetByID(c *gin.Context) {
+func (h *GameAppTemplateHandler) GetByID(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {
 		response.Error(c, http.StatusBadRequest, "参数错误")
 		return
 	}
-	app, err := h.service.FindByID(uint(id))
+	t, err := h.service.FindByID(uint(id))
 	if err != nil {
-		response.Error(c, http.StatusNotFound, "应用不存在")
+		response.Error(c, http.StatusNotFound, "SDK模板不存在")
 		return
 	}
-	response.Success(c, app)
+	response.Success(c, t)
 }
 
-func (h *GameAppHandler) Update(c *gin.Context) {
+func (h *GameAppTemplateHandler) Update(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {
 		response.Error(c, http.StatusBadRequest, "参数错误")
 		return
 	}
-	var app game.GameApp
-	if err := c.ShouldBindJSON(&app); err != nil {
+	var t game.GameAppTemplate
+	if err := c.ShouldBindJSON(&t); err != nil {
 		response.Error(c, http.StatusBadRequest, "参数错误: "+err.Error())
 		return
 	}
-	if err := h.service.Update(uint(id), &app); err != nil {
+	if err := h.service.Update(uint(id), &t); err != nil {
 		response.Error(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 	response.Success(c, nil)
 }
 
-func (h *GameAppHandler) Delete(c *gin.Context) {
+func (h *GameAppTemplateHandler) Delete(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {

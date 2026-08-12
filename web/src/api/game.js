@@ -40,6 +40,22 @@ export function deleteGameApp(id) {
   return request.post(`/game-app/delete/${id}`)
 }
 
+export function getGameAppTemplateList(params) {
+  return request.post('/game-app-template/list', params)
+}
+
+export function createGameAppTemplate(data) {
+  return request.post('/game-app-template/create', data)
+}
+
+export function updateGameAppTemplate(id, data) {
+  return request.post(`/game-app-template/update/${id}`, data)
+}
+
+export function deleteGameAppTemplate(id) {
+  return request.post(`/game-app-template/delete/${id}`)
+}
+
 export function getGameCpList(params) {
   return request.post('/game-cp/list', params)
 }

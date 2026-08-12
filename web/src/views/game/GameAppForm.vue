@@ -34,8 +34,8 @@
           <n-form-item path="app_ver" label="应用版本" style="width: 280px">
             <n-input v-model:value="formData.app_ver" placeholder="请输入应用版本" />
           </n-form-item>
-          <n-form-item path="age" label="年龄限制" style="width: 280px">
-            <n-input-number v-model:value="formData.age" :min="0" style="width: 100%" />
+          <n-form-item path="app_template_id" label="SDK模板" style="width: 280px">
+            <n-select v-model:value="formData.app_template_id" :options="templateOptions" placeholder="请选择SDK模板" filterable />
           </n-form-item>
         </n-space>
         <n-space>
@@ -48,33 +48,6 @@
         </n-space>
         <n-form-item path="pay_domain" label="支付域名" style="width: 280px">
           <n-input v-model:value="formData.pay_domain" placeholder="请输入支付域名" />
-        </n-form-item>
-      </n-space>
-
-      <n-divider>功能开关</n-divider>
-      <n-space>
-        <n-form-item path="is_verify" label="实名认证" label-placement="left">
-          <n-switch v-model:value="formData.is_verify" :checked-value="1" :unchecked-value="0" />
-        </n-form-item>
-        <n-form-item path="is_open_charge" label="开启充值" label-placement="left">
-          <n-switch v-model:value="formData.is_open_charge" :checked-value="1" :unchecked-value="0" />
-        </n-form-item>
-        <n-form-item path="is_open_register" label="开启注册" label-placement="left">
-          <n-switch v-model:value="formData.is_open_register" :checked-value="1" :unchecked-value="0" />
-        </n-form-item>
-        <n-form-item path="is_alert_email" label="邮件提醒" label-placement="left">
-          <n-switch v-model:value="formData.is_alert_email" :checked-value="1" :unchecked-value="0" />
-        </n-form-item>
-      </n-space>
-      <n-space>
-        <n-form-item path="is_alert_phone" label="短信提醒" label-placement="left">
-          <n-switch v-model:value="formData.is_alert_phone" :checked-value="1" :unchecked-value="0" />
-        </n-form-item>
-        <n-form-item path="is_alert_auth" label="认证提醒" label-placement="left">
-          <n-switch v-model:value="formData.is_alert_auth" :checked-value="1" :unchecked-value="0" />
-        </n-form-item>
-        <n-form-item path="is_open_float" label="悬浮窗" label-placement="left">
-          <n-switch v-model:value="formData.is_open_float" :checked-value="1" :unchecked-value="0" />
         </n-form-item>
       </n-space>
 
@@ -120,23 +93,22 @@ const message = useMessage()
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
 const { loadOptions } = useOptions()
 const gameOptions = ref([])
+const templateOptions = ref([])
 const appKey = ref('')
 const appSecret = ref('')
 
 const osOptions = [{ label: 'Android', value: 1 }, { label: 'iOS', value: 2 }, { label: 'H5', value: 3 }]
 
-const formData = reactive({ pid: null, name: '', package_name: '', app_name: '', os: 1, sdk_ver: '', app_ver: '', age: 18, callback_url: '', api_domain: '', pay_domain: '', is_verify: 0, is_open_charge: 1, is_open_register: 1, is_alert_email: 1, is_alert_phone: 1, is_alert_auth: 0, is_open_float: 1, cs_params: '', pay_params: '', h5_params: '', status: 1 })
-const rules = { name: [{ required: true, message: '请输入子游戏名称', trigger: 'blur' }], pid: [{ required: true, type: 'number', min: 1, message: '请选择所属游戏', trigger: 'change' }] }
+const formData = reactive({ pid: null, name: '', package_name: '', app_name: '', app_template_id: null, os: 1, sdk_ver: '', app_ver: '', callback_url: '', api_domain: '', pay_domain: '', cs_params: '', pay_params: '', h5_params: '', status: 1 })
+const rules = { name: [{ required: true, message: '请输入子游戏名称', trigger: 'blur' }], pid: [{ required: true, type: 'number', min: 1, message: '请选择所属游戏', trigger: 'change' }], app_template_id: [{ required: true, type: 'number', min: 1, message: '请选择SDK模板', trigger: 'change' }] }
 
 function goBack() { router.push('/game-app') }
 
 function fillForm(app) {
   formData.pid = app.pid; formData.name = app.name; formData.package_name = app.package_name; formData.app_name = app.app_name || ''
-  formData.os = app.os || 1; formData.sdk_ver = app.sdk_ver || ''; formData.app_ver = app.app_ver || ''; formData.age = app.age || 18
+  formData.os = app.os || 1; formData.sdk_ver = app.sdk_ver || ''; formData.app_ver = app.app_ver || ''; formData.app_template_id = app.app_template_id || null
   formData.callback_url = app.callback_url || ''; formData.api_domain = app.api_domain || ''; formData.pay_domain = app.pay_domain || ''
-  formData.is_verify = app.is_verify ?? 0; formData.is_open_charge = app.is_open_charge ?? 1; formData.is_open_register = app.is_open_register ?? 1
-  formData.is_alert_email = app.is_alert_email ?? 1; formData.is_alert_phone = app.is_alert_phone ?? 1; formData.is_alert_auth = app.is_alert_auth ?? 0
-  formData.is_open_float = app.is_open_float ?? 1; formData.cs_params = app.cs_params || ''; formData.pay_params = app.pay_params || ''; formData.h5_params = app.h5_params || ''
+  formData.cs_params = app.cs_params || ''; formData.pay_params = app.pay_params || ''; formData.h5_params = app.h5_params || ''
   formData.status = app.status ?? 1; appKey.value = app.app_key || ''; appSecret.value = app.app_secret || ''
 }
 
@@ -152,6 +124,7 @@ async function handleSubmit() {
 
 onMounted(async () => {
   gameOptions.value = await loadOptions('game')
+  templateOptions.value = await loadOptions('game_app_template')
   const id = route.params.id
   if (id && id !== 'create') { isEdit.value = true; editId.value = Number(id)
     const res = await fetch(`/api/game-app/detail/${id}`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': `Bearer ${localStorage.getItem('token')}` } })

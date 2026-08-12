@@ -71,6 +71,6 @@ if ($portCheck) { Write-Host "  Frontend started on :3000" } else { Write-Host "
 === Dev services started ===
   Backend:  http://localhost:8080
   Frontend: http://localhost:3000
-  Login:    admin / admin123 (dev mode)
+  Login:    use a manually-created sys_admin account (no auto-create)
   Stop:     dev-stack-bm-stop
 ```

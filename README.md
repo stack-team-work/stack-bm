@@ -113,7 +113,7 @@ npm run build
 ### 访问系统
 - 前端: http://localhost:3000
 - 后端: http://localhost:8080
-- dev模式默认账号: admin / admin123
+- 管理员账号需手动在 `sys_admin` 表中创建
 
 ## API 接口列表
 
@@ -201,8 +201,6 @@ $env:GOOS="windows"; $env:GOARCH="amd64"; go build -o build/stack-bm.exe cmd/ser
 | `DB_API_NAME` | stack_api 数据库名 | stack_api |
 | `JWT_SECRET` | JWT 签名密钥 | - |
 | `JWT_EXPIRE_HOURS` | Token 过期时间(小时) | 24 |
-| `DEV_DEFAULT_USERNAME` | dev 模式默认用户名 | admin |
-| `DEV_DEFAULT_PASSWORD` | dev 模式默认密码 | admin123 |
 
 ## 项目结构
 

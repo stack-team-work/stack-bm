@@ -55,6 +55,12 @@ const routes = [
         meta: { title: '编辑子游戏' },
       },
       {
+        path: 'game-app-template',
+        name: 'GameAppTemplate',
+        component: () => import('../views/game/GameAppTemplate.vue'),
+        meta: { title: 'SDK模板' },
+      },
+      {
         path: 'game-cp',
         name: 'GameCp',
         component: () => import('../views/game/GameCp.vue'),

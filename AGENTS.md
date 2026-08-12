@@ -12,7 +12,7 @@ npm run dev                        # start frontend (:3000)
 npm run build                      # production build check
 ```
 
-Dev mode (`.env` `SERVER_MODE=dev`) auto-creates `admin/admin123` on first login if no admin exists.
+Dev mode (`.env` `SERVER_MODE=dev`) only affects Gin's run mode; the default admin account must be created manually (no auto-create on login).
 
 ## Architecture
 

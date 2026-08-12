@@ -104,6 +104,7 @@ const topNavRouteMap = {
   '/media': 'publish', '/media-sub': 'publish', '/media-agent': 'publish',
   '/media-application': 'publish', '/media-manager': 'publish', '/media-subject': 'publish',
   '/game': 'game', '/game-app': 'game', '/game-app/create': 'game', '/game-app/edit': 'game',
+  '/game-app-template': 'game',
   '/game-cp': 'game', '/game-tag': 'game', '/game-variable': 'game',
   '/game-platform': 'game', '/sdk-logs': 'game',
   '/game-gift': 'operation', '/game-gift-code': 'operation', '/game-gift-user-code': 'operation',
@@ -158,6 +159,7 @@ const sidebarMenu = computed(() => {
         children: [
           { label: '父游戏', key: '/game' },
           { label: '子游戏', key: '/game-app' },
+          { label: 'SDK模板', key: '/game-app-template' },
           { label: '游戏CP', key: '/game-cp' },
           { label: '游戏标签', key: '/game-tag' },
           { label: '游戏变量', key: '/game-variable' },
