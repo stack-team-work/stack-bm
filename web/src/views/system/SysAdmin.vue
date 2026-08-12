@@ -11,26 +11,30 @@
       <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
     </n-space>
 
-    <n-modal v-model:show="showModal" :title="isEdit ? '编辑账号' : '新增账号'" preset="card" style="width: 500px" :mask-closable="false">
-      <n-form ref="formRef" :model="formData" :rules="rules">
-        <n-form-item path="username" label="用户名">
-          <n-input v-model:value="formData.username" placeholder="请输入用户名" :disabled="isEdit" />
-        </n-form-item>
-        <n-form-item path="password" label="密码" :required="!isEdit">
-          <n-input v-model:value="formData.password" type="password" :placeholder="isEdit ? '留空则不修改' : '请输入密码'" />
-        </n-form-item>
-        <n-form-item path="name" label="姓名">
-          <n-input v-model:value="formData.name" placeholder="请输入姓名" />
-        </n-form-item>
-        <n-form-item path="phone" label="手机号">
-          <n-input v-model:value="formData.phone" placeholder="请输入手机号" />
-        </n-form-item>
-        <n-form-item path="group_id" label="所属角色">
-          <n-select v-model:value="formData.group_id" :options="groupOptions" placeholder="请选择角色" />
-        </n-form-item>
-        <n-form-item path="status" label="状态">
-          <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
-        </n-form-item>
+    <n-modal v-model:show="showModal" :title="isEdit ? '编辑账号' : '新增账号'" preset="card" style="width: 640px" :mask-closable="false">
+      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="100">
+        <n-grid :cols="2" :x-gap="16">
+          <n-form-item-gi path="username" label="用户名">
+            <n-input v-model:value="formData.username" placeholder="请输入用户名" :disabled="isEdit" />
+          </n-form-item-gi>
+          <n-form-item-gi path="password" label="密码" :required="!isEdit">
+            <n-input v-model:value="formData.password" type="password" :placeholder="isEdit ? '留空则不修改' : '请输入密码'" />
+          </n-form-item-gi>
+          <n-form-item-gi path="name" label="姓名">
+            <n-input v-model:value="formData.name" placeholder="请输入姓名" />
+          </n-form-item-gi>
+          <n-form-item-gi path="phone" label="手机号">
+            <n-input v-model:value="formData.phone" placeholder="请输入手机号" />
+          </n-form-item-gi>
+          <n-form-item-gi path="group_id" label="所属角色">
+            <n-select v-model:value="formData.group_id" :options="groupOptions" placeholder="请选择角色" />
+          </n-form-item-gi>
+          <n-grid-item>
+            <n-form-item path="status" label="状态" label-placement="left">
+              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
+            </n-form-item>
+          </n-grid-item>
+        </n-grid>
       </n-form>
       <template #footer>
         <n-space justify="end">

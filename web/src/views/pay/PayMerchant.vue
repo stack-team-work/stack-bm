@@ -10,38 +10,42 @@
       </n-space>
       <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
     </n-space>
-    <n-modal v-model:show="showModal" :title="isEdit ? '编辑商户' : '新增商户'" preset="card" style="width: 560px" :mask-closable="false">
-      <n-form ref="formRef" :model="formData" :rules="rules">
-        <n-form-item path="name" label="对内名称">
-          <n-input v-model:value="formData.name" placeholder="请输入对内名称" />
-        </n-form-item>
-        <n-form-item path="show_name" label="对外名称">
-          <n-input v-model:value="formData.show_name" placeholder="请输入对外名称" />
-        </n-form-item>
-        <n-form-item path="type" label="支付类型">
-          <n-select v-model:value="formData.type" :options="typeOptions" placeholder="请选择支付类型" />
-        </n-form-item>
-        <n-form-item path="platform_mark" label="支付平台">
-          <n-select v-model:value="formData.platform_mark" :options="platformOptions" placeholder="请选择支付平台" />
-        </n-form-item>
-        <n-form-item path="mark" label="标识">
-          <n-input v-model:value="formData.mark" placeholder="请输入标识（留空自动生成）" :disabled="isEdit" />
-        </n-form-item>
-        <n-form-item path="url" label="支付URL">
-          <n-input v-model:value="formData.url" placeholder="请输入支付URL" />
-        </n-form-item>
-        <n-form-item path="rate" label="费率">
-          <n-input-number v-model:value="formData.rate" :min="0" :step="0.0001" style="width: 100%" placeholder="请输入费率" />
-        </n-form-item>
-        <n-form-item path="weight" label="权重">
-          <n-input-number v-model:value="formData.weight" :min="0" style="width: 100%" placeholder="请输入权重" />
-        </n-form-item>
-        <n-form-item path="config" label="支付配置">
-          <n-input v-model:value="formData.config" type="textarea" placeholder="请输入支付参数配置" />
-        </n-form-item>
-        <n-form-item path="status" label="状态">
-          <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
-        </n-form-item>
+    <n-modal v-model:show="showModal" :title="isEdit ? '编辑商户' : '新增商户'" preset="card" style="width: 720px" :mask-closable="false">
+      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="110">
+        <n-grid :cols="2" :x-gap="16">
+          <n-form-item-gi path="name" label="对内名称">
+            <n-input v-model:value="formData.name" placeholder="请输入对内名称" />
+          </n-form-item-gi>
+          <n-form-item-gi path="show_name" label="对外名称">
+            <n-input v-model:value="formData.show_name" placeholder="请输入对外名称" />
+          </n-form-item-gi>
+          <n-form-item-gi path="type" label="支付类型">
+            <n-select v-model:value="formData.type" :options="typeOptions" placeholder="请选择支付类型" />
+          </n-form-item-gi>
+          <n-form-item-gi path="platform_mark" label="支付平台">
+            <n-select v-model:value="formData.platform_mark" :options="platformOptions" placeholder="请选择支付平台" />
+          </n-form-item-gi>
+          <n-form-item-gi path="mark" label="标识">
+            <n-input v-model:value="formData.mark" placeholder="请输入标识（留空自动生成）" :disabled="isEdit" />
+          </n-form-item-gi>
+          <n-form-item-gi path="url" label="支付URL">
+            <n-input v-model:value="formData.url" placeholder="请输入支付URL" />
+          </n-form-item-gi>
+          <n-form-item-gi path="rate" label="费率">
+            <n-input-number v-model:value="formData.rate" :min="0" :step="0.0001" style="width: 100%" placeholder="请输入费率" />
+          </n-form-item-gi>
+          <n-form-item-gi path="weight" label="权重">
+            <n-input-number v-model:value="formData.weight" :min="0" style="width: 100%" placeholder="请输入权重" />
+          </n-form-item-gi>
+          <n-form-item-gi path="config" label="支付配置" :span="2">
+            <n-input v-model:value="formData.config" type="textarea" :rows="2" placeholder="请输入支付参数配置" />
+          </n-form-item-gi>
+          <n-grid-item :span="2">
+            <n-form-item path="status" label="状态" label-placement="left">
+              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
+            </n-form-item>
+          </n-grid-item>
+        </n-grid>
       </n-form>
       <template #footer>
         <n-space justify="end">

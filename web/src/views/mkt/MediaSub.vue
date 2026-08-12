@@ -12,20 +12,24 @@
       <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
     </n-space>
 
-    <n-modal v-model:show="showModal" :title="isEdit ? '编辑子渠道' : '新增子渠道'" preset="card" style="width: 500px" :mask-closable="false">
-      <n-form ref="formRef" :model="formData" :rules="rules">
-        <n-form-item path="media_id" label="所属媒体">
-          <n-select v-model:value="formData.media_id" :options="mediaOptions" placeholder="请选择媒体渠道" clearable />
-        </n-form-item>
-        <n-form-item path="name" label="子渠道名称">
-          <n-input v-model:value="formData.name" placeholder="请输入子渠道名称" />
-        </n-form-item>
-        <n-form-item path="mark" label="子渠道标识">
-          <n-input v-model:value="formData.mark" placeholder="请输入子渠道标识" :disabled="isEdit" />
-        </n-form-item>
-        <n-form-item path="status" label="状态">
-          <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
-        </n-form-item>
+    <n-modal v-model:show="showModal" :title="isEdit ? '编辑子渠道' : '新增子渠道'" preset="card" style="width: 560px" :mask-closable="false">
+      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="100">
+        <n-grid :cols="2" :x-gap="16">
+          <n-form-item-gi path="media_id" label="所属媒体">
+            <n-select v-model:value="formData.media_id" :options="mediaOptions" placeholder="请选择媒体渠道" clearable />
+          </n-form-item-gi>
+          <n-form-item-gi path="name" label="子渠道名称">
+            <n-input v-model:value="formData.name" placeholder="请输入子渠道名称" />
+          </n-form-item-gi>
+          <n-form-item-gi path="mark" label="子渠道标识">
+            <n-input v-model:value="formData.mark" placeholder="请输入子渠道标识" :disabled="isEdit" />
+          </n-form-item-gi>
+          <n-grid-item>
+            <n-form-item path="status" label="状态" label-placement="left">
+              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
+            </n-form-item>
+          </n-grid-item>
+        </n-grid>
       </n-form>
       <template #footer>
         <n-space justify="end">

@@ -10,35 +10,39 @@
       </n-space>
       <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
     </n-space>
-    <n-modal v-model:show="showModal" :title="isEdit ? '编辑飞书聊天' : '新增飞书聊天'" preset="card" style="width: 640px" :mask-closable="false">
-      <n-form ref="formRef" :model="formData" :rules="rules">
-        <n-form-item path="type" label="机器人类型">
-          <n-select v-model:value="formData.type" :options="chatTypeOptions" placeholder="请选择机器人类型" />
-        </n-form-item>
-        <n-form-item path="chat_id" label="群聊天ID">
-          <n-input v-model:value="formData.chat_id" placeholder="请输入群聊天ID" />
-        </n-form-item>
-        <n-form-item path="feishu_app_id" label="关联飞书应用">
-          <n-select v-model:value="formData.feishu_app_id" :options="feishuAppOptions" placeholder="请选择飞书应用" clearable />
-        </n-form-item>
-        <n-form-item path="call_action" label="Call Action">
-          <n-input v-model:value="formData.call_action" placeholder="请输入Call Action" />
-        </n-form-item>
-        <n-form-item path="action_title" label="对话标题">
-          <n-input v-model:value="formData.action_title" placeholder="请输入对话标题" />
-        </n-form-item>
-        <n-form-item path="at_type" label="艾特方式">
-          <n-select v-model:value="formData.at_type" :options="atTypeOptions" placeholder="请选择艾特方式" />
-        </n-form-item>
-        <n-form-item path="default_at_list" label="默认艾特列表">
-          <n-select v-model:value="formData.default_at_list" :options="atUserOptions" multiple placeholder="请选择默认艾特用户" />
-        </n-form-item>
-        <n-form-item path="at_list" label="选择艾特列表">
-          <n-select v-model:value="formData.at_list" :options="atUserOptions" multiple placeholder="请选择艾特用户" />
-        </n-form-item>
-        <n-form-item path="status" label="状态">
-          <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="关闭" />
-        </n-form-item>
+    <n-modal v-model:show="showModal" :title="isEdit ? '编辑飞书聊天' : '新增飞书聊天'" preset="card" style="width: 720px" :mask-closable="false">
+      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="110">
+        <n-grid :cols="2" :x-gap="16">
+          <n-form-item-gi path="type" label="机器人类型">
+            <n-select v-model:value="formData.type" :options="chatTypeOptions" placeholder="请选择机器人类型" />
+          </n-form-item-gi>
+          <n-form-item-gi path="chat_id" label="群聊天ID">
+            <n-input v-model:value="formData.chat_id" placeholder="请输入群聊天ID" />
+          </n-form-item-gi>
+          <n-form-item-gi path="feishu_app_id" label="关联飞书应用">
+            <n-select v-model:value="formData.feishu_app_id" :options="feishuAppOptions" placeholder="请选择飞书应用" clearable />
+          </n-form-item-gi>
+          <n-form-item-gi path="call_action" label="Call Action">
+            <n-input v-model:value="formData.call_action" placeholder="请输入Call Action" />
+          </n-form-item-gi>
+          <n-form-item-gi path="action_title" label="对话标题">
+            <n-input v-model:value="formData.action_title" placeholder="请输入对话标题" />
+          </n-form-item-gi>
+          <n-form-item-gi path="at_type" label="艾特方式">
+            <n-select v-model:value="formData.at_type" :options="atTypeOptions" placeholder="请选择艾特方式" />
+          </n-form-item-gi>
+          <n-form-item-gi path="default_at_list" label="默认艾特列表" :span="2">
+            <n-select v-model:value="formData.default_at_list" :options="atUserOptions" multiple placeholder="请选择默认艾特用户" />
+          </n-form-item-gi>
+          <n-form-item-gi path="at_list" label="选择艾特列表" :span="2">
+            <n-select v-model:value="formData.at_list" :options="atUserOptions" multiple placeholder="请选择艾特用户" />
+          </n-form-item-gi>
+          <n-grid-item :span="2">
+            <n-form-item path="status" label="状态" label-placement="left">
+              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="关闭" />
+            </n-form-item>
+          </n-grid-item>
+        </n-grid>
       </n-form>
       <template #footer>
         <n-space justify="end">

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50744
 File Encoding         : 65001
 
-Date: 2026-08-12 18:03:22
+Date: 2026-08-12 20:53:52
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -75,7 +75,7 @@ CREATE TABLE `game_app` (
 DROP TABLE IF EXISTS `game_app_template`;
 CREATE TABLE `game_app_template` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '模板名称',
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `is_open_realname` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否开启实名认证，1是：0：否',
   `is_open_register` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否开启注册，1是：0：否',
   `is_open_charge` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否开启充值，1是：0：否',
@@ -86,10 +86,12 @@ CREATE TABLE `game_app_template` (
   `allow_age` int(11) NOT NULL DEFAULT '18' COMMENT '可玩年龄',
   `status` tinyint(4) NOT NULL DEFAULT '1',
   `admin_id` int(11) NOT NULL DEFAULT '0' COMMENT '操作后台用户id',
+  `privacy_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '隐私条款',
+  `agreement_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '用户协议',
   `created_at` int(11) NOT NULL,
   `updated_at` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Table structure for game_cp

@@ -10,38 +10,42 @@
       </n-space>
       <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
     </n-space>
-    <n-modal v-model:show="showModal" :title="isEdit ? '编辑管家' : '新增管家'" preset="card" style="width: 550px" :mask-closable="false">
-      <n-form ref="formRef" :model="formData" :rules="rules">
-        <n-form-item path="media_id" label="媒体渠道">
-          <n-select v-model:value="formData.media_id" :options="mediaOptions" placeholder="请选择媒体渠道" clearable />
-        </n-form-item>
-        <n-form-item path="application_id" label="所属应用">
-          <n-select v-model:value="formData.application_id" :options="appOptions" placeholder="请选择应用" clearable />
-        </n-form-item>
-        <n-form-item path="name" label="管家名称">
-          <n-input v-model:value="formData.name" placeholder="请输入管家名称" />
-        </n-form-item>
-        <n-form-item path="account" label="管家账号">
-          <n-input v-model:value="formData.account" placeholder="请输入管家账号" />
-        </n-form-item>
-        <n-form-item path="account_id" label="管家ID">
-          <n-input v-model:value="formData.account_id" placeholder="请输入管家ID" />
-        </n-form-item>
-        <n-form-item path="account_num" label="绑定账户数">
-          <n-input-number v-model:value="formData.account_num" placeholder="绑定账户数" :min="0" style="width: 100%" />
-        </n-form-item>
-        <n-form-item path="auth_status" label="授权状态">
-          <n-select v-model:value="formData.auth_status" :options="authOptions" placeholder="授权状态" />
-        </n-form-item>
-        <n-form-item path="remark" label="备注">
-          <n-input v-model:value="formData.remark" placeholder="请输入备注" />
-        </n-form-item>
-        <n-form-item path="extra" label="扩展信息">
-          <n-input v-model:value="formData.extra" type="textarea" placeholder="请输入扩展信息" />
-        </n-form-item>
-        <n-form-item path="status" label="状态">
-          <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
-        </n-form-item>
+    <n-modal v-model:show="showModal" :title="isEdit ? '编辑管家' : '新增管家'" preset="card" style="width: 680px" :mask-closable="false">
+      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="100">
+        <n-grid :cols="2" :x-gap="16">
+          <n-form-item-gi path="media_id" label="媒体渠道">
+            <n-select v-model:value="formData.media_id" :options="mediaOptions" placeholder="请选择媒体渠道" clearable />
+          </n-form-item-gi>
+          <n-form-item-gi path="application_id" label="所属应用">
+            <n-select v-model:value="formData.application_id" :options="appOptions" placeholder="请选择应用" clearable />
+          </n-form-item-gi>
+          <n-form-item-gi path="name" label="管家名称">
+            <n-input v-model:value="formData.name" placeholder="请输入管家名称" />
+          </n-form-item-gi>
+          <n-form-item-gi path="account" label="管家账号">
+            <n-input v-model:value="formData.account" placeholder="请输入管家账号" />
+          </n-form-item-gi>
+          <n-form-item-gi path="account_id" label="管家ID">
+            <n-input v-model:value="formData.account_id" placeholder="请输入管家ID" />
+          </n-form-item-gi>
+          <n-form-item-gi path="account_num" label="绑定账户数">
+            <n-input-number v-model:value="formData.account_num" placeholder="绑定账户数" :min="0" style="width: 100%" />
+          </n-form-item-gi>
+          <n-form-item-gi path="auth_status" label="授权状态">
+            <n-select v-model:value="formData.auth_status" :options="authOptions" placeholder="授权状态" />
+          </n-form-item-gi>
+          <n-grid-item>
+            <n-form-item path="status" label="状态" label-placement="left">
+              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
+            </n-form-item>
+          </n-grid-item>
+          <n-form-item-gi path="remark" label="备注" :span="2">
+            <n-input v-model:value="formData.remark" placeholder="请输入备注" />
+          </n-form-item-gi>
+          <n-form-item-gi path="extra" label="扩展信息" :span="2">
+            <n-input v-model:value="formData.extra" type="textarea" :rows="2" placeholder="请输入扩展信息" />
+          </n-form-item-gi>
+        </n-grid>
       </n-form>
       <template #footer>
         <n-space justify="end">
