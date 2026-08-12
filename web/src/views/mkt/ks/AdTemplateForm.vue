@@ -4,7 +4,7 @@
       <n-text style="font-size: 18px; font-weight: 600">{{ isEdit ? '编辑快手广告模板' : '新增快手广告模板' }}</n-text>
     </n-space>
 
-    <n-card style="max-width: 1100px; margin-top: 16px">
+    <n-card style="margin-top: 16px">
       <n-form ref="formRef" :model="formData" :rules="rules" label-placement="top" label-width="130">
         <n-divider style="margin-top: 4px">基本信息</n-divider>
         <n-grid :cols="2" :x-gap="24">

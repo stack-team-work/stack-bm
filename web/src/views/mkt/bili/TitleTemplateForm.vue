@@ -4,7 +4,7 @@
       <n-text style="font-size: 18px; font-weight: 600">{{ isEdit ? '编辑标题包模板' : '新增标题包模板' }}</n-text>
     </n-space>
 
-    <n-card style="max-width: 900px; margin-top: 16px">
+    <n-card style="margin-top: 16px">
       <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="100">
         <n-form-item path="template_name" label="模板名称">
           <n-input v-model:value="formData.template_name" placeholder="请输入模板名称" style="max-width: 600px" />

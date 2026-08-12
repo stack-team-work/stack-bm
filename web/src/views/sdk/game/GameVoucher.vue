@@ -1,16 +1,18 @@
 <template>
   <div>
-    <n-space vertical :size="16">
-      <n-space>
-        <n-input v-model:value="searchKeyword" placeholder="搜索名称/描述" clearable style="width: 200px" @keyup.enter="doSearch" />
-        <n-select v-model:value="searchStatus" :options="statusOptions" placeholder="状态" clearable style="width: 120px" @update:value="doSearch" />
-        <n-button type="primary" size="small" @click="doSearch">搜索</n-button>
-        <n-button type="success" size="small" @click="handleAdd">新增</n-button>
-      </n-space>
-      <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
-    </n-space>
+    <n-card :bordered="false">
+      <div class="search-bar">
+        <n-space :size="12" align="center" wrap>
+          <n-input v-model:value="searchKeyword" placeholder="搜索名称/描述" clearable style="width: 200px" @keyup.enter="doSearch" />
+          <n-select v-model:value="searchStatus" :options="statusOptions" placeholder="状态" clearable style="width: 120px" @update:value="doSearch" />
+          <n-button type="info" size="small" @click="doSearch">搜索</n-button>
+          <n-button type="primary" size="small" @click="handleAdd">新增</n-button>
+        </n-space>
+      </div>
+      <n-data-table :bordered="false" :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
+    </n-card>
     <n-modal v-model:show="showModal" :title="isEdit ? '编辑代金券' : '新增代金券'" preset="card" style="width: 720px" :mask-closable="false">
-      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="110">
+      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="100">
         <n-grid :cols="2" :x-gap="16">
           <n-form-item-gi path="name" label="券名称">
             <n-input v-model:value="formData.name" placeholder="请输入券名称" />
@@ -55,12 +57,13 @@
 
 <script setup>
 import { ref, reactive, h, toRaw, computed, onMounted } from 'vue'
-import { NButton, NSpace, NSwitch, NPopconfirm, NInputNumber, useMessage } from 'naive-ui'
+import { NButton, NSpace, NSwitch, NPopconfirm, NIcon, NInputNumber, useMessage } from 'naive-ui'
 import { useTable } from '../../../composables/useTable'
 import { useModal } from '../../../composables/useModal'
 import { useDict } from '../../../composables/useDict'
 import { getGameVoucherList, createGameVoucher, updateGameVoucher, deleteGameVoucher } from '../../../api/sdk/game'
 import { formatTime } from '../../../utils/format'
+import { CreateOutline, TrashOutline } from '@vicons/ionicons5'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getGameVoucherList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
@@ -85,8 +88,8 @@ const columns = [
   { title: '结束时间', key: 'etime', width: 160, render: (row) => row.etime ? formatTime(row.etime) : '' },
   { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, onUpdateValue: (val) => handleStatusChange(row, val), size: 'small' }) },
   { title: '操作', key: 'actions', width: 140, render: (row) => h(NSpace, null, { default: () => [
-    h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => '编辑' }),
-    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => '删除' }) }),
+    h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CreateOutline) }), ' 编辑'] }),
+    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(TrashOutline) }), ' 删除'] }) }),
   ]}) },
 ]
 function doSearch() { search({ keyword: searchKeyword.value, status: searchStatus.value ?? -1 }) }

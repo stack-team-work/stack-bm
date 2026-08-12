@@ -1,6 +1,11 @@
 <template>
-  <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f5f7fa">
-    <n-card title="游戏发行后台管理系统" style="width: 400px">
+  <div class="login-page">
+    <div class="login-card">
+      <div class="login-header">
+        <img src="/logo.png" class="login-logo" />
+        <h1 class="login-title">游戏发行后台管理系统</h1>
+        <p class="login-subtitle">STACK-BM · 管理控制台</p>
+      </div>
       <n-form ref="formRef" :model="formData" :rules="rules">
         <n-form-item path="username" label="用户名">
           <n-input v-model:value="formData.username" placeholder="请输入用户名" />
@@ -15,12 +20,74 @@
           </n-space>
         </n-form-item>
         <n-form-item>
-          <n-button type="primary" :loading="loading" block @click="handleLogin">登 录</n-button>
+          <n-button type="primary" size="large" :loading="loading" block @click="handleLogin">登 录</n-button>
         </n-form-item>
       </n-form>
-    </n-card>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.login-page {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f0f9f4 0%, #e8f5ee 40%, #eef2fb 100%);
+  overflow: hidden;
+}
+.login-page::before {
+  content: '';
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(24, 160, 88, 0.18), transparent 70%);
+  top: -140px;
+  right: -80px;
+}
+.login-page::after {
+  content: '';
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(24, 160, 88, 0.12), transparent 70%);
+  bottom: -120px;
+  left: -60px;
+}
+.login-card {
+  position: relative;
+  z-index: 1;
+  width: 400px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(15, 80, 45, 0.12);
+  padding: 40px 36px 28px;
+}
+.login-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.login-logo {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 16px;
+}
+.login-title {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+.login-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: #999;
+  letter-spacing: 1px;
+}
+</style>
 
 <script setup>
 import { reactive, ref, onMounted } from 'vue'

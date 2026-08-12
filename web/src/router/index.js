@@ -160,7 +160,7 @@ const routes = [
         path: 'bili-ads',
         name: 'BiliAds',
         component: () => import('../views/mkt/bili/BiliAds.vue'),
-        meta: { title: 'B站Ads' },
+        meta: { title: 'B站广告' },
       },
       {
         path: 'bili-ads/ad-template/create',
@@ -202,7 +202,7 @@ const routes = [
         path: 'ks-ads',
         name: 'KsAds',
         component: () => import('../views/mkt/ks/KsAds.vue'),
-        meta: { title: '快手Ads' },
+        meta: { title: '快手广告' },
       },
       {
         path: 'ks-ads/ad-template/create',
@@ -244,7 +244,7 @@ const routes = [
         path: 'tt-ads',
         name: 'TtAds',
         component: () => import('../views/mkt/tt/TtAds.vue'),
-        meta: { title: '头条Ads' },
+        meta: { title: '头条广告' },
       },
       {
         path: 'tt-ads/ad-template/create',

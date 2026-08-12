@@ -1,15 +1,17 @@
 <template>
   <div>
-    <n-space vertical :size="16">
-      <n-space>
-        <n-input v-model:value="searchKeyword" placeholder="搜索菜单名称" clearable style="width: 180px" @keyup.enter="doSearch" />
-        <n-select v-model:value="searchParent" :options="parentSearchOptions" placeholder="父级菜单" clearable style="width: 150px" @update:value="doSearch" />
-        <n-button type="primary" size="small" @click="doSearch">搜索</n-button>
-        <n-button type="success" size="small" @click="handleAdd">新增</n-button>
-      </n-space>
+    <n-card :bordered="false">
+      <div class="search-bar">
+        <n-space :size="12" align="center" wrap>
+          <n-input v-model:value="searchKeyword" placeholder="搜索菜单名称" clearable style="width: 180px" @keyup.enter="doSearch" />
+          <n-select v-model:value="searchParent" :options="parentSearchOptions" placeholder="父级菜单" clearable style="width: 150px" @update:value="doSearch" />
+          <n-button type="info" size="small" @click="doSearch">搜索</n-button>
+          <n-button type="primary" size="small" @click="handleAdd">新增</n-button>
+        </n-space>
+      </div>
 
-      <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="false" />
-    </n-space>
+      <n-data-table :bordered="false" :columns="columns" :data="tableData" :loading="loading" :pagination="false" />
+    </n-card>
 
     <n-modal v-model:show="showModal" :title="isEdit ? '编辑菜单' : '新增菜单'" preset="card" style="width: 680px" :mask-closable="false">
       <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="100">
@@ -54,7 +56,8 @@
 
 <script setup>
 import { ref, reactive, h, onMounted, computed } from 'vue'
-import { NButton, NSpace, NSwitch, NPopconfirm, NTag } from 'naive-ui'
+import { NButton, NSpace, NSwitch, NPopconfirm, NTag, NIcon } from 'naive-ui'
+import { CreateOutline, TrashOutline } from '@vicons/ionicons5'
 import { useModal } from '../../../composables/useModal'
 import { getMenuAll, createMenu, updateMenu, deleteMenu } from '../../../api/bm/sys'
 import { useDict } from '../../../composables/useDict'
@@ -86,8 +89,8 @@ const columns = [
   { title: '排序', key: 'sort', width: 60 },
   { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, readonly: true, size: 'small' }) },
   { title: '操作', key: 'actions', width: 140, render: (row) => h(NSpace, null, { default: () => [
-    h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => '编辑' }),
-    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => '删除' }) }),
+    h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CreateOutline) }), ' 编辑'] }),
+    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(TrashOutline) }), ' 删除'] }) }),
   ]}) },
 ]
 
@@ -102,6 +105,7 @@ function doSearch() {
   }
   tableData.value = list
 }
+
 
 function handleAdd() { resetForm(); open() }
 function handleEdit(row) { resetForm(); formData.type = row.type; formData.name = row.name; formData.path = row.path; formData.parent = row.parent; formData.icon = row.icon || ''; formData.sort = row.sort; formData.author = row.author || ''; formData.status = row.status; openEdit(row) }

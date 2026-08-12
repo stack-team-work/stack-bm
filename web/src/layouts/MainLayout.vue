@@ -7,10 +7,11 @@
         :width="220"
         :collapsed="collapsed"
         :inverted="true"
+        :native-scrollbar="false"
       >
-      <div style="height: 56px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.08); gap: 8px">
-        <img src="/logo.png" style="width: 32px; height: 32px; flex-shrink: 0" />
-        <span v-if="!collapsed" style="color: #fff; font-size: 16px; font-weight: bold; letter-spacing: 2px">STACK-BM</span>
+      <div class="layout-logo">
+        <img src="/logo.png" class="layout-logo-img" />
+        <span v-if="!collapsed" class="layout-logo-text">STACK-BM</span>
       </div>
       <n-menu
         :collapsed="collapsed"
@@ -19,14 +20,16 @@
         :value="currentRoute"
         :options="sidebarMenu"
         :inverted="true"
+        :root-indent="20"
+        :indent="24"
         @update:value="handleMenuSelect"
       />
     </n-layout-sider>
     <n-layout>
-      <n-layout-header bordered style="height: 56px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; background: #fff">
+      <n-layout-header bordered class="layout-header">
         <n-space :size="8" align="center">
-          <n-button quaternary size="small" @click="collapsed = !collapsed" style="font-size: 20px">
-            <n-icon><menu-outline /></n-icon>
+          <n-button quaternary size="small" class="layout-collapse-btn" @click="collapsed = !collapsed">
+            <n-icon :size="20"><menu-outline /></n-icon>
           </n-button>
           <n-menu
             mode="horizontal"
@@ -36,14 +39,21 @@
           />
         </n-space>
         <n-dropdown :options="userDropdownOptions" @select="handleUserAction">
-          <span style="cursor: pointer; display: flex; align-items: center; gap: 4px">
-            <n-text>{{ userInfo?.username || '' }}</n-text>
-            <span style="font-size: 12px; color: #999">▼</span>
-          </span>
+          <div class="layout-user">
+            <n-avatar round :size="28" class="layout-user-avatar">
+              <n-icon><person-outline /></n-icon>
+            </n-avatar>
+            <span class="layout-user-name">{{ userInfo?.username || '' }}</span>
+            <n-icon :size="14" class="layout-user-caret"><chevron-down-outline /></n-icon>
+          </div>
         </n-dropdown>
       </n-layout-header>
-      <n-layout-content style="padding: 24px; background: #fff; min-height: calc(100vh - 56px - 32px)">
-        <router-view />
+      <n-layout-content class="layout-content">
+        <router-view v-slot="{ Component }">
+          <transition name="fade-slide" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
       </n-layout-content>
     </n-layout>
   </n-layout>
@@ -60,6 +70,76 @@
 .n-menu.n-menu--horizontal .n-menu-item-content:hover {
   background: #f5f5f5 !important;
 }
+
+.layout-logo {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.layout-logo-img {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+.layout-logo-text {
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.layout-header {
+  height: 56px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+}
+.layout-collapse-btn {
+  font-size: 20px;
+}
+
+.layout-user {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.layout-user-avatar {
+  background: #18a058;
+}
+.layout-user-name {
+  font-size: 14px;
+}
+.layout-user-caret {
+  color: #999;
+}
+
+.layout-content {
+  padding: 16px 20px 24px;
+  background: #f5f6fa;
+  min-height: calc(100vh - 56px);
+}
+
+.layout-breadcrumb {
+  margin-bottom: 16px;
+}
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.fade-slide-leave-to {
+  opacity: 0;
+}
 </style>
 
 <script setup>
@@ -70,6 +150,7 @@ import {
   HomeOutline, SettingsOutline, GameControllerOutline,
   BarChartOutline, GiftOutline, TicketOutline, CashOutline,
   ServerOutline, DocumentTextOutline, MenuOutline,
+  PersonOutline, ChevronDownOutline,
 } from '@vicons/ionicons5'
 
 const router = useRouter()
@@ -158,19 +239,19 @@ const sidebarMenu = computed(() => {
           ],
         },
         {
-          label: 'B站Ads', key: 'bili-ads', icon: renderIcon(GameControllerOutline),
+          label: 'B站广告', key: 'bili-ads', icon: renderIcon(GameControllerOutline),
           children: [
             { label: '模板列表', key: '/bili-ads' },
           ],
         },
         {
-          label: '快手Ads', key: 'ks-ads', icon: renderIcon(GameControllerOutline),
+          label: '快手广告', key: 'ks-ads', icon: renderIcon(GameControllerOutline),
           children: [
             { label: '模板列表', key: '/ks-ads' },
           ],
         },
         {
-          label: '头条Ads', key: 'tt-ads', icon: renderIcon(GameControllerOutline),
+          label: '头条广告', key: 'tt-ads', icon: renderIcon(GameControllerOutline),
           children: [
             { label: '模板列表', key: '/tt-ads' },
           ],

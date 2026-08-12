@@ -1,15 +1,17 @@
 <template>
   <div>
-    <n-space vertical :size="16">
-      <n-space>
-        <n-input v-model:value="searchKeyword" placeholder="搜索名称/备注" clearable style="width: 200px" @keyup.enter="doSearch" />
-        <n-select v-model:value="searchMediaId" :options="mediaOptions" placeholder="媒体渠道" clearable style="width: 150px" @update:value="doSearch" />
-        <n-select v-model:value="searchStatus" :options="statusOptions" placeholder="状态" clearable style="width: 120px" @update:value="doSearch" />
-        <n-button type="primary" size="small" @click="doSearch">搜索</n-button>
-        <n-button type="success" size="small" @click="handleAdd">新增</n-button>
-      </n-space>
-      <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
-    </n-space>
+    <n-card :bordered="false">
+      <div class="search-bar">
+        <n-space :size="12" align="center" wrap>
+          <n-input v-model:value="searchKeyword" placeholder="搜索名称/备注" clearable style="width: 200px" @keyup.enter="doSearch" />
+          <n-select v-model:value="searchMediaId" :options="mediaOptions" placeholder="媒体渠道" clearable style="width: 150px" @update:value="doSearch" />
+          <n-select v-model:value="searchStatus" :options="statusOptions" placeholder="状态" clearable style="width: 120px" @update:value="doSearch" />
+          <n-button type="info" size="small" @click="doSearch">搜索</n-button>
+          <n-button type="primary" size="small" @click="handleAdd">新增</n-button>
+        </n-space>
+      </div>
+      <n-data-table :bordered="false" :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
+    </n-card>
     <n-modal v-model:show="showModal" :title="isEdit ? '编辑应用' : '新增应用'" preset="card" style="width: 640px" :mask-closable="false">
       <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="100">
         <n-grid :cols="2" :x-gap="16">
@@ -50,7 +52,8 @@
 
 <script setup>
 import { ref, reactive, h, onMounted, computed } from 'vue'
-import { NButton, NSpace, NSwitch, NPopconfirm, NInputNumber, useMessage } from 'naive-ui'
+import { NButton, NSpace, NSwitch, NPopconfirm, NInputNumber, NIcon, useMessage } from 'naive-ui'
+import { CreateOutline, TrashOutline } from '@vicons/ionicons5'
 import { useTable } from '../../../composables/useTable'
 import { useModal } from '../../../composables/useModal'
 import { getMediaApplicationList, createMediaApplication, updateMediaApplication, deleteMediaApplication } from '../../../api/mkt/media'
@@ -84,8 +87,8 @@ const columns = [
   { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, onUpdateValue: (val) => handleStatusChange(row, val), size: 'small' }) },
   { title: '创建时间', key: 'created_at', width: 170, render: (row) => formatTime(row.created_at) },
   { title: '操作', key: 'actions', width: 140, render: (row) => h(NSpace, null, { default: () => [
-    h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => '编辑' }),
-    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => '删除' }) }),
+    h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CreateOutline) }), ' 编辑'] }),
+    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(TrashOutline) }), ' 删除'] }) }),
   ]}) },
 ]
 function doSearch() { search({ keyword: searchKeyword.value, media_id: searchMediaId.value ?? 0, status: searchStatus.value ?? -1 }) }

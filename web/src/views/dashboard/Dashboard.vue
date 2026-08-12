@@ -1,25 +1,57 @@
 <template>
   <div>
     <n-space vertical :size="24">
-      <n-grid :cols="4" :x-gap="24">
+      <n-grid :cols="4" :x-gap="16">
         <n-gi>
-          <n-card size="small" hoverable>
-            <n-statistic label="今日充值人数" :value="statRecharge" />
+          <n-card size="small" hoverable class="stat-card">
+            <div class="stat-card-body">
+              <div class="stat-icon" style="background: rgba(24,160,88,.12); color: #18a058">
+                <n-icon :size="22"><cash-outline /></n-icon>
+              </div>
+              <div>
+                <div class="stat-label">今日充值人数</div>
+                <div class="stat-value">{{ statRecharge }}</div>
+              </div>
+            </div>
           </n-card>
         </n-gi>
         <n-gi>
-          <n-card size="small" hoverable>
-            <n-statistic label="今日注册人数" :value="statRegister" />
+          <n-card size="small" hoverable class="stat-card">
+            <div class="stat-card-body">
+              <div class="stat-icon" style="background: rgba(32,128,240,.12); color: #2080f0">
+                <n-icon :size="22"><person-add-outline /></n-icon>
+              </div>
+              <div>
+                <div class="stat-label">今日注册人数</div>
+                <div class="stat-value">{{ statRegister }}</div>
+              </div>
+            </div>
           </n-card>
         </n-gi>
         <n-gi>
-          <n-card size="small" hoverable>
-            <n-statistic label="今日登录人数" :value="statLogin" />
+          <n-card size="small" hoverable class="stat-card">
+            <div class="stat-card-body">
+              <div class="stat-icon" style="background: rgba(240,160,32,.12); color: #f0a020">
+                <n-icon :size="22"><log-in-outline /></n-icon>
+              </div>
+              <div>
+                <div class="stat-label">今日登录人数</div>
+                <div class="stat-value">{{ statLogin }}</div>
+              </div>
+            </div>
           </n-card>
         </n-gi>
         <n-gi>
-          <n-card size="small" hoverable>
-            <n-statistic label="今日激活人数" :value="statActivate" />
+          <n-card size="small" hoverable class="stat-card">
+            <div class="stat-card-body">
+              <div class="stat-icon" style="background: rgba(208,48,80,.12); color: #d03050">
+                <n-icon :size="22"><flash-outline /></n-icon>
+              </div>
+              <div>
+                <div class="stat-label">今日激活人数</div>
+                <div class="stat-value">{{ statActivate }}</div>
+              </div>
+            </div>
           </n-card>
         </n-gi>
       </n-grid>
@@ -79,7 +111,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { DownloadOutline } from '@vicons/ionicons5'
+import { DownloadOutline, CashOutline, PersonAddOutline, LogInOutline, FlashOutline } from '@vicons/ionicons5'
 import { use } from 'echarts/core'
 import { LineChart, BarChart } from 'echarts/charts'
 import { GridComponent, TooltipComponent, LegendComponent, ToolboxComponent } from 'echarts/components'
@@ -209,3 +241,34 @@ onMounted(async () => {
   } catch { /* */ }
 })
 </script>
+
+<style scoped>
+.stat-card {
+  border-radius: 8px;
+}
+.stat-card-body {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.stat-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.stat-label {
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 4px;
+}
+.stat-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a2e;
+  line-height: 1;
+}
+</style>

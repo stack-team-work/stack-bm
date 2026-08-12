@@ -1,15 +1,17 @@
 <template>
   <div>
-    <n-space vertical :size="16">
-      <n-space>
-        <n-input v-model:value="searchKeyword" placeholder="搜索飞书用户ID" clearable style="width: 200px" @keyup.enter="doSearch" />
-        <n-select v-model:value="searchAdminId" :options="adminOptions" placeholder="管理员" clearable style="width: 160px" @update:value="doSearch" />
-        <n-select v-model:value="searchStatus" :options="statusOptions" placeholder="状态" clearable style="width: 120px" @update:value="doSearch" />
-        <n-button type="primary" size="small" @click="doSearch">搜索</n-button>
-        <n-button type="success" size="small" @click="handleAdd">新增</n-button>
-      </n-space>
-      <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
-    </n-space>
+    <n-card :bordered="false">
+      <div class="search-bar">
+        <n-space :size="12" align="center" wrap>
+          <n-input v-model:value="searchKeyword" placeholder="搜索飞书用户ID" clearable style="width: 200px" @keyup.enter="doSearch" />
+          <n-select v-model:value="searchAdminId" :options="adminOptions" placeholder="管理员" clearable style="width: 160px" @update:value="doSearch" />
+          <n-select v-model:value="searchStatus" :options="statusOptions" placeholder="状态" clearable style="width: 120px" @update:value="doSearch" />
+          <n-button type="info" size="small" @click="doSearch">搜索</n-button>
+          <n-button type="primary" size="small" @click="handleAdd">新增</n-button>
+        </n-space>
+      </div>
+      <n-data-table :bordered="false" :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
+    </n-card>
     <n-modal v-model:show="showModal" :title="isEdit ? '编辑飞书绑定' : '新增飞书绑定'" preset="card" style="width: 560px" :mask-closable="false">
       <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="100">
         <n-grid :cols="2" :x-gap="16">
@@ -38,7 +40,8 @@
 
 <script setup>
 import { ref, reactive, h, computed, onMounted } from 'vue'
-import { NButton, NSpace, NSwitch, useMessage } from 'naive-ui'
+import { NButton, NSpace, NSwitch, NIcon, useMessage } from 'naive-ui'
+import { CreateOutline } from '@vicons/ionicons5'
 import { useTable } from '../../../composables/useTable'
 import { useModal } from '../../../composables/useModal'
 import { useDict } from '../../../composables/useDict'
@@ -66,7 +69,7 @@ const columns = [
   { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, onUpdateValue: (val) => handleStatusChange(row, val), size: 'small' }) },
   { title: '创建时间', key: 'created_at', width: 170, render: (row) => formatTime(row.created_at) },
   { title: '操作', key: 'actions', width: 80, render: (row) => h(NSpace, null, { default: () => [
-    h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => '编辑' }),
+    h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CreateOutline) }), ' 编辑'] }),
   ]}) },
 ]
 function doSearch() { search({ keyword: searchKeyword.value, admin_id: searchAdminId.value ?? 0, status: searchStatus.value ?? -1 }) }

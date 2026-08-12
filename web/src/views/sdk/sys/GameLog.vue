@@ -1,15 +1,16 @@
 <template>
   <div>
-    <n-space vertical :size="16">
-      <n-space>
-        <n-input v-model:value="searchKeyword" placeholder="搜索IP/描述" clearable style="width: 200px" @keyup.enter="doSearch" />
-        <n-select v-model:value="searchType" :options="typeOptions" placeholder="类型" clearable style="width: 120px" @update:value="doSearch" />
-        <n-select v-model:value="searchLevel" :options="levelOptions" placeholder="级别" clearable style="width: 100px" @update:value="doSearch" />
-        <n-button type="primary" size="small" @click="doSearch">搜索</n-button>
-      </n-space>
-
-      <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
-    </n-space>
+    <n-card :bordered="false">
+      <div class="search-bar">
+        <n-space :size="12" align="center" wrap>
+          <n-input v-model:value="searchKeyword" placeholder="搜索IP/描述" clearable style="width: 200px" @keyup.enter="doSearch" />
+          <n-select v-model:value="searchType" :options="typeOptions" placeholder="类型" clearable style="width: 120px" @update:value="doSearch" />
+          <n-select v-model:value="searchLevel" :options="levelOptions" placeholder="级别" clearable style="width: 100px" @update:value="doSearch" />
+          <n-button type="info" size="small" @click="doSearch">搜索</n-button>
+        </n-space>
+      </div>
+      <n-data-table :bordered="false" :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
+    </n-card>
   </div>
 </template>
 
@@ -48,6 +49,7 @@ const columns = [
 function doSearch() {
   search({ keyword: searchKeyword.value, type: searchType.value ?? 0, level: searchLevel.value ?? 0 })
 }
+
 
 onMounted(async () => { await loadDict(); search({}) })
 </script>

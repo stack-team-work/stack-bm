@@ -1,17 +1,19 @@
 <template>
   <div>
-    <n-space vertical :size="16">
-      <n-space>
-        <n-input v-model:value="searchKeyword" placeholder="搜索ChatID/CallAction" clearable style="width: 200px" @keyup.enter="doSearch" />
-        <n-select v-model:value="searchFeishuAppId" :options="feishuAppOptions" placeholder="飞书应用" clearable style="width: 160px" @update:value="doSearch" />
-        <n-select v-model:value="searchStatus" :options="statusOptions" placeholder="状态" clearable style="width: 120px" @update:value="doSearch" />
-        <n-button type="primary" size="small" @click="doSearch">搜索</n-button>
-        <n-button type="success" size="small" @click="handleAdd">新增</n-button>
-      </n-space>
-      <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
-    </n-space>
+    <n-card :bordered="false">
+      <div class="search-bar">
+        <n-space :size="12" align="center" wrap>
+          <n-input v-model:value="searchKeyword" placeholder="搜索ChatID/CallAction" clearable style="width: 200px" @keyup.enter="doSearch" />
+          <n-select v-model:value="searchFeishuAppId" :options="feishuAppOptions" placeholder="飞书应用" clearable style="width: 160px" @update:value="doSearch" />
+          <n-select v-model:value="searchStatus" :options="statusOptions" placeholder="状态" clearable style="width: 120px" @update:value="doSearch" />
+          <n-button type="info" size="small" @click="doSearch">搜索</n-button>
+          <n-button type="primary" size="small" @click="handleAdd">新增</n-button>
+        </n-space>
+      </div>
+      <n-data-table :bordered="false" :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
+    </n-card>
     <n-modal v-model:show="showModal" :title="isEdit ? '编辑飞书聊天' : '新增飞书聊天'" preset="card" style="width: 720px" :mask-closable="false">
-      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="110">
+      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="100">
         <n-grid :cols="2" :x-gap="16">
           <n-form-item-gi path="type" label="机器人类型">
             <n-select v-model:value="formData.type" :options="chatTypeOptions" placeholder="请选择机器人类型" />
@@ -56,7 +58,8 @@
 
 <script setup>
 import { ref, reactive, h, computed, onMounted } from 'vue'
-import { NButton, NSpace, NSwitch, useMessage } from 'naive-ui'
+import { NButton, NSpace, NSwitch, NIcon, useMessage } from 'naive-ui'
+import { CreateOutline } from '@vicons/ionicons5'
 import { useTable } from '../../../composables/useTable'
 import { useModal } from '../../../composables/useModal'
 import { useDict } from '../../../composables/useDict'
@@ -95,7 +98,7 @@ const columns = [
   { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, onUpdateValue: (val) => handleStatusChange(row, val), size: 'small' }) },
   { title: '创建时间', key: 'created_at', width: 170, render: (row) => formatTime(row.created_at) },
   { title: '操作', key: 'actions', width: 80, render: (row) => h(NSpace, null, { default: () => [
-    h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => '编辑' }),
+    h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CreateOutline) }), ' 编辑'] }),
   ]}) },
 ]
 function doSearch() { search({ keyword: searchKeyword.value, feishu_app_id: searchFeishuAppId.value ?? 0, status: searchStatus.value ?? -1 }) }

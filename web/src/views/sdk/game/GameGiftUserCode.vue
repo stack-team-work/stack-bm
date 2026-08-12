@@ -1,13 +1,15 @@
 <template>
   <div>
-    <n-space vertical :size="16">
-      <n-space>
-        <n-input v-model:value="searchKeyword" placeholder="搜索激活码/用户/角色" clearable style="width: 220px" @keyup.enter="doSearch" />
-        <n-select v-model:value="searchGiftId" :options="giftOptions" placeholder="礼包" clearable style="width: 160px" @update:value="doSearch" />
-        <n-button type="primary" size="small" @click="doSearch">搜索</n-button>
-      </n-space>
-      <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
-    </n-space>
+    <n-card :bordered="false">
+      <div class="search-bar">
+        <n-space :size="12" align="center" wrap>
+          <n-input v-model:value="searchKeyword" placeholder="搜索激活码/用户/角色" clearable style="width: 220px" @keyup.enter="doSearch" />
+          <n-select v-model:value="searchGiftId" :options="giftOptions" placeholder="礼包" clearable style="width: 160px" @update:value="doSearch" />
+          <n-button type="info" size="small" @click="doSearch">搜索</n-button>
+        </n-space>
+      </div>
+      <n-data-table :bordered="false" :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
+    </n-card>
   </div>
 </template>
 

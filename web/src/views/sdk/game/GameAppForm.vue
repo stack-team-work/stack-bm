@@ -5,8 +5,8 @@
       <n-text style="font-size: 18px; font-weight: 600">{{ isEdit ? '编辑子游戏' : '新增子游戏' }}</n-text>
     </n-space>
 
-    <n-card style="max-width: 900px; margin-top: 16px">
-      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="120">
+    <n-card style="margin-top: 16px">
+      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="100">
         <n-grid :cols="2" :x-gap="20">
           <n-form-item-gi path="pid" label="所属游戏">
             <n-select v-model:value="formData.pid" :options="gameOptions" placeholder="请选择父游戏" />

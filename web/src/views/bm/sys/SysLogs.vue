@@ -1,20 +1,22 @@
 <template>
   <div>
-    <n-space vertical :size="16">
-      <n-space>
-        <n-input v-model:value="searchKeyword" placeholder="搜索路径/用户/描述" clearable style="width: 250px" @keyup.enter="doSearch" />
-        <n-select v-model:value="searchLevel" :options="levelOptions" placeholder="级别" clearable style="width: 120px" @update:value="doSearch" />
-        <n-button type="primary" size="small" @click="doSearch">搜索</n-button>
-        <n-popconfirm @positive-click="handleClear">
-          <template #trigger>
-            <n-button type="error" size="small" :loading="clearing">清空日志</n-button>
-          </template>
-          确认清空所有操作日志？
-        </n-popconfirm>
-      </n-space>
+    <n-card :bordered="false">
+      <div class="search-bar">
+        <n-space :size="12" align="center" wrap>
+          <n-input v-model:value="searchKeyword" placeholder="搜索路径/用户/描述" clearable style="width: 250px" @keyup.enter="doSearch" />
+          <n-select v-model:value="searchLevel" :options="levelOptions" placeholder="级别" clearable style="width: 120px" @update:value="doSearch" />
+          <n-button type="info" size="small" @click="doSearch">搜索</n-button>
+          <n-popconfirm @positive-click="handleClear">
+            <template #trigger>
+              <n-button type="error" size="small" :loading="clearing">清空日志</n-button>
+            </template>
+            确认清空所有操作日志？
+          </n-popconfirm>
+        </n-space>
+      </div>
 
-      <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
-    </n-space>
+      <n-data-table :bordered="false" :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
+    </n-card>
   </div>
 </template>
 
@@ -27,7 +29,7 @@ import { formatTime } from '../../../utils/format'
 import { useDict } from '../../../composables/useDict'
 
 const message = useMessage()
-const { loading, tableData, pagination, search, resetSearch, handlePageChange, handlePageSizeChange } = useTable(getLogList)
+const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getLogList)
 const { load: loadDict, options } = useDict()
 
 const searchKeyword = ref('')

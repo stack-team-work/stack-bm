@@ -1,33 +1,35 @@
 <template>
   <div>
-    <n-space vertical :size="16">
-      <n-space>
-        <n-input v-model:value="searchKeyword" placeholder="搜索名称/包名" clearable style="width: 200px" @keyup.enter="doSearch" />
-        <n-select v-model:value="searchGameId" :options="gameSearchOptions" placeholder="父游戏" clearable style="width: 150px" @update:value="doSearch" />
-        <n-select v-model:value="searchStatus" :options="statusOptions" placeholder="状态" clearable style="width: 120px" @update:value="doSearch" />
-        <n-button type="primary" size="small" @click="doSearch">搜索</n-button>
-        <n-button type="success" size="small" @click="handleAdd">新增</n-button>
-      </n-space>
-
-      <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
-    </n-space>
+    <n-card :bordered="false">
+      <div class="search-bar">
+        <n-space :size="12" align="center" wrap>
+          <n-input v-model:value="searchKeyword" placeholder="搜索名称/包名" clearable style="width: 200px" @keyup.enter="doSearch" />
+          <n-select v-model:value="searchGameId" :options="gameSearchOptions" placeholder="父游戏" clearable style="width: 150px" @update:value="doSearch" />
+          <n-select v-model:value="searchStatus" :options="statusOptions" placeholder="状态" clearable style="width: 120px" @update:value="doSearch" />
+          <n-button type="info" size="small" @click="doSearch">搜索</n-button>
+          <n-button type="primary" size="small" @click="handleAdd">新增</n-button>
+        </n-space>
+      </div>
+      <n-data-table :bordered="false" :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" @update:page="handlePageChange" @update:page-size="handlePageSizeChange" />
+    </n-card>
   </div>
 </template>
 
 <script setup>
 import { ref, h, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
+import { NButton, NSpace, NSwitch, NPopconfirm, NIcon, useMessage } from 'naive-ui'
 import { useTable } from '../../../composables/useTable'
 import { useModal } from '../../../composables/useModal'
 import { useDict } from '../../../composables/useDict'
 import { useOptions } from '../../../composables/useOptions'
 import { getGameAppList, deleteGameApp, updateGameApp } from '../../../api/sdk/game'
 import { formatTime } from '../../../utils/format'
+import { CreateOutline, TrashOutline } from '@vicons/ionicons5'
 
 const router = useRouter()
 const message = useMessage()
-const { loading, tableData, pagination, search, resetSearch, handlePageChange, handlePageSizeChange } = useTable(getGameAppList)
+const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getGameAppList)
 const { handleDelete: doDelete } = useModal()
 
 const searchKeyword = ref('')
@@ -49,9 +51,9 @@ const columns = [
   { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, onUpdateValue: (val) => handleStatusChange(row, val), size: 'small' }) },
   { title: '创建时间', key: 'created_at', width: 170, render: (row) => formatTime(row.created_at) },
   { title: '操作', key: 'actions', width: 180, render: (row) => h(NSpace, null, { default: () => [
-    h(NButton, { size: 'tiny', onClick: () => router.push(`/game-app/edit/${row.id}`) }, { default: () => '编辑' }),
+    h(NButton, { size: 'tiny', onClick: () => router.push(`/game-app/edit/${row.id}`) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CreateOutline) }), ' 编辑'] }),
     h(NButton, { size: 'tiny', onClick: () => handleExport(row) }, { default: () => '导出' }),
-    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => '删除' }) }),
+    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(TrashOutline) }), ' 删除'] }) }),
   ]}) },
 ]
 
