@@ -3,6 +3,7 @@ package router
 import (
 	"stack-bm/internal/handler"
 	"stack-bm/internal/handler/bm/sys"
+	"stack-bm/internal/handler/mkt/bili"
 	"stack-bm/internal/handler/mkt/media"
 	"stack-bm/internal/handler/sdk/game"
 	"stack-bm/internal/handler/sdk/pay"
@@ -50,6 +51,10 @@ func SetupRouter() *gin.Engine {
 	mediaApplicationHandler := media.NewMediaApplicationHandler()
 	mediaManagerHandler := media.NewMediaManagerHandler()
 	mediaSubjectHandler := media.NewMediaSubjectHandler()
+
+	biliAdTemplateHandler := bili.NewAdTemplateHandler()
+	biliAudienceTemplateHandler := bili.NewAudienceTemplateHandler()
+	biliTitleTemplateHandler := bili.NewTitleTemplateHandler()
 
 	payPlatformHandler := pay.NewPayPlatformHandler()
 	payMerchantHandler := pay.NewPayMerchantHandler()
@@ -233,6 +238,27 @@ func SetupRouter() *gin.Engine {
 		api.POST("/media-subject/detail/:id", mediaSubjectHandler.GetByID)
 		api.POST("/media-subject/update/:id", mediaSubjectHandler.Update)
 		api.POST("/media-subject/delete/:id", mediaSubjectHandler.Delete)
+
+		api.POST("/bili-ad-template/create", biliAdTemplateHandler.Create)
+		api.POST("/bili-ad-template/list", biliAdTemplateHandler.GetList)
+		api.POST("/bili-ad-template/detail/:id", biliAdTemplateHandler.GetByID)
+		api.POST("/bili-ad-template/update/:id", biliAdTemplateHandler.Update)
+		api.POST("/bili-ad-template/delete/:id", biliAdTemplateHandler.Delete)
+		api.POST("/bili-ad-template/copy", biliAdTemplateHandler.Copy)
+
+		api.POST("/bili-audience-template/create", biliAudienceTemplateHandler.Create)
+		api.POST("/bili-audience-template/list", biliAudienceTemplateHandler.GetList)
+		api.POST("/bili-audience-template/detail/:id", biliAudienceTemplateHandler.GetByID)
+		api.POST("/bili-audience-template/update/:id", biliAudienceTemplateHandler.Update)
+		api.POST("/bili-audience-template/delete/:id", biliAudienceTemplateHandler.Delete)
+		api.POST("/bili-audience-template/copy", biliAudienceTemplateHandler.Copy)
+
+		api.POST("/bili-title-template/create", biliTitleTemplateHandler.Create)
+		api.POST("/bili-title-template/list", biliTitleTemplateHandler.GetList)
+		api.POST("/bili-title-template/detail/:id", biliTitleTemplateHandler.GetByID)
+		api.POST("/bili-title-template/update/:id", biliTitleTemplateHandler.Update)
+		api.POST("/bili-title-template/delete/:id", biliTitleTemplateHandler.Delete)
+		api.POST("/bili-title-template/copy", biliTitleTemplateHandler.Copy)
 
 		api.POST("/pay-platform/create", payPlatformHandler.Create)
 		api.POST("/pay-platform/list", payPlatformHandler.GetList)

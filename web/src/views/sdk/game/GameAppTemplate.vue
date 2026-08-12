@@ -20,6 +20,12 @@
           <n-form-item-gi path="allow_age" label="可玩年龄">
             <n-input-number v-model:value="formData.allow_age" :min="0" style="width: 100%" />
           </n-form-item-gi>
+          <n-form-item-gi path="privacy_url" label="隐私条款">
+            <n-input v-model:value="formData.privacy_url" placeholder="请输入隐私条款URL" />
+          </n-form-item-gi>
+          <n-form-item-gi path="agreement_url" label="用户协议">
+            <n-input v-model:value="formData.agreement_url" placeholder="请输入用户协议URL" />
+          </n-form-item-gi>
           <n-grid-item>
             <n-form-item path="is_open_realname" label="实名认证" label-placement="left">
               <n-switch v-model:value="formData.is_open_realname" :checked-value="1" :unchecked-value="0" />
@@ -91,11 +97,11 @@ const { load: loadDict, options } = useDict()
 const statusOptions = computed(() => options('status'))
 
 const formData = reactive({
-  name: '', is_open_realname: 1, is_open_register: 1, is_open_charge: 1, is_alert_email: 1,
+  name: '', privacy_url: '', agreement_url: '', is_open_realname: 1, is_open_register: 1, is_open_charge: 1, is_alert_email: 1,
   is_alert_phone: 1, is_alert_auth: 1, is_open_float: 1, allow_age: 18, status: 1,
 })
 function resetForm() { Object.assign(formData, {
-  name: '', is_open_realname: 1, is_open_register: 1, is_open_charge: 1, is_alert_email: 1,
+  name: '', privacy_url: '', agreement_url: '', is_open_realname: 1, is_open_register: 1, is_open_charge: 1, is_alert_email: 1,
   is_alert_phone: 1, is_alert_auth: 1, is_open_float: 1, allow_age: 18, status: 1,
 }) }
 const rules = { name: [{ required: true, message: '请输入模板名称', trigger: 'blur' }], allow_age: [{ required: true, type: 'number', min: 0, message: '请输入可玩年龄', trigger: 'blur' }] }
@@ -108,6 +114,8 @@ const columns = [
   { title: '充值', key: 'is_open_charge', width: 80, render: (row) => row.is_open_charge === 1 ? '开启' : '关闭' },
   { title: '悬浮窗', key: 'is_open_float', width: 80, render: (row) => row.is_open_float === 1 ? '开启' : '关闭' },
   { title: '可玩年龄', key: 'allow_age', width: 80 },
+  { title: '隐私条款', key: 'privacy_url', width: 160, ellipsis: { tooltip: true }, render: (row) => row.privacy_url || '-' },
+  { title: '用户协议', key: 'agreement_url', width: 160, ellipsis: { tooltip: true }, render: (row) => row.agreement_url || '-' },
   { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, onUpdateValue: (val) => handleStatusChange(row, val), size: 'small' }) },
   { title: '创建时间', key: 'created_at', width: 170, render: (row) => formatTime(row.created_at) },
   { title: '操作', key: 'actions', width: 140, render: (row) => h(NSpace, null, { default: () => [
@@ -121,6 +129,8 @@ function handleAdd() { resetForm(); open() }
 function handleEdit(row) {
   resetForm()
   formData.name = row.name
+  formData.privacy_url = row.privacy_url || ''
+  formData.agreement_url = row.agreement_url || ''
   formData.is_open_realname = row.is_open_realname; formData.is_open_register = row.is_open_register
   formData.is_open_charge = row.is_open_charge; formData.is_alert_email = row.is_alert_email
   formData.is_alert_phone = row.is_alert_phone; formData.is_alert_auth = row.is_alert_auth

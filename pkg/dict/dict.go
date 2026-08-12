@@ -7,6 +7,27 @@ type Option struct {
 	Value int    `json:"value"`
 }
 
+type StringOption struct {
+	Label string `json:"label"`
+	Value string `json:"value"`
+}
+
+func biliOpts(in []constants.BiliOption) []Option {
+	out := make([]Option, 0, len(in))
+	for _, o := range in {
+		out = append(out, Option{Label: o.Label, Value: o.Value})
+	}
+	return out
+}
+
+func biliSOpts(in []constants.BiliStringOption) []StringOption {
+	out := make([]StringOption, 0, len(in))
+	for _, o := range in {
+		out = append(out, StringOption{Label: o.Label, Value: o.Value})
+	}
+	return out
+}
+
 var Dict = map[string]interface{}{
 	"status": []Option{
 		{Label: "启用", Value: constants.STATUS_ENABLE},
@@ -75,4 +96,33 @@ var Dict = map[string]interface{}{
 		{Label: "艾特全部", Value: constants.FEISHU_CHAT_AT_TYPE_ALL},
 		{Label: "艾特负责人", Value: constants.FEISHU_CHAT_AT_TYPE_OWNER},
 	},
+	"bili_promotion_purpose":   biliOpts(constants.BiliPromotionPurposeOptions),
+	"bili_ad_type":             biliOpts(constants.BiliAdTypeOptions),
+	"bili_delivery_type":       biliOpts(constants.BiliDeliveryOptions),
+	"bili_budget_type":         biliOpts(constants.BiliBudgetOptions),
+	"bili_speed_mode":          biliOpts(constants.BiliSpeedModeOptions),
+	"bili_promotion_content":   biliOpts(constants.BiliPromotionContentOptions),
+	"bili_mini_game":           biliOpts(constants.BiliMiniGameOptions),
+	"bili_unit_date_type":      biliOpts(constants.BiliUnitDateTypeOptions),
+	"bili_unit_time_type":      biliOpts(constants.BiliUnitTimeTypeOptions),
+	"bili_strategy_type":       biliOpts(constants.BiliStrategyOptions),
+	"bili_bid_type":            biliOpts(constants.BiliBidOptions),
+	"bili_optimize_gold":       biliOpts(constants.BiliOptimizeGoldOptions),
+	"bili_deep_optimize_gold":  biliOpts(constants.BiliDeepOptimizeGoldOptions),
+	"bili_deep_gold_type":      biliOpts(constants.BiliDeepGoldOptions),
+	"bili_launch_type":         biliOpts(constants.BiliLaunchOptions),
+	"bili_network_type":        biliOpts(constants.BiliNetworkOptions),
+	"bili_custom_bid_type":     biliSOpts(constants.BiliCustomBidOptions),
+	"bili_brand_type":          biliOpts(constants.BiliBrandOptions),
+	"bili_area_type":           biliOpts(constants.BiliAreaTypeOptions),
+	"bili_installed_type":      biliOpts(constants.BiliInstalledOptions),
+	"bili_installed_app_type":  biliOpts(constants.BiliInstalledAppOptions),
+	"bili_tag_fuzzy_type":      biliOpts(constants.BiliTagFuzzyOptions),
+	"bili_title_word_type":     biliOpts(constants.BiliTitleWordOptions),
+	"bili_gender":              biliOpts(constants.BiliGenderOptions),
+	"bili_age":                 biliOpts(constants.BiliAgeOptions),
+	"bili_network":             biliOpts(constants.BiliNetOptions),
+	"bili_phone_price":         biliOpts(constants.BiliPhonePriceOptions),
+	"bili_os":                  biliOpts(constants.BiliOsOptions),
+	"bili_converted_user":      biliOpts(constants.BiliConvertedUserFilterOptions),
 }

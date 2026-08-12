@@ -13,6 +13,8 @@ type GameAppTemplate struct {
 	AllowAge       int   `gorm:"column:allow_age;default:18" json:"allow_age"`
 	Status         int8  `gorm:"default:1" json:"status"`
 	AdminID        int   `gorm:"column:admin_id;default:0" json:"admin_id"`
+	PrivacyURL     string `gorm:"column:privacy_url;size:255" json:"privacy_url"`
+	AgreementURL   string `gorm:"column:agreement_url;size:255" json:"agreement_url"`
 	CreatedAt      int64 `gorm:"column:created_at;autoCreateTime" json:"created_at"`
 	UpdatedAt      int64 `gorm:"column:updated_at;autoUpdateTime" json:"updated_at"`
 }

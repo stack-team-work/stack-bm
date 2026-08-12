@@ -13,6 +13,7 @@ func main() {
 	config.LoadConfig()
 
 	database.InitDB()
+	database.InitMongo()
 
 	r := router.SetupRouter()
 

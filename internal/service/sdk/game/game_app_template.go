@@ -49,6 +49,12 @@ func (s *GameAppTemplateService) Update(id uint, t *game.GameAppTemplate) error 
 	if t.AllowAge > 0 {
 		existing.AllowAge = t.AllowAge
 	}
+	if t.PrivacyURL != "" {
+		existing.PrivacyURL = t.PrivacyURL
+	}
+	if t.AgreementURL != "" {
+		existing.AgreementURL = t.AgreementURL
+	}
 	existing.IsOpenRealname = t.IsOpenRealname
 	existing.IsOpenRegister = t.IsOpenRegister
 	existing.IsOpenCharge = t.IsOpenCharge

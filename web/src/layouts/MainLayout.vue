@@ -103,6 +103,7 @@ const topNavRouteMap = {
   '/dashboard': 'publish',
   '/media': 'publish', '/media-sub': 'publish', '/media-agent': 'publish',
   '/media-application': 'publish', '/media-manager': 'publish', '/media-subject': 'publish',
+  '/bili-ads': 'publish',
   '/game': 'game', '/game-app': 'game', '/game-app/create': 'game', '/game-app/edit': 'game',
   '/game-app-template': 'game',
   '/game-cp': 'game', '/game-tag': 'game', '/game-variable': 'game',
@@ -150,6 +151,14 @@ const sidebarMenu = computed(() => {
             { label: 'mkt应用', key: '/media-application' },
             { label: 'mkt管家', key: '/media-manager' },
             { label: '主体管理', key: '/media-subject' },
+          ],
+        },
+        {
+          label: 'B站Ads', key: 'bili-ads', icon: renderIcon(GameControllerOutline),
+          children: [
+            { label: '广告模板', key: '/bili-ads/ad-template' },
+            { label: '定向包模板', key: '/bili-ads/audience-template' },
+            { label: '标题包模板', key: '/bili-ads/title-template' },
           ],
         },
       ]

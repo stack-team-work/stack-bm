@@ -12,6 +12,7 @@ type Config struct {
 	DBSdk  DBConfig
 	DBMkt  DBConfig
 	JWT    JWTConfig
+	Mongo  MongoConfig
 }
 
 type ServerConfig struct {
@@ -30,6 +31,11 @@ type DBConfig struct {
 type JWTConfig struct {
 	Secret      string
 	ExpireHours int
+}
+
+type MongoConfig struct {
+	URI       string
+	ChannelDB string
 }
 
 var AppConfig *Config
@@ -73,6 +79,10 @@ func LoadConfig() *Config {
 		JWT: JWTConfig{
 			Secret:      viper.GetString("JWT_SECRET"),
 			ExpireHours: viper.GetInt("JWT_EXPIRE_HOURS"),
+		},
+		Mongo: MongoConfig{
+			URI:       viper.GetString("MONGO_URI"),
+			ChannelDB: viper.GetString("MONGO_CHANNEL_DB"),
 		},
 	}
 

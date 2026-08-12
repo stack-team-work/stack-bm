@@ -157,6 +157,24 @@ const routes = [
         meta: { title: '主体管理' },
       },
       {
+        path: 'bili-ads/ad-template',
+        name: 'BiliAdTemplate',
+        component: () => import('../views/mkt/bili/AdTemplate.vue'),
+        meta: { title: 'B站广告模板' },
+      },
+      {
+        path: 'bili-ads/audience-template',
+        name: 'BiliAudienceTemplate',
+        component: () => import('../views/mkt/bili/AudienceTemplate.vue'),
+        meta: { title: 'B站定向包模板' },
+      },
+      {
+        path: 'bili-ads/title-template',
+        name: 'BiliTitleTemplate',
+        component: () => import('../views/mkt/bili/TitleTemplate.vue'),
+        meta: { title: 'B站标题包模板' },
+      },
+      {
         path: 'pay-platform',
         name: 'PayPlatform',
         component: () => import('../views/pay/PayPlatform.vue'),
