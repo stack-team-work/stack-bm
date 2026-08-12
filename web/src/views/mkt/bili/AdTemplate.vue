@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <n-space vertical :size="16">
       <n-space>
@@ -133,7 +133,7 @@ import { useTable } from '../../../composables/useTable'
 import { useModal } from '../../../composables/useModal'
 import { useDict } from '../../../composables/useDict'
 import { useOptions } from '../../../composables/useOptions'
-import { getBiliAdTemplateList, createBiliAdTemplate, updateBiliAdTemplate, deleteBiliAdTemplate, copyBiliAdTemplate } from '../../../api/mkt'
+import { getBiliAdTemplateList, createBiliAdTemplate, updateBiliAdTemplate, deleteBiliAdTemplate, copyBiliAdTemplate } from '../../../api/mkt/bili'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getBiliAdTemplateList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()

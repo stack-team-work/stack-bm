@@ -44,11 +44,11 @@
 <script setup>
 import { ref, reactive, h, computed, onMounted } from 'vue'
 import { NButton, NSpace, NSwitch, useMessage } from 'naive-ui'
-import { useTable } from '../../composables/useTable'
-import { useModal } from '../../composables/useModal'
-import { useDict } from '../../composables/useDict'
-import { getFeishuAppList, createFeishuApp, updateFeishuApp, updateFeishuAppStatus } from '../../api/system'
-import { formatTime } from '../../utils/format'
+import { useTable } from '../../../composables/useTable'
+import { useModal } from '../../../composables/useModal'
+import { useDict } from '../../../composables/useDict'
+import { getFeishuAppList, createFeishuApp, updateFeishuApp, updateFeishuAppStatus } from '../../../api/bm/sys'
+import { formatTime } from '../../../utils/format'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getFeishuAppList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit } = useModal()

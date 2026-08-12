@@ -40,11 +40,11 @@
 <script setup>
 import { ref, reactive, h, computed, onMounted } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
-import { useTable } from '../../composables/useTable'
-import { useModal } from '../../composables/useModal'
-import { getMediaList, createMedia, updateMedia, deleteMedia } from '../../api/mkt'
-import { formatTime } from '../../utils/format'
-import { useDict } from '../../composables/useDict'
+import { useTable } from '../../../composables/useTable'
+import { useModal } from '../../../composables/useModal'
+import { getMediaList, createMedia, updateMedia, deleteMedia } from '../../../api/mkt/media'
+import { formatTime } from '../../../utils/format'
+import { useDict } from '../../../composables/useDict'
 
 const { loading, tableData, pagination, search, resetSearch, handlePageChange, handlePageSizeChange } = useTable(getMediaList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()

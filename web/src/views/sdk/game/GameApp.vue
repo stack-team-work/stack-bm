@@ -18,12 +18,12 @@
 import { ref, h, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
-import { useTable } from '../../composables/useTable'
-import { useModal } from '../../composables/useModal'
-import { useDict } from '../../composables/useDict'
-import { useOptions } from '../../composables/useOptions'
-import { getGameAppList, deleteGameApp, updateGameApp } from '../../api/game'
-import { formatTime } from '../../utils/format'
+import { useTable } from '../../../composables/useTable'
+import { useModal } from '../../../composables/useModal'
+import { useDict } from '../../../composables/useDict'
+import { useOptions } from '../../../composables/useOptions'
+import { getGameAppList, deleteGameApp, updateGameApp } from '../../../api/sdk/game'
+import { formatTime } from '../../../utils/format'
 
 const router = useRouter()
 const message = useMessage()

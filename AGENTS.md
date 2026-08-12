@@ -103,7 +103,7 @@ New module uses the correct `database.DB*` for its table's database.
 4. `internal/handler/<table-prefix>/` — HTTP handler, import service with alias `<prefix>Svc`
 5. `internal/router/router.go` — register handler and routes
 
-Frontend: add API functions in `web/src/api/<domain>.js`, create Vue page under `web/src/views/<domain>/`, add route in `web/src/router/index.js`, add menu entry in `web/src/layouts/MainLayout.vue`.
+Frontend: add API functions in `web/src/api/<backend-module>.js` (e.g. `api/mkt/bili.js`), create Vue page under `web/src/views/<backend-module>/` (e.g. `views/mkt/bili/`), add route in `web/src/router/index.js`, add menu entry in `web/src/layouts/MainLayout.vue`. Frontend directory mirrors the backend `internal/{model,repository,service,handler}/...` layout.
 
 ## Frontend gotchas
 
@@ -116,18 +116,25 @@ Frontend: add API functions in `web/src/api/<domain>.js`, create Vue page under 
 
 ```
 web/src/
-├── api/
-│   ├── index.js      login, getUserInfo
-│   ├── system.js     admin, adminGroup
-│   ├── game.js       game, gameApp, gameCp, gamePlatform, gameTag, gameVariable
-│   └── mkt.js        media, mediaSub
+├── api/                     # 与后端 handler 包路径对齐
+│   ├── index.js             login, getUserInfo, dict, options
+│   ├── bm/sys.js            admin, adminGroup, menu, sysColumn, logs, feishu
+│   ├── sdk/game.js          game, gameApp, gameCp, gameTag, gameVariable, gamePlatform, gift, voucher
+│   ├── sdk/pay.js           payPlatform, payMerchant
+│   ├── sdk/sys.js           sdkLog
+│   ├── mkt/media.js         media, mediaSub, mediaAgent, mediaApplication, mediaManager, mediaSubject
+│   └── mkt/bili.js          bili ad/audience/title templates
 ├── composables/
-│   ├── useTable.js   pagination + search + load
-│   └── useModal.js   form open/edit/submit/delete
+│   ├── useTable.js          pagination + search + load
+│   └── useModal.js          form open/edit/submit/delete
 ├── views/
-│   ├── system/       SysAdmin, SysAdminGroup, SysLogs, SysMenu, Dashboard
-│   ├── game/         Game, GameApp, GameAppForm, GameCp, GameTag, GameVariable, GamePlatform
-│   ├── mkt/          Media, MediaSub
+│   ├── bm/sys/              SysAdmin, SysAdminGroup, SysLogs, SysMenu, SysColumn, Feishu*
+│   ├── sdk/game/            Game, GameApp, GameAppForm, GameAppTemplate, GameCp, GameTag, GameVariable, GamePlatform, GameGift*, GameVoucher*
+│   ├── sdk/pay/             PayPlatform, PayMerchant
+│   ├── sdk/sys/             GameLog (SDK 日志)
+│   ├── mkt/media/           Media, MediaSub, MediaAgent, MediaApplication, MediaManager, MediaSubject
+│   ├── mkt/bili/            AdTemplate, AudienceTemplate, TitleTemplate
+│   ├── dashboard/           Dashboard
 │   ├── Login.vue
-│   └── layouts/      MainLayout.vue
+│   └── layouts/             MainLayout.vue
 ```

@@ -13,10 +13,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useTable } from '../../composables/useTable'
-import { useOptions } from '../../composables/useOptions'
-import { getGameGiftUserCodeList } from '../../api/game'
-import { formatTime } from '../../utils/format'
+import { useTable } from '../../../composables/useTable'
+import { useOptions } from '../../../composables/useOptions'
+import { getGameGiftUserCodeList } from '../../../api/sdk/game'
+import { formatTime } from '../../../utils/format'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getGameGiftUserCodeList)
 const searchKeyword = ref('')

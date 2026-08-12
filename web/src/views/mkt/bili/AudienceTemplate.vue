@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <n-space vertical :size="16">
       <n-space>
@@ -73,7 +73,7 @@ import { NButton, NSpace, NPopconfirm, useMessage } from 'naive-ui'
 import { useTable } from '../../../composables/useTable'
 import { useModal } from '../../../composables/useModal'
 import { useDict } from '../../../composables/useDict'
-import { getBiliAudienceTemplateList, createBiliAudienceTemplate, updateBiliAudienceTemplate, deleteBiliAudienceTemplate, copyBiliAudienceTemplate } from '../../../api/mkt'
+import { getBiliAudienceTemplateList, createBiliAudienceTemplate, updateBiliAudienceTemplate, deleteBiliAudienceTemplate, copyBiliAudienceTemplate } from '../../../api/mkt/bili'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getBiliAudienceTemplateList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()

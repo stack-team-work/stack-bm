@@ -81,11 +81,11 @@
 <script setup>
 import { ref, reactive, h, onMounted, computed } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
-import { useTable } from '../../composables/useTable'
-import { useModal } from '../../composables/useModal'
-import { useDict } from '../../composables/useDict'
-import { getGameAppTemplateList, createGameAppTemplate, updateGameAppTemplate, deleteGameAppTemplate } from '../../api/game'
-import { formatTime } from '../../utils/format'
+import { useTable } from '../../../composables/useTable'
+import { useModal } from '../../../composables/useModal'
+import { useDict } from '../../../composables/useDict'
+import { getGameAppTemplateList, createGameAppTemplate, updateGameAppTemplate, deleteGameAppTemplate } from '../../../api/sdk/game'
+import { formatTime } from '../../../utils/format'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getGameAppTemplateList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()

@@ -54,11 +54,11 @@
 <script setup>
 import { ref, reactive, h, computed, onMounted } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, useMessage } from 'naive-ui'
-import { useTable } from '../../composables/useTable'
-import { useModal } from '../../composables/useModal'
-import { getSysColumnList, createSysColumn, updateSysColumn, deleteSysColumn } from '../../api/system'
-import { formatTime } from '../../utils/format'
-import { useDict } from '../../composables/useDict'
+import { useTable } from '../../../composables/useTable'
+import { useModal } from '../../../composables/useModal'
+import { getSysColumnList, createSysColumn, updateSysColumn, deleteSysColumn } from '../../../api/bm/sys'
+import { formatTime } from '../../../utils/format'
+import { useDict } from '../../../composables/useDict'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getSysColumnList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()

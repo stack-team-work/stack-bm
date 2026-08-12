@@ -32,10 +32,10 @@
 <script setup>
 import { ref, reactive, h } from 'vue'
 import { NButton, NSpace, NPopconfirm, useMessage } from 'naive-ui'
-import { useTable } from '../../composables/useTable'
-import { useModal } from '../../composables/useModal'
-import { getPayPlatformList, createPayPlatform, updatePayPlatform, deletePayPlatform } from '../../api/pay'
-import { formatTime } from '../../utils/format'
+import { useTable } from '../../../composables/useTable'
+import { useModal } from '../../../composables/useModal'
+import { getPayPlatformList, createPayPlatform, updatePayPlatform, deletePayPlatform } from '../../../api/sdk/pay'
+import { formatTime } from '../../../utils/format'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getPayPlatformList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()

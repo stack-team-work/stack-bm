@@ -1,4 +1,4 @@
-import request from '../utils/request'
+import request from '../../utils/request'
 
 export function getGameList(params) {
   return request.post('/game/list', params)
@@ -130,10 +130,6 @@ export function updateGamePlatform(id, data) {
 
 export function deleteGamePlatform(id) {
   return request.post(`/game-platform/delete/${id}`)
-}
-
-export function getSdkLogList(params) {
-  return request.post('/sdk-logs/list', params)
 }
 
 export function getGameGiftList(params) {

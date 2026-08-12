@@ -21,10 +21,10 @@
 <script setup>
 import { ref, h, onMounted, computed } from 'vue'
 import { NTag, NPopconfirm, NButton, useMessage } from 'naive-ui'
-import { useTable } from '../../composables/useTable'
-import { getLogList, clearLogs } from '../../api/system'
-import { formatTime } from '../../utils/format'
-import { useDict } from '../../composables/useDict'
+import { useTable } from '../../../composables/useTable'
+import { getLogList, clearLogs } from '../../../api/bm/sys'
+import { formatTime } from '../../../utils/format'
+import { useDict } from '../../../composables/useDict'
 
 const message = useMessage()
 const { loading, tableData, pagination, search, resetSearch, handlePageChange, handlePageSizeChange } = useTable(getLogList)

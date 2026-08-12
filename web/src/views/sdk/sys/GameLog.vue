@@ -16,10 +16,10 @@
 <script setup>
 import { ref, h, onMounted, computed } from 'vue'
 import { NTag } from 'naive-ui'
-import { useTable } from '../../composables/useTable'
-import { useDict } from '../../composables/useDict'
-import { getSdkLogList } from '../../api/game'
-import { formatTime } from '../../utils/format'
+import { useTable } from '../../../composables/useTable'
+import { useDict } from '../../../composables/useDict'
+import { getSdkLogList } from '../../../api/sdk/sys'
+import { formatTime } from '../../../utils/format'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getSdkLogList)
 

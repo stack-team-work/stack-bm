@@ -14,10 +14,10 @@
 <script setup>
 import { ref, h, onMounted } from 'vue'
 import { NTag } from 'naive-ui'
-import { useTable } from '../../composables/useTable'
-import { useOptions } from '../../composables/useOptions'
-import { getGameVoucherUseList } from '../../api/game'
-import { formatTime } from '../../utils/format'
+import { useTable } from '../../../composables/useTable'
+import { useOptions } from '../../../composables/useOptions'
+import { getGameVoucherUseList } from '../../../api/sdk/game'
+import { formatTime } from '../../../utils/format'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getGameVoucherUseList)
 const searchKeyword = ref('')

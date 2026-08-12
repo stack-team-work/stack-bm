@@ -55,9 +55,9 @@
 <script setup>
 import { ref, reactive, h, onMounted, computed } from 'vue'
 import { NButton, NSpace, NSwitch, NPopconfirm, NTag } from 'naive-ui'
-import { useModal } from '../../composables/useModal'
-import { getMenuAll, createMenu, updateMenu, deleteMenu } from '../../api/system'
-import { useDict } from '../../composables/useDict'
+import { useModal } from '../../../composables/useModal'
+import { getMenuAll, createMenu, updateMenu, deleteMenu } from '../../../api/bm/sys'
+import { useDict } from '../../../composables/useDict'
 
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
 const { load: loadDict, options } = useDict()

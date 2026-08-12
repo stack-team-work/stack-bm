@@ -39,12 +39,12 @@
 <script setup>
 import { ref, reactive, h, computed, onMounted } from 'vue'
 import { NButton, NSpace, NSwitch, useMessage } from 'naive-ui'
-import { useTable } from '../../composables/useTable'
-import { useModal } from '../../composables/useModal'
-import { useDict } from '../../composables/useDict'
-import { useOptions } from '../../composables/useOptions'
-import { getFeishuUserList, createFeishuUser, updateFeishuUser, updateFeishuUserStatus } from '../../api/system'
-import { formatTime } from '../../utils/format'
+import { useTable } from '../../../composables/useTable'
+import { useModal } from '../../../composables/useModal'
+import { useDict } from '../../../composables/useDict'
+import { useOptions } from '../../../composables/useOptions'
+import { getFeishuUserList, createFeishuUser, updateFeishuUser, updateFeishuUserStatus } from '../../../api/bm/sys'
+import { formatTime } from '../../../utils/format'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getFeishuUserList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()

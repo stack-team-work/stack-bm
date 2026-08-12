@@ -88,9 +88,9 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useMessage } from 'naive-ui'
-import { useModal } from '../../composables/useModal'
-import { useOptions } from '../../composables/useOptions'
-import { createGameApp, updateGameApp } from '../../api/game'
+import { useModal } from '../../../composables/useModal'
+import { useOptions } from '../../../composables/useOptions'
+import { createGameApp, updateGameApp } from '../../../api/sdk/game'
 
 const router = useRouter()
 const route = useRoute()

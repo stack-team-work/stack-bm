@@ -1,4 +1,4 @@
-import request from '../utils/request'
+import request from '../../utils/request'
 
 export function getPayPlatformList(params) {
   return request.post('/pay-platform/list', params)

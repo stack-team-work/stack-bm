@@ -85,7 +85,7 @@ import { LineChart, BarChart } from 'echarts/charts'
 import { GridComponent, TooltipComponent, LegendComponent, ToolboxComponent } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
 import VChart from 'vue-echarts'
-import { getDashboardStats } from '../../api/system'
+import { getDashboardStats } from '../../api/bm/sys'
 
 use([LineChart, BarChart, GridComponent, TooltipComponent, LegendComponent, ToolboxComponent, CanvasRenderer])
 
