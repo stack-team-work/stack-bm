@@ -191,14 +191,17 @@ stack-bm/
 ├── cmd/server/          # 程序入口
 ├── internal/
 │   ├── config/          # 配置管理
-│   ├── database/        # 数据库初始化
-│   ├── model/           # 数据模型
-│   ├── repository/      # 数据访问层
-│   ├── service/         # 业务逻辑层
-│   ├── handler/         # HTTP处理层
+│   ├── database/        # 数据库初始化（MySQL + MongoDB）
+│   ├── model/           # 数据模型（bm/sys, mkt/{media,bili,ks}, sdk/{game,pay}）
+│   ├── repository/      # 数据访问层（与 model 结构一致）
+│   ├── service/         # 业务逻辑层（与 model 结构一致）
+│   ├── handler/         # HTTP处理层（与 model 结构一致）
 │   ├── middleware/       # 中间件
 │   └── router/          # 路由注册
+├── migrations/          # MySQL 建表 SQL
 ├── pkg/
+│   ├── constants/       # 通用 + B站(bili) + 快手(ks) 枚举常量
+│   ├── dict/            # 字典（前端下拉选项）
 │   ├── jwt/             # JWT工具
 │   ├── response/        # 响应封装
 │   └── utils/           # 工具函数
@@ -206,5 +209,7 @@ stack-bm/
 ├── deploy.sh            # 部署脚本
 ├── stack-bm.service     # systemd 服务文件
 ├── .env.example         # 配置模板
-└── web/                 # 前端项目
+└── web/                 # 前端项目（api/views 与后端包路径对齐）
+    ├── src/api/         # bm/sys, sdk/{game,pay,sys}, mkt/{media,bili,ks}
+    └── src/views/       # bm/sys, sdk/{game,pay,sys}, mkt/{media,bili,ks}, dashboard
 ```

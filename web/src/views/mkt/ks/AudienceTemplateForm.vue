@@ -4,8 +4,8 @@
       <n-text style="font-size: 18px; font-weight: 600">{{ isEdit ? '编辑快手定向包模板' : '新增快手定向包模板' }}</n-text>
     </n-space>
 
-    <n-card style="max-width: 900px; margin-top: 16px">
-      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="160">
+    <n-card style="max-width: 1000px; margin-top: 16px">
+      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="top" label-width="160">
         <n-divider style="margin-top: 4px">基本信息</n-divider>
         <n-grid :cols="2" :x-gap="24">
           <n-form-item-gi path="template_name" label="模板名称">
@@ -17,66 +17,88 @@
         </n-grid>
 
         <n-divider>基础定向</n-divider>
-        <n-grid :cols="2" :x-gap="24">
-          <n-form-item-gi path="target_type" label="定向类型">
-            <n-select v-model:value="formData.target_type" :options="dict('ks_target_type')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="intelli_extend_option" label="智能放量">
-            <n-select v-model:value="formData.intelli_extend_option" :options="dict('ks_intelli_type')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="gender" label="性别">
-            <n-select v-model:value="formData.gender" :options="dict('ks_gender')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="network" label="网络环境">
-            <n-select v-model:value="formData.network" :options="dict('ks_network')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="operators" label="运营商">
-            <n-select v-model:value="formData.operators" :options="dict('ks_operators')" multiple clearable />
-          </n-form-item-gi>
-          <n-form-item-gi path="platform_os" label="操作系统">
-            <n-select v-model:value="formData.platform_os" :options="dict('ks_platform_os')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="device_price" label="设备价位">
-            <n-select v-model:value="formData.device_price" :options="dict('ks_device_price')" multiple clearable />
-          </n-form-item-gi>
-          <n-form-item-gi path="disable_installed_app_switch" label="排除已安装">
-            <n-select v-model:value="formData.disable_installed_app_switch" :options="dict('ks_installed_app')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="filter_converted_level" label="过滤已转化">
-            <n-select v-model:value="formData.filter_converted_level" :options="dict('ks_filter_converted')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="filter_time_range" label="转化时间">
-            <n-select v-model:value="formData.filter_time_range" :options="dict('ks_filter_time')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="behavior_type" label="行为定向">
-            <n-select v-model:value="formData.behavior_type" :options="dict('ks_behavior_type')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="shared_user" label="共享用户过滤">
-            <n-select v-model:value="formData.shared_user" :options="dict('ks_share_user')" />
-          </n-form-item-gi>
-        </n-grid>
+        <n-form-item label="定向类型" path="target_type">
+          <n-radio-group v-model:value="formData.target_type">
+            <n-radio-button v-for="o in dict('ks_target_type')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="智能放量" path="intelli_extend_option">
+          <n-radio-group v-model:value="formData.intelli_extend_option">
+            <n-radio-button v-for="o in dict('ks_intelli_type')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="性别" path="gender">
+          <n-radio-group v-model:value="formData.gender">
+            <n-radio-button v-for="o in dict('ks_gender')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="网络环境" path="network">
+          <n-radio-group v-model:value="formData.network">
+            <n-radio-button v-for="o in dict('ks_network')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="运营商" path="operators">
+          <n-checkbox-group v-model:value="formData.operators">
+            <n-checkbox v-for="o in dict('ks_operators')" :key="o.value" :value="o.value" :label="o.label" style="margin-right: 12px" />
+          </n-checkbox-group>
+        </n-form-item>
+        <n-form-item label="操作系统" path="platform_os">
+          <n-radio-group v-model:value="formData.platform_os">
+            <n-radio-button v-for="o in dict('ks_platform_os')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="设备价位" path="device_price">
+          <n-checkbox-group v-model:value="formData.device_price">
+            <n-checkbox v-for="o in dict('ks_device_price')" :key="o.value" :value="o.value" :label="o.label" style="margin-right: 12px" />
+          </n-checkbox-group>
+        </n-form-item>
+        <n-form-item label="排除已安装" path="disable_installed_app_switch">
+          <n-radio-group v-model:value="formData.disable_installed_app_switch">
+            <n-radio-button v-for="o in dict('ks_installed_app')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="过滤已转化" path="filter_converted_level">
+          <n-radio-group v-model:value="formData.filter_converted_level">
+            <n-radio-button v-for="o in dict('ks_filter_converted')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item v-if="formData.filter_converted_level !== 0" label="转化时间" path="filter_time_range">
+          <n-radio-group v-model:value="formData.filter_time_range">
+            <n-radio-button v-for="o in dict('ks_filter_time')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="行为定向" path="behavior_type">
+          <n-radio-group v-model:value="formData.behavior_type">
+            <n-radio-button v-for="o in dict('ks_behavior_type')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="共享用户过滤" path="shared_user">
+          <n-radio-group v-model:value="formData.shared_user">
+            <n-radio-button v-for="o in dict('ks_share_user')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
 
         <n-divider>高级配置（JSON）</n-divider>
         <n-grid :cols="2" :x-gap="24">
-          <n-form-item-gi path="device_brand_ids" label="设备品牌" :span="2">
+          <n-form-item-gi label="设备品牌" :span="2">
             <n-input v-model:value="formData.device_brand_ids" type="textarea" :rows="2" placeholder="如 [1,2,3]（设备品牌ID）" />
           </n-form-item-gi>
-          <n-form-item-gi path="android_osv" label="安卓系统版本" :span="2">
+          <n-form-item-gi label="安卓系统版本" :span="2">
             <n-input v-model:value="formData.android_osv" type="textarea" :rows="2" placeholder="JSON 数组或 ID" />
           </n-form-item-gi>
-          <n-form-item-gi path="population" label="定向人群包" :span="2">
+          <n-form-item-gi label="定向人群包" :span="2">
             <n-input v-model:value="formData.population" type="textarea" :rows="2" placeholder="如 [1,2]（DMP人群包ID）" />
           </n-form-item-gi>
-          <n-form-item-gi path="exclude_population" label="排除人群包" :span="2">
+          <n-form-item-gi label="排除人群包" :span="2">
             <n-input v-model:value="formData.exclude_population" type="textarea" :rows="2" placeholder="如 [1,2]" />
           </n-form-item-gi>
-          <n-form-item-gi path="region" label="地域" :span="2">
+          <n-form-item-gi label="地域" :span="2">
             <n-input v-model:value="formData.region" type="textarea" :rows="2" placeholder="高级参数，留空即可" />
           </n-form-item-gi>
-          <n-form-item-gi path="behavior" label="行为" :span="2">
+          <n-form-item-gi label="行为" :span="2">
             <n-input v-model:value="formData.behavior" type="textarea" :rows="2" placeholder="高级参数，留空即可" />
           </n-form-item-gi>
-          <n-form-item-gi path="interest" label="兴趣" :span="2">
+          <n-form-item-gi label="兴趣" :span="2">
             <n-input v-model:value="formData.interest" type="textarea" :rows="2" placeholder="高级参数，留空即可" />
           </n-form-item-gi>
         </n-grid>

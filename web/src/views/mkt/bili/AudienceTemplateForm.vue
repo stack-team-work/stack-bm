@@ -4,8 +4,8 @@
       <n-text style="font-size: 18px; font-weight: 600">{{ isEdit ? '编辑定向包模板' : '新增定向包模板' }}</n-text>
     </n-space>
 
-    <n-card style="max-width: 900px; margin-top: 16px">
-      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="150">
+    <n-card style="max-width: 1000px; margin-top: 16px">
+      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="top" label-width="150">
         <n-divider style="margin-top: 4px">基本信息</n-divider>
         <n-grid :cols="2" :x-gap="24">
           <n-form-item-gi path="template_name" label="模板名称">
@@ -17,45 +17,59 @@
         </n-grid>
 
         <n-divider>人群定向</n-divider>
-        <n-grid :cols="2" :x-gap="24">
-          <n-form-item-gi path="age_list" label="年龄段">
-            <n-select v-model:value="formData.age_list" :options="dict('bili_age')" multiple placeholder="选择年龄段" clearable />
-          </n-form-item-gi>
-          <n-form-item-gi path="gender_list" label="性别">
-            <n-select v-model:value="formData.gender_list" :options="dict('bili_gender')" multiple placeholder="选择性别" clearable />
-          </n-form-item-gi>
-          <n-form-item-gi path="network_list" label="网络环境">
-            <n-select v-model:value="formData.network_list" :options="dict('bili_network')" multiple placeholder="选择网络" clearable />
-          </n-form-item-gi>
-          <n-form-item-gi path="phone_price_list" label="手机价位">
-            <n-select v-model:value="formData.phone_price_list" :options="dict('bili_phone_price')" multiple placeholder="选择手机价位" clearable />
-          </n-form-item-gi>
-          <n-form-item-gi path="os_list" label="操作系统">
-            <n-select v-model:value="formData.os_list" :options="dict('bili_os')" multiple placeholder="选择系统" clearable />
-          </n-form-item-gi>
-          <n-form-item-gi path="installed_user_filter" label="安装过滤">
-            <n-select v-model:value="formData.installed_user_filter" :options="dict('bili_installed_type')" multiple placeholder="选择安装过滤" clearable />
-          </n-form-item-gi>
-          <n-form-item-gi path="converted_user_filter" label="转化用户过滤">
-            <n-select v-model:value="formData.converted_user_filter" :options="dict('bili_converted_user')" clearable />
-          </n-form-item-gi>
-          <n-form-item-gi path="area_type" label="地域类型">
-            <n-select v-model:value="formData.area_type" :options="dict('bili_area_type')" clearable />
-          </n-form-item-gi>
-        </n-grid>
+        <n-form-item label="年龄段" path="age_list">
+          <n-checkbox-group v-model:value="formData.age_list">
+            <n-checkbox v-for="o in dict('bili_age')" :key="o.value" :value="o.value" :label="o.label" style="margin-right: 12px" />
+          </n-checkbox-group>
+        </n-form-item>
+        <n-form-item label="性别" path="gender_list">
+          <n-checkbox-group v-model:value="formData.gender_list">
+            <n-checkbox v-for="o in dict('bili_gender')" :key="o.value" :value="o.value" :label="o.label" style="margin-right: 12px" />
+          </n-checkbox-group>
+        </n-form-item>
+        <n-form-item label="网络环境" path="network_list">
+          <n-checkbox-group v-model:value="formData.network_list">
+            <n-checkbox v-for="o in dict('bili_network')" :key="o.value" :value="o.value" :label="o.label" style="margin-right: 12px" />
+          </n-checkbox-group>
+        </n-form-item>
+        <n-form-item label="手机价位" path="phone_price_list">
+          <n-checkbox-group v-model:value="formData.phone_price_list">
+            <n-checkbox v-for="o in dict('bili_phone_price')" :key="o.value" :value="o.value" :label="o.label" style="margin-right: 12px" />
+          </n-checkbox-group>
+        </n-form-item>
+        <n-form-item label="操作系统" path="os_list">
+          <n-checkbox-group v-model:value="formData.os_list">
+            <n-checkbox v-for="o in dict('bili_os')" :key="o.value" :value="o.value" :label="o.label" style="margin-right: 12px" />
+          </n-checkbox-group>
+        </n-form-item>
+        <n-form-item label="安装过滤" path="installed_user_filter">
+          <n-checkbox-group v-model:value="formData.installed_user_filter">
+            <n-checkbox v-for="o in dict('bili_installed_type')" :key="o.value" :value="o.value" :label="o.label" style="margin-right: 12px" />
+          </n-checkbox-group>
+        </n-form-item>
+        <n-form-item label="转化用户过滤" path="converted_user_filter">
+          <n-radio-group v-model:value="formData.converted_user_filter">
+            <n-radio-button v-for="o in dict('bili_converted_user')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="地域类型" path="area_type">
+          <n-radio-group v-model:value="formData.area_type">
+            <n-radio-button v-for="o in dict('bili_area_type')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
 
         <n-divider>高级配置（JSON）</n-divider>
         <n-grid :cols="2" :x-gap="24">
-          <n-form-item-gi path="area_list" label="地域列表" :span="2">
+          <n-form-item-gi label="地域列表" :span="2">
             <n-input v-model:value="formData.area_list" type="textarea" :rows="2" placeholder="如 [1,2,3]（地理划分ID）" />
           </n-form-item-gi>
-          <n-form-item-gi path="area_level_list" label="地域层级" :span="2">
+          <n-form-item-gi label="地域层级" :span="2">
             <n-input v-model:value="formData.area_level_list" type="textarea" :rows="2" placeholder="如 [1,2]（发展划分ID）" />
           </n-form-item-gi>
-          <n-form-item-gi path="crowd_pack" label="人群包" :span="2">
+          <n-form-item-gi label="人群包" :span="2">
             <n-input v-model:value="formData.crowd_pack" type="textarea" :rows="2" placeholder="如 [1,2]（DMP人群包ID）" />
           </n-form-item-gi>
-          <n-form-item-gi path="archive_content" label="档案内容" :span="2">
+          <n-form-item-gi label="档案内容" :span="2">
             <n-input v-model:value="formData.archive_content" type="textarea" :rows="2" placeholder="高级参数，留空即可" />
           </n-form-item-gi>
         </n-grid>

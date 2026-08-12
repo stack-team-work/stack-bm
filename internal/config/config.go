@@ -34,8 +34,9 @@ type JWTConfig struct {
 }
 
 type MongoConfig struct {
-	URI       string
-	ChannelDB string
+	URI        string
+	ChannelDB  string
+	ChannelRaw string
 }
 
 var AppConfig *Config
@@ -81,8 +82,9 @@ func LoadConfig() *Config {
 			ExpireHours: viper.GetInt("JWT_EXPIRE_HOURS"),
 		},
 		Mongo: MongoConfig{
-			URI:       viper.GetString("MONGO_URI"),
-			ChannelDB: viper.GetString("MONGO_CHANNEL_DB"),
+			URI:        viper.GetString("MONGO_URI"),
+			ChannelDB:  viper.GetString("MONGO_CHANNEL_DB"),
+			ChannelRaw: viper.GetString("MONGO_CHANNEL_RAW_DB"),
 		},
 	}
 

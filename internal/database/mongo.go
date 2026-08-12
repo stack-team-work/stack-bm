@@ -13,8 +13,9 @@ import (
 )
 
 var (
-	Mongo     *mongo.Client
-	ChannelDB *mongo.Database
+	Mongo        *mongo.Client
+	ChannelDB    *mongo.Database
+	ChannelRawDB *mongo.Database
 )
 
 func InitMongo() {
@@ -40,5 +41,10 @@ func InitMongo() {
 		dbName = "channel_template"
 	}
 	ChannelDB = client.Database(dbName)
-	fmt.Printf("Connected to MongoDB: %s (%s)\n", config.AppConfig.Mongo.URI, dbName)
+	rawName := config.AppConfig.Mongo.ChannelRaw
+	if rawName == "" {
+		rawName = "channel"
+	}
+	ChannelRawDB = client.Database(rawName)
+	fmt.Printf("Connected to MongoDB: %s (%s, %s)\n", config.AppConfig.Mongo.URI, dbName, rawName)
 }

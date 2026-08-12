@@ -241,6 +241,48 @@ const routes = [
         meta: { title: '编辑快手标题包模板' },
       },
       {
+        path: 'tt-ads',
+        name: 'TtAds',
+        component: () => import('../views/mkt/tt/TtAds.vue'),
+        meta: { title: '头条Ads' },
+      },
+      {
+        path: 'tt-ads/ad-template/create',
+        name: 'TtAdTemplateCreate',
+        component: () => import('../views/mkt/tt/AdTemplateForm.vue'),
+        meta: { title: '新增头条广告模板' },
+      },
+      {
+        path: 'tt-ads/ad-template/edit/:id',
+        name: 'TtAdTemplateEdit',
+        component: () => import('../views/mkt/tt/AdTemplateForm.vue'),
+        meta: { title: '编辑头条广告模板' },
+      },
+      {
+        path: 'tt-ads/audience-template/create',
+        name: 'TtAudienceTemplateCreate',
+        component: () => import('../views/mkt/tt/AudienceTemplateForm.vue'),
+        meta: { title: '新增头条定向包模板' },
+      },
+      {
+        path: 'tt-ads/audience-template/edit/:id',
+        name: 'TtAudienceTemplateEdit',
+        component: () => import('../views/mkt/tt/AudienceTemplateForm.vue'),
+        meta: { title: '编辑头条定向包模板' },
+      },
+      {
+        path: 'tt-ads/title-template/create',
+        name: 'TtTitleTemplateCreate',
+        component: () => import('../views/mkt/tt/TitleTemplateForm.vue'),
+        meta: { title: '新增头条标题包模板' },
+      },
+      {
+        path: 'tt-ads/title-template/edit/:id',
+        name: 'TtTitleTemplateEdit',
+        component: () => import('../views/mkt/tt/TitleTemplateForm.vue'),
+        meta: { title: '编辑头条标题包模板' },
+      },
+      {
         path: 'pay-platform',
         name: 'PayPlatform',
         component: () => import('../views/sdk/pay/PayPlatform.vue'),

@@ -6,6 +6,7 @@ import (
 	"stack-bm/internal/handler/mkt/bili"
 	"stack-bm/internal/handler/mkt/ks"
 	"stack-bm/internal/handler/mkt/media"
+	"stack-bm/internal/handler/mkt/tt"
 	"stack-bm/internal/handler/sdk/game"
 	"stack-bm/internal/handler/sdk/pay"
 	sdkSys "stack-bm/internal/handler/sdk/sys"
@@ -60,6 +61,11 @@ func SetupRouter() *gin.Engine {
 	ksAdTemplateHandler := ks.NewAdTemplateHandler()
 	ksAudienceTemplateHandler := ks.NewAudienceTemplateHandler()
 	ksTitleTemplateHandler := ks.NewTitleTemplateHandler()
+
+	ttAdTemplateHandler := tt.NewAdTemplateHandler()
+	ttAudienceTemplateHandler := tt.NewAudienceTemplateHandler()
+	ttTitleTemplateHandler := tt.NewTitleTemplateHandler()
+	ttWordListHandler := tt.NewWordListHandler()
 
 	payPlatformHandler := pay.NewPayPlatformHandler()
 	payMerchantHandler := pay.NewPayMerchantHandler()
@@ -285,6 +291,29 @@ func SetupRouter() *gin.Engine {
 		api.POST("/ks-title-template/update/:id", ksTitleTemplateHandler.Update)
 		api.POST("/ks-title-template/delete/:id", ksTitleTemplateHandler.Delete)
 		api.POST("/ks-title-template/copy", ksTitleTemplateHandler.Copy)
+
+		api.POST("/tt-ad-template/create", ttAdTemplateHandler.Create)
+		api.POST("/tt-ad-template/list", ttAdTemplateHandler.GetList)
+		api.POST("/tt-ad-template/detail/:id", ttAdTemplateHandler.GetByID)
+		api.POST("/tt-ad-template/update/:id", ttAdTemplateHandler.Update)
+		api.POST("/tt-ad-template/delete/:id", ttAdTemplateHandler.Delete)
+		api.POST("/tt-ad-template/copy", ttAdTemplateHandler.Copy)
+
+		api.POST("/tt-audience-template/create", ttAudienceTemplateHandler.Create)
+		api.POST("/tt-audience-template/list", ttAudienceTemplateHandler.GetList)
+		api.POST("/tt-audience-template/detail/:id", ttAudienceTemplateHandler.GetByID)
+		api.POST("/tt-audience-template/update/:id", ttAudienceTemplateHandler.Update)
+		api.POST("/tt-audience-template/delete/:id", ttAudienceTemplateHandler.Delete)
+		api.POST("/tt-audience-template/copy", ttAudienceTemplateHandler.Copy)
+
+		api.POST("/tt-title-template/create", ttTitleTemplateHandler.Create)
+		api.POST("/tt-title-template/list", ttTitleTemplateHandler.GetList)
+		api.POST("/tt-title-template/detail/:id", ttTitleTemplateHandler.GetByID)
+		api.POST("/tt-title-template/update/:id", ttTitleTemplateHandler.Update)
+		api.POST("/tt-title-template/delete/:id", ttTitleTemplateHandler.Delete)
+		api.POST("/tt-title-template/copy", ttTitleTemplateHandler.Copy)
+
+		api.POST("/tt-word-list/list", ttWordListHandler.GetList)
 
 		api.POST("/pay-platform/create", payPlatformHandler.Create)
 		api.POST("/pay-platform/list", payPlatformHandler.GetList)

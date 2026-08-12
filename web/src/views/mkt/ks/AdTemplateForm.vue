@@ -4,8 +4,8 @@
       <n-text style="font-size: 18px; font-weight: 600">{{ isEdit ? '编辑快手广告模板' : '新增快手广告模板' }}</n-text>
     </n-space>
 
-    <n-card style="max-width: 1000px; margin-top: 16px">
-      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="130">
+    <n-card style="max-width: 1100px; margin-top: 16px">
+      <n-form ref="formRef" :model="formData" :rules="rules" label-placement="top" label-width="130">
         <n-divider style="margin-top: 4px">基本信息</n-divider>
         <n-grid :cols="2" :x-gap="24">
           <n-form-item-gi path="template_name" label="模板名称">
@@ -17,148 +17,182 @@
         </n-grid>
 
         <n-divider>投放设置</n-divider>
-        <n-grid :cols="2" :x-gap="24">
-          <n-form-item-gi path="market_target" label="投放目标">
-            <n-select v-model:value="formData.market_target" :options="dict('ks_market_target')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="type" label="广告场景">
-            <n-select v-model:value="formData.type" :options="dict('ks_scene')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="ad_type" label="广告类型">
-            <n-select v-model:value="formData.ad_type" :options="dict('ks_ad_type')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="auto_manage" label="投放方式">
-            <n-select v-model:value="formData.auto_manage" :options="dict('ks_auto_manager')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="scene_id" label="投放位置">
-            <n-select v-model:value="formData.scene_id" :options="dict('ks_scene_inventory')" multiple placeholder="选择投放位置" clearable />
-          </n-form-item-gi>
-          <n-form-item-gi path="unit_date_type" label="投放日期">
-            <n-select v-model:value="formData.unit_date_type" :options="dict('ks_unit_date_type')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="begin_time" label="开始日期">
+        <n-form-item label="投放目标" path="market_target">
+          <n-radio-group v-model:value="formData.market_target">
+            <n-radio-button v-for="o in dict('ks_market_target')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="广告场景" path="type">
+          <n-radio-group v-model:value="formData.type">
+            <n-radio-button v-for="o in dict('ks_scene')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="广告类型" path="ad_type">
+          <n-radio-group v-model:value="formData.ad_type">
+            <n-radio-button v-for="o in dict('ks_ad_type')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="投放方式" path="auto_manage">
+          <n-radio-group v-model:value="formData.auto_manage">
+            <n-radio-button v-for="o in dict('ks_auto_manager')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="投放位置" path="scene_id">
+          <n-checkbox-group v-model:value="formData.scene_id">
+            <n-checkbox v-for="o in dict('ks_scene_inventory')" :key="o.value" :value="o.value" :label="o.label" style="margin-right: 12px" />
+          </n-checkbox-group>
+        </n-form-item>
+        <n-form-item label="投放日期" path="unit_date_type">
+          <n-radio-group v-model:value="formData.unit_date_type">
+            <n-radio-button v-for="o in dict('ks_unit_date_type')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-grid v-if="formData.unit_date_type === 1" :cols="2" :x-gap="24">
+          <n-form-item-gi label="开始日期" path="begin_time">
             <n-date-picker v-model:formatted-value="formData.begin_time" type="date" value-format="yyyy-MM-dd" style="width: 100%" />
           </n-form-item-gi>
-          <n-form-item-gi path="end_time" label="结束日期">
+          <n-form-item-gi label="结束日期" path="end_time">
             <n-date-picker v-model:formatted-value="formData.end_time" type="date" value-format="yyyy-MM-dd" style="width: 100%" />
           </n-form-item-gi>
-          <n-form-item-gi path="unit_time_type" label="投放时间段">
-            <n-select v-model:value="formData.unit_time_type" :options="dict('ks_unit_time_type')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="schedule_time" label="时间段">
-            <n-input v-model:value="formData.schedule_time" placeholder="如 00:00-08:00,12:00-14:00" />
-          </n-form-item-gi>
-          <n-form-item-gi path="speed_type" label="投放速度">
-            <n-select v-model:value="formData.speed_type" :options="dict('ks_speed_type')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="show_mode" label="展现方式">
-            <n-select v-model:value="formData.show_mode" :options="dict('ks_show_mode')" />
-          </n-form-item-gi>
         </n-grid>
+        <n-form-item label="投放时间段" path="unit_time_type">
+          <n-radio-group v-model:value="formData.unit_time_type">
+            <n-radio-button v-for="o in dict('ks_unit_time_type')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item v-if="formData.unit_time_type === 1" label="时间段" path="schedule_time">
+          <n-input v-model:value="formData.schedule_time" placeholder="如 00:00-08:00,12:00-14:00" style="max-width: 400px" />
+        </n-form-item>
+        <n-form-item label="投放速度" path="speed_type">
+          <n-radio-group v-model:value="formData.speed_type">
+            <n-radio-button v-for="o in dict('ks_speed_type')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="展现方式" path="show_mode">
+          <n-radio-group v-model:value="formData.show_mode">
+            <n-radio-button v-for="o in dict('ks_show_mode')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
 
         <n-divider>预算</n-divider>
-        <n-grid :cols="2" :x-gap="24">
-          <n-form-item-gi path="budget_type" label="预算类型">
-            <n-select v-model:value="formData.budget_type" :options="dict('ks_budget_type')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="day_budget" label="每日预算">
-            <n-input-number v-model:value="formData.day_budget" :min="0" style="width: 100%" />
-          </n-form-item-gi>
-          <n-form-item-gi path="unit_budget_type" label="单元预算类型">
-            <n-select v-model:value="formData.unit_budget_type" :options="dict('ks_budget_type')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="unit_day_budget" label="单元每日预算">
-            <n-input-number v-model:value="formData.unit_day_budget" :min="0" style="width: 100%" />
-          </n-form-item-gi>
-        </n-grid>
+        <n-form-item label="预算类型" path="budget_type">
+          <n-radio-group v-model:value="formData.budget_type">
+            <n-radio-button v-for="o in dict('ks_budget_type')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item v-if="formData.budget_type === 2" label="每日预算" path="day_budget">
+          <n-input-number v-model:value="formData.day_budget" :min="0" style="width: 240px" />
+        </n-form-item>
+        <n-form-item label="单元预算类型" path="unit_budget_type">
+          <n-radio-group v-model:value="formData.unit_budget_type">
+            <n-radio-button v-for="o in dict('ks_budget_type')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item v-if="formData.unit_budget_type === 2" label="单元每日预算" path="unit_day_budget">
+          <n-input-number v-model:value="formData.unit_day_budget" :min="0" style="width: 240px" />
+        </n-form-item>
 
         <n-divider>创意设置</n-divider>
-        <n-grid :cols="2" :x-gap="24">
-          <n-form-item-gi path="creative_unit_type" label="创意类型">
-            <n-select v-model:value="formData.creative_unit_type" :options="dict('ks_creative_unit')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="mini_type" label="小游戏类型">
-            <n-select v-model:value="formData.mini_type" :options="dict('ks_mini_type')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="auto_photo_scope" label="素材优选">
-            <n-select v-model:value="formData.auto_photo_scope" :options="dict('ks_auto_photo_scope')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="action_bar_text" label="行动号召">
-            <n-input v-model:value="formData.action_bar_text" placeholder="请输入行动号召文案" />
-          </n-form-item-gi>
-          <n-grid-item>
-            <n-form-item path="asset_mining" label="资产挖矿" label-placement="left">
-              <n-switch v-model:value="formData.asset_mining" :checked-value="1" :unchecked-value="0" />
-            </n-form-item>
-          </n-grid-item>
-          <n-grid-item>
-            <n-form-item path="smart_cover" label="智能封面" label-placement="left">
-              <n-switch v-model:value="formData.smart_cover" :checked-value="1" :unchecked-value="0" />
-            </n-form-item>
-          </n-grid-item>
-        </n-grid>
+        <n-form-item label="创意类型" path="creative_unit_type">
+          <n-radio-group v-model:value="formData.creative_unit_type">
+            <n-radio-button v-for="o in dict('ks_creative_unit')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="小游戏类型" path="mini_type">
+          <n-radio-group v-model:value="formData.mini_type">
+            <n-radio-button v-for="o in dict('ks_mini_type')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="素材优选" path="auto_photo_scope">
+          <n-radio-group v-model:value="formData.auto_photo_scope">
+            <n-radio-button v-for="o in dict('ks_auto_photo_scope')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="行动号召" path="action_bar_text">
+          <n-input v-model:value="formData.action_bar_text" placeholder="请输入行动号召文案" style="max-width: 400px" />
+        </n-form-item>
+        <n-form-item label="资产挖矿" path="asset_mining">
+          <n-switch v-model:value="formData.asset_mining" :checked-value="1" :unchecked-value="0" />
+        </n-form-item>
+        <n-form-item label="智能封面" path="smart_cover">
+          <n-switch v-model:value="formData.smart_cover" :checked-value="1" :unchecked-value="0" />
+        </n-form-item>
 
         <n-divider>出价与优化目标</n-divider>
-        <n-grid :cols="2" :x-gap="24">
-          <n-form-item-gi path="bid_type" label="竞价策略">
-            <n-select v-model:value="formData.bid_type" :options="dict('ks_bid_strategy')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="custom_bid_type" label="自定义出价">
-            <n-select v-model:value="formData.custom_bid_type" :options="dict('ks_bid_way')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="base_target" label="出价方式">
-            <n-select v-model:value="formData.base_target" :options="dict('ks_bid_type')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="smart_bid" label="手动/自动出价">
-            <n-select v-model:value="formData.smart_bid" :options="dict('ks_smart_bid')" />
-          </n-form-item-gi>
-          <n-form-item-gi path="base_bid" label="基础出价">
+        <n-form-item label="竞价策略" path="bid_type">
+          <n-radio-group v-model:value="formData.bid_type">
+            <n-radio-button v-for="o in dict('ks_bid_strategy')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="自定义出价" path="custom_bid_type">
+          <n-radio-group v-model:value="formData.custom_bid_type">
+            <n-radio-button v-for="o in dict('ks_bid_way')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="出价方式" path="base_target">
+          <n-radio-group v-model:value="formData.base_target">
+            <n-radio-button v-for="o in dict('ks_bid_type')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="手动/自动出价" path="smart_bid">
+          <n-radio-group v-model:value="formData.smart_bid">
+            <n-radio-button v-for="o in dict('ks_smart_bid')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-grid :cols="3" :x-gap="24">
+          <n-form-item-gi label="基础出价" path="base_bid">
             <n-input-number v-model:value="formData.base_bid" :min="0" :step="0.01" style="width: 100%" />
           </n-form-item-gi>
-          <n-form-item-gi path="min_base_bid" label="出价下限">
+          <n-form-item-gi label="出价下限" path="min_base_bid">
             <n-input-number v-model:value="formData.min_base_bid" :min="0" :step="0.01" style="width: 100%" />
           </n-form-item-gi>
-          <n-form-item-gi path="max_base_bid" label="出价上限">
+          <n-form-item-gi label="出价上限" path="max_base_bid">
             <n-input-number v-model:value="formData.max_base_bid" :min="0" :step="0.01" style="width: 100%" />
           </n-form-item-gi>
-          <n-form-item-gi path="cpa_target" label="优化目标">
-            <n-select v-model:value="formData.cpa_target" :options="dict('ks_ocpx_action')" clearable />
-          </n-form-item-gi>
-          <n-form-item-gi path="target_action" label="目标行为">
-            <n-select v-model:value="formData.target_action" :options="dict('ks_target_action')" clearable />
-          </n-form-item-gi>
-          <n-form-item-gi path="cpa_bid" label="目标转化出价">
+        </n-grid>
+        <n-form-item label="优化目标" path="cpa_target">
+          <n-radio-group v-model:value="formData.cpa_target">
+            <n-radio-button v-for="o in dict('ks_ocpx_action')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="目标行为" path="target_action">
+          <n-radio-group v-model:value="formData.target_action">
+            <n-radio-button v-for="o in dict('ks_target_action')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-grid :cols="3" :x-gap="24">
+          <n-form-item-gi label="目标转化出价" path="cpa_bid">
             <n-input-number v-model:value="formData.cpa_bid" :min="0" :step="0.01" style="width: 100%" />
           </n-form-item-gi>
-          <n-form-item-gi path="min_cpa_bid" label="转化出价下限">
+          <n-form-item-gi label="转化出价下限" path="min_cpa_bid">
             <n-input-number v-model:value="formData.min_cpa_bid" :min="0" :step="0.01" style="width: 100%" />
           </n-form-item-gi>
-          <n-form-item-gi path="max_cpa_bid" label="转化出价上限">
+          <n-form-item-gi label="转化出价上限" path="max_cpa_bid">
             <n-input-number v-model:value="formData.max_cpa_bid" :min="0" :step="0.01" style="width: 100%" />
           </n-form-item-gi>
-          <n-form-item-gi path="deep_cpa_target" label="深度优化目标">
-            <n-select v-model:value="formData.deep_cpa_target" :options="dict('ks_deep_conversion')" clearable />
-          </n-form-item-gi>
-          <n-form-item-gi path="deep_cpa_bid" label="深度转化出价">
+        </n-grid>
+        <n-form-item label="深度优化目标" path="deep_cpa_target">
+          <n-radio-group v-model:value="formData.deep_cpa_target">
+            <n-radio-button v-for="o in dict('ks_deep_conversion')" :key="o.value" :value="o.value">{{ o.label }}</n-radio-button>
+          </n-radio-group>
+        </n-form-item>
+        <n-grid v-if="formData.deep_cpa_target" :cols="3" :x-gap="24">
+          <n-form-item-gi label="深度转化出价" path="deep_cpa_bid">
             <n-input-number v-model:value="formData.deep_cpa_bid" :min="0" :step="0.01" style="width: 100%" />
           </n-form-item-gi>
-          <n-form-item-gi path="min_deep_cpa_bid" label="深度出价下限">
+          <n-form-item-gi label="深度出价下限" path="min_deep_cpa_bid">
             <n-input-number v-model:value="formData.min_deep_cpa_bid" :min="0" :step="0.01" style="width: 100%" />
           </n-form-item-gi>
-          <n-form-item-gi path="max_deep_cpa_bid" label="深度出价上限">
+          <n-form-item-gi label="深度出价上限" path="max_deep_cpa_bid">
             <n-input-number v-model:value="formData.max_deep_cpa_bid" :min="0" :step="0.01" style="width: 100%" />
           </n-form-item-gi>
-          <n-grid-item>
-            <n-form-item path="quick_search" label="快速搜索" label-placement="left">
-              <n-switch v-model:value="formData.quick_search" :checked-value="1" :unchecked-value="0" />
-            </n-form-item>
-          </n-grid-item>
-          <n-grid-item>
-            <n-form-item path="target_explore" label="目标探索" label-placement="left">
-              <n-switch v-model:value="formData.target_explore" :checked-value="1" :unchecked-value="0" />
-            </n-form-item>
-          </n-grid-item>
         </n-grid>
+        <n-form-item label="快速搜索" path="quick_search">
+          <n-switch v-model:value="formData.quick_search" :checked-value="1" :unchecked-value="0" />
+        </n-form-item>
+        <n-form-item label="目标探索" path="target_explore">
+          <n-switch v-model:value="formData.target_explore" :checked-value="1" :unchecked-value="0" />
+        </n-form-item>
 
         <n-space style="margin-top: 16px">
           <n-button type="primary" :loading="submitLoading" @click="handleSubmit" size="medium">

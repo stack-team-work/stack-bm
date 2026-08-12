@@ -104,6 +104,10 @@ const topNavRouteMap = {
   '/ks-ads/ad-template/create': 'publish', '/ks-ads/ad-template/edit': 'publish',
   '/ks-ads/audience-template/create': 'publish', '/ks-ads/audience-template/edit': 'publish',
   '/ks-ads/title-template/create': 'publish', '/ks-ads/title-template/edit': 'publish',
+  '/tt-ads': 'publish',
+  '/tt-ads/ad-template/create': 'publish', '/tt-ads/ad-template/edit': 'publish',
+  '/tt-ads/audience-template/create': 'publish', '/tt-ads/audience-template/edit': 'publish',
+  '/tt-ads/title-template/create': 'publish', '/tt-ads/title-template/edit': 'publish',
   '/game': 'game', '/game-app': 'game', '/game-app/create': 'game', '/game-app/edit': 'game',
   '/game-app-template': 'game',
   '/game-cp': 'game', '/game-tag': 'game', '/game-variable': 'game',
@@ -163,6 +167,12 @@ const sidebarMenu = computed(() => {
           label: '快手Ads', key: 'ks-ads', icon: renderIcon(GameControllerOutline),
           children: [
             { label: '模板列表', key: '/ks-ads' },
+          ],
+        },
+        {
+          label: '头条Ads', key: 'tt-ads', icon: renderIcon(GameControllerOutline),
+          children: [
+            { label: '模板列表', key: '/tt-ads' },
           ],
         },
       ]

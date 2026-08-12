@@ -15,7 +15,7 @@
 <script setup>
 import { ref, h, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { NButton, NSpace, NPopconfirm, useMessage } from 'naive-ui'
+import { NButton, NSpace, NPopconfirm, useDialog, useMessage } from 'naive-ui'
 import { useTable } from '../../../composables/useTable'
 import { useDict } from '../../../composables/useDict'
 import { getBiliAdTemplateList, deleteBiliAdTemplate, copyBiliAdTemplate } from '../../../api/mkt/bili'
@@ -24,6 +24,7 @@ const router = useRouter()
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getBiliAdTemplateList)
 const { load: loadDict, options } = useDict()
 const message = useMessage()
+const dialog = useDialog()
 
 const searchKeyword = ref('')
 const dict = (key) => options(key)
@@ -45,16 +46,24 @@ const columns = [
 
 function doSearch() { search({ keyword: searchKeyword.value }) }
 function handleAdd() { router.push('/bili-ads/ad-template/create') }
-async function handleCopy(row) {
-  const name = prompt('请输入新模板名称', row.template_name + '(副本)')
-  if (!name) return
-  try { await copyBiliAdTemplate({ id: row.id, template_name: name }); message.success('复制成功'); search({ keyword: searchKeyword.value }) }
-  catch (err) { message.error(err.message || '复制失败') }
+function handleCopy(row) {
+  dialog.warning({
+    title: '复制模板',
+    content: '请输入新模板名称',
+    positiveText: '确定',
+    negativeText: '取消',
+    inputValue: row.template_name + '(副本)',
+    onPositiveClick: async (d) => {
+      const name = d?.inputValue || ''
+      if (!name) { message.warning('请输入模板名称'); return false }
+      try { await copyBiliAdTemplate({ id: row.id, template_name: name }); message.success('复制成功'); search({ keyword: searchKeyword.value }); return true }
+      catch (err) { message.error(err.message || '复制失败'); return false }
+    },
+  })
 }
-async function onDelete(id) { if (await doDelete(id, deleteBiliAdTemplate)) search({ keyword: searchKeyword.value }) }
-
-async function doDelete(id, fn) {
-  try { await fn(id); message.success('删除成功'); return true } catch (err) { message.error(err.message || '删除失败'); return false }
+async function onDelete(id) {
+  try { await deleteBiliAdTemplate(id); message.success('删除成功'); search({ keyword: searchKeyword.value }) }
+  catch (err) { message.error(err.message || '删除失败') }
 }
 
 onMounted(async () => { await loadDict(); search({}) })
