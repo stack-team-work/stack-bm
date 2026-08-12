@@ -199,6 +199,48 @@ const routes = [
         meta: { title: '编辑B站标题包模板' },
       },
       {
+        path: 'ks-ads',
+        name: 'KsAds',
+        component: () => import('../views/mkt/ks/KsAds.vue'),
+        meta: { title: '快手Ads' },
+      },
+      {
+        path: 'ks-ads/ad-template/create',
+        name: 'KsAdTemplateCreate',
+        component: () => import('../views/mkt/ks/AdTemplateForm.vue'),
+        meta: { title: '新增快手广告模板' },
+      },
+      {
+        path: 'ks-ads/ad-template/edit/:id',
+        name: 'KsAdTemplateEdit',
+        component: () => import('../views/mkt/ks/AdTemplateForm.vue'),
+        meta: { title: '编辑快手广告模板' },
+      },
+      {
+        path: 'ks-ads/audience-template/create',
+        name: 'KsAudienceTemplateCreate',
+        component: () => import('../views/mkt/ks/AudienceTemplateForm.vue'),
+        meta: { title: '新增快手定向包模板' },
+      },
+      {
+        path: 'ks-ads/audience-template/edit/:id',
+        name: 'KsAudienceTemplateEdit',
+        component: () => import('../views/mkt/ks/AudienceTemplateForm.vue'),
+        meta: { title: '编辑快手定向包模板' },
+      },
+      {
+        path: 'ks-ads/title-template/create',
+        name: 'KsTitleTemplateCreate',
+        component: () => import('../views/mkt/ks/TitleTemplateForm.vue'),
+        meta: { title: '新增快手标题包模板' },
+      },
+      {
+        path: 'ks-ads/title-template/edit/:id',
+        name: 'KsTitleTemplateEdit',
+        component: () => import('../views/mkt/ks/TitleTemplateForm.vue'),
+        meta: { title: '编辑快手标题包模板' },
+      },
+      {
         path: 'pay-platform',
         name: 'PayPlatform',
         component: () => import('../views/sdk/pay/PayPlatform.vue'),

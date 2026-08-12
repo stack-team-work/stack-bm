@@ -4,6 +4,7 @@ import (
 	"stack-bm/internal/handler"
 	"stack-bm/internal/handler/bm/sys"
 	"stack-bm/internal/handler/mkt/bili"
+	"stack-bm/internal/handler/mkt/ks"
 	"stack-bm/internal/handler/mkt/media"
 	"stack-bm/internal/handler/sdk/game"
 	"stack-bm/internal/handler/sdk/pay"
@@ -55,6 +56,10 @@ func SetupRouter() *gin.Engine {
 	biliAdTemplateHandler := bili.NewAdTemplateHandler()
 	biliAudienceTemplateHandler := bili.NewAudienceTemplateHandler()
 	biliTitleTemplateHandler := bili.NewTitleTemplateHandler()
+
+	ksAdTemplateHandler := ks.NewAdTemplateHandler()
+	ksAudienceTemplateHandler := ks.NewAudienceTemplateHandler()
+	ksTitleTemplateHandler := ks.NewTitleTemplateHandler()
 
 	payPlatformHandler := pay.NewPayPlatformHandler()
 	payMerchantHandler := pay.NewPayMerchantHandler()
@@ -259,6 +264,27 @@ func SetupRouter() *gin.Engine {
 		api.POST("/bili-title-template/update/:id", biliTitleTemplateHandler.Update)
 		api.POST("/bili-title-template/delete/:id", biliTitleTemplateHandler.Delete)
 		api.POST("/bili-title-template/copy", biliTitleTemplateHandler.Copy)
+
+		api.POST("/ks-ad-template/create", ksAdTemplateHandler.Create)
+		api.POST("/ks-ad-template/list", ksAdTemplateHandler.GetList)
+		api.POST("/ks-ad-template/detail/:id", ksAdTemplateHandler.GetByID)
+		api.POST("/ks-ad-template/update/:id", ksAdTemplateHandler.Update)
+		api.POST("/ks-ad-template/delete/:id", ksAdTemplateHandler.Delete)
+		api.POST("/ks-ad-template/copy", ksAdTemplateHandler.Copy)
+
+		api.POST("/ks-audience-template/create", ksAudienceTemplateHandler.Create)
+		api.POST("/ks-audience-template/list", ksAudienceTemplateHandler.GetList)
+		api.POST("/ks-audience-template/detail/:id", ksAudienceTemplateHandler.GetByID)
+		api.POST("/ks-audience-template/update/:id", ksAudienceTemplateHandler.Update)
+		api.POST("/ks-audience-template/delete/:id", ksAudienceTemplateHandler.Delete)
+		api.POST("/ks-audience-template/copy", ksAudienceTemplateHandler.Copy)
+
+		api.POST("/ks-title-template/create", ksTitleTemplateHandler.Create)
+		api.POST("/ks-title-template/list", ksTitleTemplateHandler.GetList)
+		api.POST("/ks-title-template/detail/:id", ksTitleTemplateHandler.GetByID)
+		api.POST("/ks-title-template/update/:id", ksTitleTemplateHandler.Update)
+		api.POST("/ks-title-template/delete/:id", ksTitleTemplateHandler.Delete)
+		api.POST("/ks-title-template/copy", ksTitleTemplateHandler.Copy)
 
 		api.POST("/pay-platform/create", payPlatformHandler.Create)
 		api.POST("/pay-platform/list", payPlatformHandler.GetList)

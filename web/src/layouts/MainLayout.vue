@@ -100,6 +100,10 @@ const topNavRouteMap = {
   '/bili-ads/ad-template/create': 'publish', '/bili-ads/ad-template/edit': 'publish',
   '/bili-ads/audience-template/create': 'publish', '/bili-ads/audience-template/edit': 'publish',
   '/bili-ads/title-template/create': 'publish', '/bili-ads/title-template/edit': 'publish',
+  '/ks-ads': 'publish',
+  '/ks-ads/ad-template/create': 'publish', '/ks-ads/ad-template/edit': 'publish',
+  '/ks-ads/audience-template/create': 'publish', '/ks-ads/audience-template/edit': 'publish',
+  '/ks-ads/title-template/create': 'publish', '/ks-ads/title-template/edit': 'publish',
   '/game': 'game', '/game-app': 'game', '/game-app/create': 'game', '/game-app/edit': 'game',
   '/game-app-template': 'game',
   '/game-cp': 'game', '/game-tag': 'game', '/game-variable': 'game',
@@ -153,6 +157,12 @@ const sidebarMenu = computed(() => {
           label: 'B站Ads', key: 'bili-ads', icon: renderIcon(GameControllerOutline),
           children: [
             { label: '模板列表', key: '/bili-ads' },
+          ],
+        },
+        {
+          label: '快手Ads', key: 'ks-ads', icon: renderIcon(GameControllerOutline),
+          children: [
+            { label: '模板列表', key: '/ks-ads' },
           ],
         },
       ]

@@ -123,7 +123,8 @@ web/src/
 │   ├── sdk/pay.js           payPlatform, payMerchant
 │   ├── sdk/sys.js           sdkLog
 │   ├── mkt/media.js         media, mediaSub, mediaAgent, mediaApplication, mediaManager, mediaSubject
-│   └── mkt/bili.js          bili ad/audience/title templates
+│   ├── mkt/bili.js          bili ad/audience/title templates
+│   └── mkt/ks.js            ks (快手) ad/audience/title templates
 ├── composables/
 │   ├── useTable.js          pagination + search + load
 │   └── useModal.js          form open/edit/submit/delete
@@ -134,6 +135,7 @@ web/src/
 │   ├── sdk/sys/             GameLog (SDK 日志)
 │   ├── mkt/media/           Media, MediaSub, MediaAgent, MediaApplication, MediaManager, MediaSubject
 │   ├── mkt/bili/            BiliAds (tab 页), AdTemplate*, AudienceTemplate*, TitleTemplate*
+│   ├── mkt/ks/              KsAds (tab 页), AdTemplate*, AudienceTemplate*, TitleTemplate*
 │   ├── dashboard/           Dashboard
 │   ├── Login.vue
 │   └── layouts/             MainLayout.vue
