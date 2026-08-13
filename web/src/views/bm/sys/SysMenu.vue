@@ -56,11 +56,11 @@
 
 <script setup>
 import { ref, reactive, h, onMounted, computed } from 'vue'
-import { NButton, NSpace, NSwitch, NPopconfirm, NTag, NIcon } from 'naive-ui'
-import { CreateOutline, TrashOutline } from '@vicons/ionicons5'
+import { NButton, NSpace, NSwitch, NTag } from 'naive-ui'
 import { useModal } from '../../../composables/useModal'
 import { getMenuAll, createMenu, updateMenu, deleteMenu } from '../../../api/bm/sys'
 import { useDict } from '../../../composables/useDict'
+import TableActions from '../../../components/TableActions.vue'
 
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
 const { load: loadDict, options } = useDict()
@@ -88,10 +88,7 @@ const columns = [
   { title: '图标', key: 'icon', width: 80 },
   { title: '排序', key: 'sort', width: 60 },
   { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, readonly: true, size: 'small' }) },
-  { title: '操作', key: 'actions', width: 140, render: (row) => h(NSpace, null, { default: () => [
-    h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CreateOutline) }), ' 编辑'] }),
-    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(TrashOutline) }), ' 删除'] }) }),
-  ]}) },
+  { title: '操作', key: 'actions', width: 140, render: (row) => h(TableActions, { row, edit: () => handleEdit(row), remove: () => onDelete(row.id) }) },
 ]
 
 function doSearch() {

@@ -16,11 +16,12 @@
 <script setup>
 import { ref, h, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { NButton, NSpace, NPopconfirm, NIcon, useDialog, useMessage } from 'naive-ui'
-import { CreateOutline, CopyOutline, TrashOutline } from '@vicons/ionicons5'
+import { NButton, NIcon, useDialog, useMessage } from 'naive-ui'
+import { CopyOutline } from '@vicons/ionicons5'
 import { useTable } from '../../../composables/useTable'
 import { useDict } from '../../../composables/useDict'
 import { getBiliAdTemplateList, deleteBiliAdTemplate, copyBiliAdTemplate } from '../../../api/mkt/bili'
+import TableActions from '../../../components/TableActions.vue'
 
 const router = useRouter()
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getBiliAdTemplateList)
@@ -39,11 +40,7 @@ const columns = [
   { title: '出价方式', key: 'base_target', width: 80, render: (row) => dictLabel('bili_bid_type', row.base_target) },
   { title: '单元预算', key: 'unit_budget', width: 90, render: (row) => row.unit_budget ?? '-' },
   { title: '更新时间', key: 'updated_at', width: 170 },
-  { title: '操作', key: 'actions', width: 180, render: (row) => h(NSpace, null, { default: () => [
-    h(NButton, { size: 'tiny', onClick: () => router.push(`/bili-ads/ad-template/edit/${row.id}`) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CreateOutline) }), ' 编辑'] }),
-    h(NButton, { size: 'tiny', onClick: () => handleCopy(row) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CopyOutline) }), ' 复制'] }),
-    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(TrashOutline) }), ' 删除'] }) }),
-  ]}) },
+  { title: '操作', key: 'actions', width: 180, render: (row) => h(TableActions, { row, edit: () => router.push(`/bili-ads/ad-template/edit/${row.id}`), remove: () => onDelete(row.id) }, { extra: () => h(NButton, { size: 'tiny', onClick: () => handleCopy(row) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CopyOutline) }), ' 复制'] }) }) },
 ]
 
 function doSearch() { search({ keyword: searchKeyword.value }) }

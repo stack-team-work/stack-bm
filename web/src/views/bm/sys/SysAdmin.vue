@@ -49,12 +49,12 @@
 
 <script setup>
 import { ref, reactive, h, onMounted, computed } from 'vue'
-import { NButton, NSpace, NSwitch, NPopconfirm, NIcon, useMessage } from 'naive-ui'
-import { CreateOutline, TrashOutline } from '@vicons/ionicons5'
+import { NSwitch, useMessage } from 'naive-ui'
 import { useTable } from '../../../composables/useTable'
 import { useModal } from '../../../composables/useModal'
 import { getAdminList, createAdmin, updateAdmin, deleteAdmin, getAdminGroupAll } from '../../../api/bm/sys'
 import { formatTime } from '../../../utils/format'
+import TableActions from '../../../components/TableActions.vue'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getAdminList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
@@ -77,10 +77,7 @@ const columns = [
   { title: '角色', key: 'group_id', width: 100, render: (row) => { const g = groupOptions.value.find(o => o.value === row.group_id); return g ? g.label : row.group_id } },
   { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, onUpdateValue: (val) => handleStatusChange(row, val), size: 'small' }) },
   { title: '创建时间', key: 'created_at', width: 170, render: (row) => formatTime(row.created_at) },
-  { title: '操作', key: 'actions', width: 140, render: (row) => h(NSpace, null, { default: () => [
-    h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CreateOutline) }), ' 编辑'] }),
-    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(TrashOutline) }), ' 删除'] }) }),
-  ]}) },
+  { title: '操作', key: 'actions', width: 140, render: (row) => h(TableActions, { row, edit: () => handleEdit(row), remove: () => onDelete(row.id) }) },
 ]
 
 function doSearch() { search({ keyword: searchKeyword.value, group_id: searchGroupId.value ?? 0 }) }
@@ -88,7 +85,7 @@ function handleAdd() { resetForm(); open() }
 function handleEdit(row) { resetForm(); formData.username = row.username; formData.name = row.name; formData.phone = row.phone; formData.group_id = row.group_id; formData.status = row.status; openEdit(row) }
 
 async function handleSubmit() {
-  if (!isEdit.value && !formData.password) { const { useMessage } = await import('naive-ui'); useMessage().error('请输入密码'); return }
+  if (!isEdit.value && !formData.password) { message.error('请输入密码'); return }
   if (await submit(formData, createAdmin, updateAdmin)) search({ keyword: searchKeyword.value, group_id: searchGroupId.value ?? 0 })
 }
 async function onDelete(id) { if (await doDelete(id, deleteAdmin)) search({ keyword: searchKeyword.value, group_id: searchGroupId.value ?? 0 }) }

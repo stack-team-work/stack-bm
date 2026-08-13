@@ -33,8 +33,8 @@
 
 <script setup>
 import { ref, reactive, h } from 'vue'
-import { NButton, NSpace, NPopconfirm, NIcon, useMessage } from 'naive-ui'
-import { CreateOutline, TrashOutline } from '@vicons/ionicons5'
+import { NButton, NSpace, useMessage } from 'naive-ui'
+import TableActions from '../../../components/TableActions.vue'
 import { useTable } from '../../../composables/useTable'
 import { useModal } from '../../../composables/useModal'
 import { getPayPlatformList, createPayPlatform, updatePayPlatform, deletePayPlatform } from '../../../api/sdk/pay'
@@ -52,10 +52,7 @@ const columns = [
   { title: '平台名称', key: 'name' },
   { title: '平台标识', key: 'mark' },
   { title: '创建时间', key: 'created_at', width: 170, render: (row) => formatTime(row.created_at) },
-  { title: '操作', key: 'actions', width: 140, render: (row) => h(NSpace, null, { default: () => [
-    h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CreateOutline) }), ' 编辑'] }),
-    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(TrashOutline) }), ' 删除'] }) }),
-  ]}) },
+  { title: '操作', key: 'actions', width: 140, render: (row) => h(TableActions, { row, edit: () => handleEdit(row), remove: () => onDelete(row.id) }) },
 ]
 function doSearch() { search({ keyword: searchKeyword.value }) }
 function handleAdd() { resetForm(); open() }

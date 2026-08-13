@@ -59,13 +59,13 @@
 
 <script setup>
 import { ref, reactive, h, toRaw, computed, onMounted } from 'vue'
-import { NButton, NSpace, NSwitch, NPopconfirm, NIcon, NInputNumber, useMessage } from 'naive-ui'
+import { NButton, NSpace, NSwitch, NInputNumber, useMessage } from 'naive-ui'
 import { useTable } from '../../../composables/useTable'
 import { useModal } from '../../../composables/useModal'
 import { useDict } from '../../../composables/useDict'
 import { getGameGiftList, createGameGift, updateGameGift, deleteGameGift } from '../../../api/sdk/game'
 import { formatTime } from '../../../utils/format'
-import { CreateOutline, TrashOutline } from '@vicons/ionicons5'
+import TableActions from '../../../components/TableActions.vue'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getGameGiftList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
@@ -89,10 +89,7 @@ const columns = [
   { title: '开始时间', key: 'stime', width: 160, render: (row) => row.stime ? formatTime(row.stime) : '' },
   { title: '结束时间', key: 'etime', width: 160, render: (row) => row.etime ? formatTime(row.etime) : '' },
   { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, onUpdateValue: (val) => handleStatusChange(row, val), size: 'small' }) },
-  { title: '操作', key: 'actions', width: 140, render: (row) => h(NSpace, null, { default: () => [
-    h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CreateOutline) }), ' 编辑'] }),
-    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(TrashOutline) }), ' 删除'] }) }),
-  ]}) },
+  { title: '操作', key: 'actions', width: 140, render: (row) => h(TableActions, { row, edit: () => handleEdit(row), remove: () => onDelete(row.id) }) },
 ]
 function doSearch() { search({ keyword: searchKeyword.value, status: searchStatus.value ?? -1 }) }
 function handleAdd() { resetForm(); open() }

@@ -1,6 +1,7 @@
 <template>
   <n-layout has-sider style="height: 100vh">
     <n-layout-sider
+        class="layout-sider"
         bordered
         collapse-mode="width"
         :collapsed-width="64"
@@ -49,6 +50,12 @@
         </n-dropdown>
       </n-layout-header>
       <n-layout-content class="layout-content">
+        <div v-if="route.meta?.title" class="layout-breadcrumb">
+          <n-breadcrumb>
+            <n-breadcrumb-item>{{ activeTopNavLabel }}</n-breadcrumb-item>
+            <n-breadcrumb-item>{{ route.meta.title }}</n-breadcrumb-item>
+          </n-breadcrumb>
+        </div>
         <router-view v-slot="{ Component }">
           <transition name="fade-slide" mode="out-in">
             <component :is="Component" />
@@ -60,15 +67,54 @@
 </template>
 
 <style>
+/* 顶部横向导航：品牌色下划线选中态 */
 .n-menu.n-menu--horizontal .n-menu-item-content {
-  padding: 0 12px;
-  border-radius: 4px;
+  padding: 0 14px;
+  font-weight: 500;
+  color: var(--text-2);
 }
 .n-menu.n-menu--horizontal .n-menu-item-content.n-menu-item-content--selected {
-  background: #f0f0f0 !important;
+  color: var(--brand-600) !important;
+  background: transparent !important;
+}
+.n-menu.n-menu--horizontal .n-menu-item-content.n-menu-item-content--selected::after {
+  content: '';
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 6px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--brand-500);
 }
 .n-menu.n-menu--horizontal .n-menu-item-content:hover {
-  background: #f5f5f5 !important;
+  color: var(--brand-600) !important;
+  background: transparent !important;
+}
+
+/* 深色侧边栏：品牌背景 + 高亮条选中态 */
+.layout-sider.n-layout-sider {
+  background: linear-gradient(180deg, var(--sider-bg) 0%, var(--sider-bg-2) 100%) !important;
+}
+.layout-sider .n-menu.n-menu--dark .n-menu-item-content {
+  position: relative;
+}
+.layout-sider .n-menu.n-menu--dark .n-menu-item-content:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+.layout-sider .n-menu.n-menu--dark .n-menu-item-content.n-menu-item-content--selected {
+  background: rgba(16, 185, 129, 0.16);
+}
+.layout-sider .n-menu.n-menu--dark .n-menu-item-content.n-menu-item-content--selected::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 18px;
+  border-radius: 0 3px 3px 0;
+  background: var(--brand-500);
 }
 
 .layout-logo {
@@ -77,7 +123,8 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--sider-border);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(16, 185, 129, 0.02));
 }
 .layout-logo-img {
   width: 32px;
@@ -108,25 +155,32 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+.layout-user:hover {
+  background: var(--bg-page);
 }
 .layout-user-avatar {
-  background: #18a058;
+  background: var(--brand-500);
 }
 .layout-user-name {
   font-size: 14px;
+  color: var(--text-1);
 }
 .layout-user-caret {
-  color: #999;
+  color: var(--text-3);
 }
 
 .layout-content {
   padding: 16px 20px 24px;
-  background: #f5f6fa;
+  background: var(--bg-page);
   min-height: calc(100vh - 56px);
 }
 
 .layout-breadcrumb {
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .fade-slide-enter-active,
@@ -148,9 +202,10 @@ import { useRouter, useRoute } from 'vue-router'
 import { NIcon } from 'naive-ui'
 import {
   HomeOutline, SettingsOutline, GameControllerOutline,
-  BarChartOutline, GiftOutline, TicketOutline, CashOutline,
-  ServerOutline, DocumentTextOutline, MenuOutline,
-  PersonOutline, ChevronDownOutline,
+  LayersOutline, GiftOutline, TicketOutline, CashOutline,
+  StatsChartOutline, DocumentTextOutline, MenuOutline,
+  PersonOutline, ChevronDownOutline, PlayCircleOutline,
+  VideocamOutline, MegaphoneOutline, ChatbubblesOutline,
 } from '@vicons/ionicons5'
 
 const router = useRouter()
@@ -207,6 +262,8 @@ watch(() => route.path, (p) => {
   if (nav) activeTopNav.value = nav
 })
 
+const activeTopNavLabel = computed(() => topNavOptions.find(o => o.key === activeTopNav.value)?.label || '')
+
 const topNavFirstRoute = {
   publish: '/dashboard',
   game: '/game',
@@ -228,7 +285,7 @@ const sidebarMenu = computed(() => {
       return [
         { label: '概况', key: '/dashboard', icon: renderIcon(HomeOutline) },
         {
-          label: '渠道管理', key: 'mkt-mgmt', icon: renderIcon(BarChartOutline),
+          label: '渠道管理', key: 'mkt-mgmt', icon: renderIcon(LayersOutline),
           children: [
             { label: '媒体渠道', key: '/media' },
             { label: '媒体子渠道', key: '/media-sub' },
@@ -239,19 +296,19 @@ const sidebarMenu = computed(() => {
           ],
         },
         {
-          label: 'B站广告', key: 'bili-ads', icon: renderIcon(GameControllerOutline),
+          label: 'B站广告', key: 'bili-ads', icon: renderIcon(PlayCircleOutline),
           children: [
             { label: '模板列表', key: '/bili-ads' },
           ],
         },
         {
-          label: '快手广告', key: 'ks-ads', icon: renderIcon(GameControllerOutline),
+          label: '快手广告', key: 'ks-ads', icon: renderIcon(VideocamOutline),
           children: [
             { label: '模板列表', key: '/ks-ads' },
           ],
         },
         {
-          label: '头条广告', key: 'tt-ads', icon: renderIcon(GameControllerOutline),
+          label: '头条广告', key: 'tt-ads', icon: renderIcon(MegaphoneOutline),
           children: [
             { label: '模板列表', key: '/tt-ads' },
           ],
@@ -299,7 +356,7 @@ const sidebarMenu = computed(() => {
         ],
       }]
     case 'dev-data':
-      return [{ label: '暂无数据', key: 'empty', icon: renderIcon(ServerOutline) }]
+      return [{ label: '暂无数据', key: 'empty', icon: renderIcon(StatsChartOutline) }]
     case 'system':
       return [
         {
@@ -313,7 +370,7 @@ const sidebarMenu = computed(() => {
         },
         { label: '后台日志', key: '/logs', icon: renderIcon(DocumentTextOutline) },
         {
-          label: '飞书管理', key: 'feishu-mgmt', icon: renderIcon(SettingsOutline),
+          label: '飞书管理', key: 'feishu-mgmt', icon: renderIcon(ChatbubblesOutline),
           children: [
             { label: '飞书绑定', key: '/feishu-user' },
             { label: '飞书应用', key: '/feishu-app' },

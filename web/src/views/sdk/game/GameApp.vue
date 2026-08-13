@@ -18,14 +18,14 @@
 <script setup>
 import { ref, h, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { NButton, NSpace, NSwitch, NPopconfirm, NIcon, useMessage } from 'naive-ui'
+import { NButton, NSwitch, useMessage } from 'naive-ui'
 import { useTable } from '../../../composables/useTable'
 import { useModal } from '../../../composables/useModal'
 import { useDict } from '../../../composables/useDict'
 import { useOptions } from '../../../composables/useOptions'
 import { getGameAppList, deleteGameApp, updateGameApp } from '../../../api/sdk/game'
 import { formatTime } from '../../../utils/format'
-import { CreateOutline, TrashOutline } from '@vicons/ionicons5'
+import TableActions from '../../../components/TableActions.vue'
 
 const router = useRouter()
 const message = useMessage()
@@ -50,11 +50,7 @@ const columns = [
   { title: 'SDK模板', key: 'app_template_id', width: 100, render: (row) => { const t = templateOptions.value.find(o => o.value === row.app_template_id); return t ? t.label : `SDK模板#${row.app_template_id}` } },
   { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, onUpdateValue: (val) => handleStatusChange(row, val), size: 'small' }) },
   { title: '创建时间', key: 'created_at', width: 170, render: (row) => formatTime(row.created_at) },
-  { title: '操作', key: 'actions', width: 180, render: (row) => h(NSpace, null, { default: () => [
-    h(NButton, { size: 'tiny', onClick: () => router.push(`/game-app/edit/${row.id}`) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CreateOutline) }), ' 编辑'] }),
-    h(NButton, { size: 'tiny', onClick: () => handleExport(row) }, { default: () => '导出' }),
-    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(TrashOutline) }), ' 删除'] }) }),
-  ]}) },
+  { title: '操作', key: 'actions', width: 180, render: (row) => h(TableActions, { row, edit: () => router.push(`/game-app/edit/${row.id}`), remove: () => onDelete(row.id) }, { extra: () => h(NButton, { size: 'tiny', onClick: () => handleExport(row) }, { default: () => '导出' }) }) },
 ]
 
 function doSearch() { search({ keyword: searchKeyword.value, game_id: searchGameId.value ?? 0, status: searchStatus.value ?? -1 }) }

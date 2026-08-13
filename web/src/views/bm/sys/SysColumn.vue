@@ -55,13 +55,13 @@
 
 <script setup>
 import { ref, reactive, h, computed, onMounted } from 'vue'
-import { NButton, NSpace, NSwitch, NPopconfirm, NIcon, useMessage } from 'naive-ui'
-import { CreateOutline, TrashOutline } from '@vicons/ionicons5'
+import { NButton, NSpace, NSwitch, useMessage } from 'naive-ui'
 import { useTable } from '../../../composables/useTable'
 import { useModal } from '../../../composables/useModal'
 import { getSysColumnList, createSysColumn, updateSysColumn, deleteSysColumn } from '../../../api/bm/sys'
 import { formatTime } from '../../../utils/format'
 import { useDict } from '../../../composables/useDict'
+import TableActions from '../../../components/TableActions.vue'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getSysColumnList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
@@ -88,10 +88,7 @@ const columns = [
   { title: '标识', key: 'mark' },
   { title: '默认', key: 'default', width: 60, render: (row) => row.default === 1 ? '是' : '否' },
   { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, onUpdateValue: (val) => handleStatusChange(row, val), size: 'small' }) },
-  { title: '操作', key: 'actions', width: 140, render: (row) => h(NSpace, null, { default: () => [
-    h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CreateOutline) }), ' 编辑'] }),
-    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(TrashOutline) }), ' 删除'] }) }),
-  ]}) },
+  { title: '操作', key: 'actions', width: 140, render: (row) => h(TableActions, { row, edit: () => handleEdit(row), remove: () => onDelete(row.id) }) },
 ]
 function doSearch() { search({ keyword: searchKeyword.value, report_type: searchReportType.value ?? 0, indicator_type: searchIndicatorType.value ?? 0, status: searchStatus.value ?? -1 }) }
 function handleAdd() { resetForm(); open() }

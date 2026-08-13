@@ -53,5 +53,6 @@ declare module 'vue' {
     NText: typeof import('naive-ui')['NText']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TableActions: typeof import('./components/TableActions.vue')['default']
   }
 }

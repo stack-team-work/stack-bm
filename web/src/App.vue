@@ -12,34 +12,50 @@
 <script setup>
 import { zhCN, dateZhCN } from 'naive-ui'
 
+// 设计 token（与 src/styles/tokens.css 保持一致，作为单一来源）
+const tokens = {
+  brand: '#10b981',
+  brandHover: '#059669',
+  brandPressed: '#047857',
+  info: '#2563eb',
+  success: '#16a34a',
+  warning: '#f59e0b',
+  error: '#ef4444',
+  border: '#eef0f4',
+  bgPage: '#f5f7fa',
+  text2: '#646a73',
+}
+
 const themeOverrides = {
   common: {
-    primaryColor: '#18a058',
-    primaryColorHover: '#36ad6a',
-    primaryColorPressed: '#0c7a43',
-    primaryColorSuppl: '#36ad6a',
-    infoColor: '#2080f0',
-    successColor: '#18a058',
-    warningColor: '#f0a020',
-    errorColor: '#d03050',
-    borderRadius: '6px',
+    primaryColor: tokens.brand,
+    primaryColorHover: tokens.brandHover,
+    primaryColorPressed: tokens.brandPressed,
+    primaryColorSuppl: tokens.brand,
+    infoColor: tokens.info,
+    successColor: tokens.success,
+    warningColor: tokens.warning,
+    errorColor: tokens.error,
+    bodyColor: tokens.bgPage,
+    borderRadius: '8px',
     fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif",
   },
   Button: {
     borderRadiusTiny: '4px',
-    borderRadiusSmall: '4px',
+    borderRadiusSmall: '6px',
     borderRadiusMedium: '6px',
-    borderRadiusLarge: '6px',
+    borderRadiusLarge: '8px',
     fontWeight: 500,
   },
   Card: {
     borderRadius: '8px',
   },
   Modal: {
-    borderRadius: '8px',
+    borderRadius: '12px',
+    boxShadow: '0 12px 32px rgba(16, 24, 40, 0.12)',
   },
   Popover: {
-    borderRadius: '6px',
+    borderRadius: '8px',
   },
   Input: {
     borderRadius: '6px',
@@ -52,6 +68,12 @@ const themeOverrides = {
   },
   DataTable: {
     borderRadius: '8px',
+    thColor: '#f7f8fa',
+    thTextColor: tokens.text2,
+    thFontWeight: '600',
+    borderColor: tokens.border,
+    tdColor: '#ffffff',
+    tdColorHover: '#f7f8fa',
   },
   Tag: {
     borderRadius: '4px',

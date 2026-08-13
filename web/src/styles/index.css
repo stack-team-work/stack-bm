@@ -1,3 +1,5 @@
+@import './tokens.css';
+
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -12,7 +14,8 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f5f6fa;
+  background-color: var(--bg-page);
+  color: var(--text-1);
 }
 
 #app {
@@ -28,29 +31,41 @@ a {
   height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.18);
+  background: rgba(0, 0, 0, 0.16);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.28);
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 
+/* 通用布局工具类 */
 .search-bar {
   margin-bottom: 16px;
 }
-
 .page-toolbar {
   margin-bottom: 16px;
+}
+
+/* 卡片统一轻阴影（带边框的卡片保持原样） */
+.n-card {
+  box-shadow: var(--shadow-card);
+}
+.n-card.n-card--bordered {
+  box-shadow: none;
+}
+
+/* 表格表头轻量区分 */
+.n-data-table .n-data-table-th {
+  color: var(--text-2);
 }
 
 .n-radio-group {
   flex-wrap: wrap;
   row-gap: 8px;
 }
-
 .n-checkbox-group {
   flex-wrap: wrap;
   row-gap: 8px;

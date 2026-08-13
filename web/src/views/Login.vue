@@ -1,91 +1,178 @@
 <template>
   <div class="login-page">
-    <div class="login-card">
-      <div class="login-header">
-        <img src="/logo.png" class="login-logo" />
-        <h1 class="login-title">游戏发行后台管理系统</h1>
-        <p class="login-subtitle">STACK-BM · 管理控制台</p>
+    <div class="login-panel">
+      <div class="login-brand">
+        <img src="/logo.png" class="brand-logo" />
+        <h1 class="brand-title">游戏发行后台管理系统</h1>
+        <p class="brand-subtitle">STACK-BM · 一站式投放管理控制台</p>
+        <ul class="brand-features">
+          <li>多渠道广告模板统一配置</li>
+          <li>游戏 / 礼包 / 支付全链路管理</li>
+          <li>实时数据报表与日志追踪</li>
+        </ul>
       </div>
-      <n-form ref="formRef" :model="formData" :rules="rules">
-        <n-form-item path="username" label="用户名">
-          <n-input v-model:value="formData.username" placeholder="请输入用户名" />
-        </n-form-item>
-        <n-form-item path="password" label="密码">
-          <n-input v-model:value="formData.password" type="password" placeholder="请输入密码" @keyup.enter="handleLogin" />
-        </n-form-item>
-        <n-form-item path="captcha" label="验证码">
-          <n-space>
-            <n-input v-model:value="formData.captcha" placeholder="验证码" style="width: 140px" @keyup.enter="handleLogin" />
-            <n-button size="small" @click="refreshCaptcha" :loading="captchaLoading">{{ captchaText }}</n-button>
-          </n-space>
-        </n-form-item>
-        <n-form-item>
-          <n-button type="primary" size="large" :loading="loading" block @click="handleLogin">登 录</n-button>
-        </n-form-item>
-      </n-form>
+      <div class="login-form-panel">
+        <div class="login-card">
+          <h2 class="login-form-title">账号登录</h2>
+          <p class="login-form-subtitle">使用后台账号登录管理控制台</p>
+          <n-form ref="formRef" :model="formData" :rules="rules" label-placement="top" size="large">
+            <n-form-item path="username" label="用户名">
+              <n-input v-model:value="formData.username" placeholder="请输入用户名" />
+            </n-form-item>
+            <n-form-item path="password" label="密码">
+              <n-input v-model:value="formData.password" type="password" placeholder="请输入密码" show-password-on="click" @keyup.enter="handleLogin" />
+            </n-form-item>
+            <n-form-item path="captcha" label="验证码">
+              <div class="captcha-row">
+                <n-input v-model:value="formData.captcha" placeholder="验证码" @keyup.enter="handleLogin" />
+                <n-button class="captcha-btn" :loading="captchaLoading" @click="refreshCaptcha">{{ captchaText }}</n-button>
+              </div>
+            </n-form-item>
+            <n-form-item>
+              <n-button type="primary" size="large" :loading="loading" block class="login-btn" @click="handleLogin">登 录</n-button>
+            </n-form-item>
+          </n-form>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
 .login-page {
-  position: relative;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f0f9f4 0%, #e8f5ee 40%, #eef2fb 100%);
+  padding: 24px;
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0f4fb 60%, #eef2fb 100%);
   overflow: hidden;
 }
-.login-page::before {
-  content: '';
-  position: absolute;
-  width: 480px;
-  height: 480px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(24, 160, 88, 0.18), transparent 70%);
-  top: -140px;
-  right: -80px;
-}
-.login-page::after {
-  content: '';
-  position: absolute;
-  width: 420px;
-  height: 420px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(24, 160, 88, 0.12), transparent 70%);
-  bottom: -120px;
-  left: -60px;
-}
-.login-card {
-  position: relative;
-  z-index: 1;
-  width: 400px;
+.login-panel {
+  width: 900px;
+  max-width: 100%;
+  display: flex;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(15, 80, 45, 0.16);
   background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(15, 80, 45, 0.12);
-  padding: 40px 36px 28px;
 }
-.login-header {
-  text-align: center;
-  margin-bottom: 28px;
+.login-brand {
+  flex: 1;
+  padding: 48px 40px;
+  color: #fff;
+  background: linear-gradient(160deg, #059669 0%, #047857 55%, #064e3b 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
-.login-logo {
+.login-brand::before {
+  content: '';
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.14), transparent 70%);
+  top: -120px;
+  right: -100px;
+}
+.login-brand::after {
+  content: '';
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent 70%);
+  bottom: -90px;
+  left: -70px;
+}
+.brand-logo {
   width: 56px;
   height: 56px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
 }
-.login-title {
+.brand-title {
   margin: 0 0 8px;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 600;
-  color: #1a1a2e;
+  position: relative;
+  z-index: 1;
 }
-.login-subtitle {
-  margin: 0;
+.brand-subtitle {
+  margin: 0 0 32px;
   font-size: 13px;
-  color: #999;
+  opacity: 0.85;
   letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+}
+.brand-features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
+}
+.brand-features li {
+  font-size: 14px;
+  opacity: 0.92;
+  padding-left: 24px;
+  position: relative;
+}
+.brand-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #a7f3d0;
+  font-weight: 600;
+}
+.login-form-panel {
+  width: 420px;
+  display: flex;
+  align-items: center;
+  padding: 40px 44px;
+}
+.login-card {
+  width: 100%;
+}
+.login-form-title {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+.login-form-subtitle {
+  margin: 0 0 28px;
+  font-size: 13px;
+  color: var(--text-3);
+}
+.captcha-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+.captcha-btn {
+  flex-shrink: 0;
+  min-width: 120px;
+}
+.login-btn {
+  margin-top: 8px;
+}
+@media (max-width: 720px) {
+  .login-brand {
+    display: none;
+  }
+  .login-form-panel {
+    width: 100%;
+  }
 }
 </style>
 

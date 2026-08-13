@@ -16,11 +16,12 @@
 <script setup>
 import { ref, h, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { NButton, NSpace, NPopconfirm, NIcon, useDialog, useMessage } from 'naive-ui'
-import { CreateOutline, CopyOutline, TrashOutline } from '@vicons/ionicons5'
+import { NButton, NIcon, useDialog, useMessage } from 'naive-ui'
+import { CopyOutline } from '@vicons/ionicons5'
 import { useTable } from '../../../composables/useTable'
 import { useDict } from '../../../composables/useDict'
 import { getKsAudienceTemplateList, deleteKsAudienceTemplate, copyKsAudienceTemplate } from '../../../api/mkt/ks'
+import TableActions from '../../../components/TableActions.vue'
 
 const router = useRouter()
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getKsAudienceTemplateList)
@@ -38,11 +39,7 @@ const columns = [
   { title: '性别', key: 'gender', width: 80, render: (row) => dictLabel('ks_gender', row.gender) },
   { title: '操作系统', key: 'platform_os', width: 100, render: (row) => dictLabel('ks_platform_os', row.platform_os) },
   { title: '更新时间', key: 'updated_at', width: 170 },
-  { title: '操作', key: 'actions', width: 180, render: (row) => h(NSpace, null, { default: () => [
-    h(NButton, { size: 'tiny', onClick: () => router.push(`/ks-ads/audience-template/edit/${row.id}`) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CreateOutline) }), ' 编辑'] }),
-    h(NButton, { size: 'tiny', onClick: () => handleCopy(row) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CopyOutline) }), ' 复制'] }),
-    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(TrashOutline) }), ' 删除'] }) }),
-  ]}) },
+  { title: '操作', key: 'actions', width: 180, render: (row) => h(TableActions, { row, edit: () => router.push(`/ks-ads/audience-template/edit/${row.id}`), remove: () => onDelete(row.id) }, { extra: () => h(NButton, { size: 'tiny', onClick: () => handleCopy(row) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CopyOutline) }), ' 复制'] }) }) },
 ]
 
 function doSearch() { search({ keyword: searchKeyword.value }) }

@@ -15,12 +15,16 @@
     <n-modal v-model:show="showModal" :title="isEdit ? '编辑媒体渠道' : '新增媒体渠道'" preset="card" style="width: 560px" :mask-closable="false">
       <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="100">
         <n-grid :cols="2" :x-gap="16">
-          <n-form-item-gi path="name" label="渠道名称">
-            <n-input v-model:value="formData.name" placeholder="请输入渠道名称" />
-          </n-form-item-gi>
-          <n-form-item-gi path="mark" label="渠道标识">
-            <n-input v-model:value="formData.mark" placeholder="请输入渠道标识" :disabled="isEdit" />
-          </n-form-item-gi>
+          <n-grid-item>
+            <n-form-item path="name" label="渠道名称">
+              <n-input v-model:value="formData.name" placeholder="请输入渠道名称" />
+            </n-form-item>
+          </n-grid-item>
+          <n-grid-item>
+            <n-form-item path="mark" label="渠道标识">
+              <n-input v-model:value="formData.mark" placeholder="请输入渠道标识" :disabled="isEdit" />
+            </n-form-item>
+          </n-grid-item>
           <n-grid-item :span="2">
             <n-form-item path="status" label="状态" label-placement="left">
               <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
@@ -40,13 +44,13 @@
 
 <script setup>
 import { ref, reactive, h, computed, onMounted } from 'vue'
-import { NButton, NSpace, NSwitch, NPopconfirm, NIcon, useMessage } from 'naive-ui'
-import { CreateOutline, TrashOutline } from '@vicons/ionicons5'
+import { NSwitch, useMessage } from 'naive-ui'
 import { useTable } from '../../../composables/useTable'
 import { useModal } from '../../../composables/useModal'
 import { getMediaList, createMedia, updateMedia, deleteMedia } from '../../../api/mkt/media'
 import { formatTime } from '../../../utils/format'
 import { useDict } from '../../../composables/useDict'
+import TableActions from '../../../components/TableActions.vue'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getMediaList)
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
@@ -67,10 +71,7 @@ const columns = [
   { title: '渠道标识', key: 'mark' },
   { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, onUpdateValue: (val) => handleStatusChange(row, val), size: 'small' }) },
   { title: '创建时间', key: 'created_at', width: 170, render: (row) => formatTime(row.created_at) },
-  { title: '操作', key: 'actions', width: 140, render: (row) => h(NSpace, null, { default: () => [
-    h(NButton, { size: 'tiny', onClick: () => handleEdit(row) }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(CreateOutline) }), ' 编辑'] }),
-    h(NPopconfirm, { onPositiveClick: () => onDelete(row.id) }, { default: () => '确认删除?', trigger: () => h(NButton, { size: 'tiny', type: 'error' }, { default: () => [h(NIcon, { size: 14 }, { default: () => h(TrashOutline) }), ' 删除'] }) }),
-  ]}) },
+  { title: '操作', key: 'actions', width: 140, render: (row) => h(TableActions, { row, edit: () => handleEdit(row), remove: () => onDelete(row.id) }) },
 ]
 
 function doSearch() { search({ keyword: searchKeyword.value, status: searchStatus.value ?? -1 }) }

@@ -186,8 +186,8 @@ function makeOption(seriesData, chartType, colors) {
   }
 }
 
-const rechargeOption = computed(() => makeOption(rechargeSeries, rechargeView.value, ['#00b894', '#e17055', '#fdcb6e']))
-const userOption = computed(() => makeOption(userSeries, userView.value, ['#00b894', '#e17055', '#fdcb6e']))
+const rechargeOption = computed(() => makeOption(rechargeSeries, rechargeView.value, ['#10b981', '#2563eb', '#f59e0b']))
+const userOption = computed(() => makeOption(userSeries, userView.value, ['#10b981', '#2563eb', '#f59e0b']))
 
 function highLow(s) {
   let maxVal = -Infinity, minVal = Infinity, maxIdx = 0, minIdx = 0
@@ -245,6 +245,11 @@ onMounted(async () => {
 <style scoped>
 .stat-card {
   border-radius: 8px;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.stat-card:hover {
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.10);
+  transform: translateY(-2px);
 }
 .stat-card-body {
   display: flex;
