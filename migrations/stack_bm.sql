@@ -171,3 +171,15 @@ CREATE TABLE `sys_menu` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `href` (`path`)
 ) ENGINE=InnoDB AUTO_INCREMENT=641 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='菜单';
+
+CREATE TABLE `sys_tags` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `type` tinyint(1) unsigned NOT NULL  COMMENT '类型：1素材类型，2，需求套路，3：xxxx',
+  `name` varchar(100) NOT NULL COMMENT '名称',
+  `remark` varchar(255) NOT NULL COMMENT '备注',
+  `admin_id` int(11) unsigned NOT NULL COMMENT '添加人',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='系统标签列表';

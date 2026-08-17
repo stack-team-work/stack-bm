@@ -104,6 +104,11 @@ var Dict = map[string]interface{}{
 		{Label: "BM指标", Value: constants.SYS_COLUMN_INDICATOR_BM},
 		{Label: "N日指标", Value: constants.SYS_COLUMN_INDICATOR_NDAY},
 	},
+	"sys_tag_type": []Option{
+		{Label: "素材类型", Value: constants.SYS_TAG_TYPE_MATERIAL},
+		{Label: "需求套路", Value: constants.SYS_TAG_TYPE_DEMAND},
+		{Label: "其他", Value: constants.SYS_TAG_TYPE_OTHER},
+	},
 	"feishu_chat_type": []Option{
 		{Label: "普通机器人", Value: constants.FEISHU_CHAT_TYPE_NORMAL},
 		{Label: "应用机器人", Value: constants.FEISHU_CHAT_TYPE_APP},

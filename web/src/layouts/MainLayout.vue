@@ -251,7 +251,7 @@ const topNavRouteMap = {
   '/game-gift': 'operation', '/game-gift-code': 'operation', '/game-gift-user-code': 'operation',
   '/game-voucher': 'operation', '/game-voucher-use': 'operation',
   '/pay-platform': 'finance', '/pay-merchant': 'finance',
-  '/admin': 'system', '/admin-group': 'system', '/menu': 'system', '/sys-column': 'system', '/logs': 'system',
+  '/admin': 'system', '/admin-group': 'system', '/menu': 'system', '/sys-column': 'system', '/sys-tag': 'system', '/logs': 'system',
   '/feishu-user': 'system', '/feishu-app': 'system', '/feishu-chat': 'system',
 }
 
@@ -366,6 +366,7 @@ const sidebarMenu = computed(() => {
             { label: '后台角色', key: '/admin-group' },
             { label: '菜单管理', key: '/menu' },
             { label: '报表指标', key: '/sys-column' },
+            { label: '系统标签', key: '/sys-tag' },
           ],
         },
         { label: '后台日志', key: '/logs', icon: renderIcon(DocumentTextOutline) },

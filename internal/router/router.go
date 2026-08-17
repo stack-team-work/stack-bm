@@ -30,6 +30,7 @@ func SetupRouter() *gin.Engine {
 	sysLogHandler := sys.NewSysLogHandler()
 	sysMenuHandler := sys.NewSysMenuHandler()
 	sysColumnHandler := sys.NewSysColumnHandler()
+	sysTagHandler := sys.NewSysTagHandler()
 
 	feishuAppHandler := sys.NewFeishuAppHandler()
 	feishuChatHandler := sys.NewFeishuChatHandler()
@@ -184,6 +185,12 @@ func SetupRouter() *gin.Engine {
 		api.POST("/sys-column/detail/:id", sysColumnHandler.GetByID)
 		api.POST("/sys-column/update/:id", sysColumnHandler.Update)
 		api.POST("/sys-column/delete/:id", sysColumnHandler.Delete)
+
+		api.POST("/sys-tag/create", sysTagHandler.Create)
+		api.POST("/sys-tag/list", sysTagHandler.GetList)
+		api.POST("/sys-tag/all", sysTagHandler.GetAll)
+		api.POST("/sys-tag/detail/:id", sysTagHandler.GetByID)
+		api.POST("/sys-tag/update/:id", sysTagHandler.Update)
 
 		api.POST("/feishu-app/create", feishuAppHandler.Create)
 		api.POST("/feishu-app/list", feishuAppHandler.GetList)

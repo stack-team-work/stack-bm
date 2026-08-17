@@ -84,6 +84,22 @@ export function deleteSysColumn(id) {
   return request.post(`/sys-column/delete/${id}`)
 }
 
+export function getSysTagList(params) {
+  return request.post('/sys-tag/list', params)
+}
+
+export function getSysTagAll(params) {
+  return request.post('/sys-tag/all', params)
+}
+
+export function createSysTag(data) {
+  return request.post('/sys-tag/create', data)
+}
+
+export function updateSysTag(id, data) {
+  return request.post(`/sys-tag/update/${id}`, data)
+}
+
 export function getFeishuAppList(params) {
   return request.post('/feishu-app/list', params)
 }

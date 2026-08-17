@@ -313,6 +313,12 @@ const routes = [
         meta: { title: '报表指标' },
       },
       {
+        path: 'sys-tag',
+        name: 'SysTag',
+        component: () => import('../views/bm/sys/SysTag.vue'),
+        meta: { title: '系统标签' },
+      },
+      {
         path: 'feishu-user',
         name: 'FeishuUser',
         component: () => import('../views/bm/sys/FeishuUser.vue'),
