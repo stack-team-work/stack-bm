@@ -1,28 +1,28 @@
-package sys
+package feishu
 
 import (
 	"errors"
-	"stack-bm/internal/model/bm/sys"
-	bmSysRepo "stack-bm/internal/repository/bm/sys"
+	"stack-bm/internal/model/bm/feishu"
+	feishuRepo "stack-bm/internal/repository/bm/feishu"
 	"stack-bm/pkg/dict"
 	"stack-bm/pkg/utils"
 )
 
-type FeishuAppService struct{ repo *bmSysRepo.FeishuAppRepository }
+type FeishuAppService struct{ repo *feishuRepo.FeishuAppRepository }
 
 func NewFeishuAppService() *FeishuAppService {
-	return &FeishuAppService{repo: bmSysRepo.NewFeishuAppRepository()}
+	return &FeishuAppService{repo: feishuRepo.NewFeishuAppRepository()}
 }
 
-func (s *FeishuAppService) Create(m *sys.FeishuApp) error {
+func (s *FeishuAppService) Create(m *feishu.FeishuApp) error {
 	if m.Mark == "" {
 		m.Mark = utils.ToPinYinMark(m.AppName)
 	}
 	return s.repo.Create(m)
 }
-func (s *FeishuAppService) FindByID(id uint) (*sys.FeishuApp, error) { return s.repo.FindByID(id) }
+func (s *FeishuAppService) FindByID(id uint) (*feishu.FeishuApp, error) { return s.repo.FindByID(id) }
 func (s *FeishuAppService) FindOptions() ([]dict.Option, error)      { return s.repo.FindOptions() }
-func (s *FeishuAppService) FindPage(page, size int, keyword string, status int) ([]sys.FeishuApp, int64, error) {
+func (s *FeishuAppService) FindPage(page, size int, keyword string, status int) ([]feishu.FeishuApp, int64, error) {
 	if page < 1 {
 		page = 1
 	}
@@ -31,9 +31,9 @@ func (s *FeishuAppService) FindPage(page, size int, keyword string, status int) 
 	}
 	return s.repo.FindPage(page, size, keyword, status)
 }
-func (s *FeishuAppService) FindAll() ([]sys.FeishuApp, error) { return s.repo.FindAll() }
+func (s *FeishuAppService) FindAll() ([]feishu.FeishuApp, error) { return s.repo.FindAll() }
 
-func (s *FeishuAppService) Update(id uint, m *sys.FeishuApp) error {
+func (s *FeishuAppService) Update(id uint, m *feishu.FeishuApp) error {
 	existing, err := s.repo.FindByID(id)
 	if err != nil {
 		return errors.New("飞书应用不存在")

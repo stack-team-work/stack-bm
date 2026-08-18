@@ -1,8 +1,8 @@
-package sys
+package feishu
 
 import (
 	"stack-bm/internal/database"
-	"stack-bm/internal/model/bm/sys"
+	"stack-bm/internal/model/bm/feishu"
 	"gorm.io/gorm"
 )
 
@@ -10,10 +10,10 @@ type FeishuChatRepository struct{ db *gorm.DB }
 
 func NewFeishuChatRepository() *FeishuChatRepository { return &FeishuChatRepository{db: database.DBBM} }
 
-func (r *FeishuChatRepository) Create(m *sys.FeishuChat) error { return r.db.Create(m).Error }
+func (r *FeishuChatRepository) Create(m *feishu.FeishuChat) error { return r.db.Create(m).Error }
 
-func (r *FeishuChatRepository) FindByID(id uint) (*sys.FeishuChat, error) {
-	var m sys.FeishuChat
+func (r *FeishuChatRepository) FindByID(id uint) (*feishu.FeishuChat, error) {
+	var m feishu.FeishuChat
 	err := r.db.First(&m, id).Error
 	if err != nil {
 		return nil, err
@@ -21,10 +21,10 @@ func (r *FeishuChatRepository) FindByID(id uint) (*sys.FeishuChat, error) {
 	return &m, nil
 }
 
-func (r *FeishuChatRepository) FindPage(page, size int, keyword string, status int, feishuAppID int) ([]sys.FeishuChat, int64, error) {
-	var list []sys.FeishuChat
+func (r *FeishuChatRepository) FindPage(page, size int, keyword string, status int, feishuAppID int) ([]feishu.FeishuChat, int64, error) {
+	var list []feishu.FeishuChat
 	var total int64
-	query := r.db.Model(&sys.FeishuChat{})
+	query := r.db.Model(&feishu.FeishuChat{})
 	if keyword != "" {
 		query = query.Where("chat_id LIKE ? OR call_action LIKE ? OR action_title LIKE ?", "%"+keyword+"%", "%"+keyword+"%", "%"+keyword+"%")
 	}
@@ -44,11 +44,11 @@ func (r *FeishuChatRepository) FindPage(page, size int, keyword string, status i
 	return list, total, nil
 }
 
-func (r *FeishuChatRepository) FindAll() ([]sys.FeishuChat, error) {
-	var list []sys.FeishuChat
+func (r *FeishuChatRepository) FindAll() ([]feishu.FeishuChat, error) {
+	var list []feishu.FeishuChat
 	err := r.db.Where("status = 1").Find(&list).Error
 	return list, err
 }
 
-func (r *FeishuChatRepository) Update(m *sys.FeishuChat) error { return r.db.Save(m).Error }
-func (r *FeishuChatRepository) Delete(id uint) error          { return r.db.Delete(&sys.FeishuChat{}, id).Error }
+func (r *FeishuChatRepository) Update(m *feishu.FeishuChat) error { return r.db.Save(m).Error }
+func (r *FeishuChatRepository) Delete(id uint) error          { return r.db.Delete(&feishu.FeishuChat{}, id).Error }

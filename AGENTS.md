@@ -118,7 +118,8 @@ Frontend: add API functions in `web/src/api/<backend-module>.js` (e.g. `api/mkt/
 web/src/
 ├── api/                     # 与后端 handler 包路径对齐
 │   ├── index.js             login, getUserInfo, dict, options
-│   ├── bm/sys.js            admin, adminGroup, menu, sysColumn, logs, feishu
+│   ├── bm/sys.js            admin, adminGroup, menu, sysColumn, logs
+│   ├── bm/feishu.js         feishu app/chat/user
 │   ├── sdk/game.js          game, gameApp, gameCp, gameTag, gameVariable, gamePlatform, gift, voucher
 │   ├── sdk/pay.js           payPlatform, payMerchant
 │   ├── sdk/sys.js           sdkLog
@@ -129,7 +130,8 @@ web/src/
 │   ├── useTable.js          pagination + search + load
 │   └── useModal.js          form open/edit/submit/delete
 ├── views/
-│   ├── bm/sys/              SysAdmin, SysAdminGroup, SysLogs, SysMenu, SysColumn, Feishu*
+│   ├── bm/sys/              SysAdmin, SysAdminGroup, SysLogs, SysMenu, SysColumn
+│   ├── bm/feishu/           FeishuApp, FeishuChat, FeishuUser
 │   ├── sdk/game/            Game, GameApp, GameAppForm, GameAppTemplate, GameCp, GameTag, GameVariable, GamePlatform, GameGift*, GameVoucher*
 │   ├── sdk/pay/             PayPlatform, PayMerchant
 │   ├── sdk/sys/             GameLog (SDK 日志)

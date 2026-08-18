@@ -1,22 +1,22 @@
-package sys
+package feishu
 
 import (
 	"errors"
-	"stack-bm/internal/model/bm/sys"
-	bmSysRepo "stack-bm/internal/repository/bm/sys"
+	"stack-bm/internal/model/bm/feishu"
+	feishuRepo "stack-bm/internal/repository/bm/feishu"
 )
 
-type FeishuChatService struct{ repo *bmSysRepo.FeishuChatRepository }
+type FeishuChatService struct{ repo *feishuRepo.FeishuChatRepository }
 
 func NewFeishuChatService() *FeishuChatService {
-	return &FeishuChatService{repo: bmSysRepo.NewFeishuChatRepository()}
+	return &FeishuChatService{repo: feishuRepo.NewFeishuChatRepository()}
 }
 
-func (s *FeishuChatService) Create(m *sys.FeishuChat) error { return s.repo.Create(m) }
-func (s *FeishuChatService) FindByID(id uint) (*sys.FeishuChat, error) {
+func (s *FeishuChatService) Create(m *feishu.FeishuChat) error { return s.repo.Create(m) }
+func (s *FeishuChatService) FindByID(id uint) (*feishu.FeishuChat, error) {
 	return s.repo.FindByID(id)
 }
-func (s *FeishuChatService) FindPage(page, size int, keyword string, status int, feishuAppID int) ([]sys.FeishuChat, int64, error) {
+func (s *FeishuChatService) FindPage(page, size int, keyword string, status int, feishuAppID int) ([]feishu.FeishuChat, int64, error) {
 	if page < 1 {
 		page = 1
 	}
@@ -25,9 +25,9 @@ func (s *FeishuChatService) FindPage(page, size int, keyword string, status int,
 	}
 	return s.repo.FindPage(page, size, keyword, status, feishuAppID)
 }
-func (s *FeishuChatService) FindAll() ([]sys.FeishuChat, error) { return s.repo.FindAll() }
+func (s *FeishuChatService) FindAll() ([]feishu.FeishuChat, error) { return s.repo.FindAll() }
 
-func (s *FeishuChatService) Update(id uint, m *sys.FeishuChat) error {
+func (s *FeishuChatService) Update(id uint, m *feishu.FeishuChat) error {
 	existing, err := s.repo.FindByID(id)
 	if err != nil {
 		return errors.New("飞书聊天不存在")

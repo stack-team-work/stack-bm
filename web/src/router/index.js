@@ -321,19 +321,19 @@ const routes = [
       {
         path: 'feishu-user',
         name: 'FeishuUser',
-        component: () => import('../views/bm/sys/FeishuUser.vue'),
+        component: () => import('../views/bm/feishu/FeishuUser.vue'),
         meta: { title: '飞书绑定' },
       },
       {
         path: 'feishu-app',
         name: 'FeishuApp',
-        component: () => import('../views/bm/sys/FeishuApp.vue'),
+        component: () => import('../views/bm/feishu/FeishuApp.vue'),
         meta: { title: '飞书应用' },
       },
       {
         path: 'feishu-chat',
         name: 'FeishuChat',
-        component: () => import('../views/bm/sys/FeishuChat.vue'),
+        component: () => import('../views/bm/feishu/FeishuChat.vue'),
         meta: { title: '飞书聊天' },
       },
     ],

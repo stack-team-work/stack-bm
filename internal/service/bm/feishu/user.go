@@ -1,22 +1,22 @@
-package sys
+package feishu
 
 import (
 	"errors"
-	"stack-bm/internal/model/bm/sys"
-	bmSysRepo "stack-bm/internal/repository/bm/sys"
+	"stack-bm/internal/model/bm/feishu"
+	feishuRepo "stack-bm/internal/repository/bm/feishu"
 )
 
-type FeishuUserService struct{ repo *bmSysRepo.FeishuUserRepository }
+type FeishuUserService struct{ repo *feishuRepo.FeishuUserRepository }
 
 func NewFeishuUserService() *FeishuUserService {
-	return &FeishuUserService{repo: bmSysRepo.NewFeishuUserRepository()}
+	return &FeishuUserService{repo: feishuRepo.NewFeishuUserRepository()}
 }
 
-func (s *FeishuUserService) Create(m *sys.FeishuUser) error { return s.repo.Create(m) }
-func (s *FeishuUserService) FindByID(id uint) (*sys.FeishuUser, error) {
+func (s *FeishuUserService) Create(m *feishu.FeishuUser) error { return s.repo.Create(m) }
+func (s *FeishuUserService) FindByID(id uint) (*feishu.FeishuUser, error) {
 	return s.repo.FindByID(id)
 }
-func (s *FeishuUserService) FindPage(page, size int, keyword string, status int, adminID int) ([]sys.FeishuUser, int64, error) {
+func (s *FeishuUserService) FindPage(page, size int, keyword string, status int, adminID int) ([]feishu.FeishuUser, int64, error) {
 	if page < 1 {
 		page = 1
 	}
@@ -25,9 +25,9 @@ func (s *FeishuUserService) FindPage(page, size int, keyword string, status int,
 	}
 	return s.repo.FindPage(page, size, keyword, status, adminID)
 }
-func (s *FeishuUserService) FindAll() ([]sys.FeishuUser, error) { return s.repo.FindAll() }
+func (s *FeishuUserService) FindAll() ([]feishu.FeishuUser, error) { return s.repo.FindAll() }
 
-func (s *FeishuUserService) Update(id uint, m *sys.FeishuUser) error {
+func (s *FeishuUserService) Update(id uint, m *feishu.FeishuUser) error {
 	existing, err := s.repo.FindByID(id)
 	if err != nil {
 		return errors.New("飞书用户不存在")

@@ -1,22 +1,22 @@
-package sys
+package feishu
 
 import (
 	"net/http"
 	"strconv"
-	"stack-bm/internal/model/bm/sys"
-	bmSysSvc "stack-bm/internal/service/bm/sys"
+	"stack-bm/internal/model/bm/feishu"
+	feishuSvc "stack-bm/internal/service/bm/feishu"
 	"stack-bm/pkg/response"
 	"github.com/gin-gonic/gin"
 )
 
-type FeishuChatHandler struct{ service *bmSysSvc.FeishuChatService }
+type FeishuChatHandler struct{ service *feishuSvc.FeishuChatService }
 
 func NewFeishuChatHandler() *FeishuChatHandler {
-	return &FeishuChatHandler{service: bmSysSvc.NewFeishuChatService()}
+	return &FeishuChatHandler{service: feishuSvc.NewFeishuChatService()}
 }
 
 func (h *FeishuChatHandler) Create(c *gin.Context) {
-	var m sys.FeishuChat
+	var m feishu.FeishuChat
 	if err := c.ShouldBindJSON(&m); err != nil {
 		response.Error(c, http.StatusBadRequest, "参数错误: "+err.Error())
 		return
@@ -82,7 +82,7 @@ func (h *FeishuChatHandler) Update(c *gin.Context) {
 		response.Error(c, http.StatusBadRequest, "参数错误")
 		return
 	}
-	var m sys.FeishuChat
+	var m feishu.FeishuChat
 	if err := c.ShouldBindJSON(&m); err != nil {
 		response.Error(c, http.StatusBadRequest, "参数错误: "+err.Error())
 		return

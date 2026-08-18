@@ -1,4 +1,4 @@
-package sys
+package feishu
 
 type FeishuUser struct {
 	ID           uint   `gorm:"primarykey" json:"id"`

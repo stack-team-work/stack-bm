@@ -46,7 +46,7 @@ import { useTable } from '../../../composables/useTable'
 import { useModal } from '../../../composables/useModal'
 import { useDict } from '../../../composables/useDict'
 import { useOptions } from '../../../composables/useOptions'
-import { getFeishuUserList, createFeishuUser, updateFeishuUser, updateFeishuUserStatus } from '../../../api/bm/sys'
+import { getFeishuUserList, createFeishuUser, updateFeishuUser, updateFeishuUserStatus } from '../../../api/bm/feishu'
 import { formatTime } from '../../../utils/format'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getFeishuUserList)

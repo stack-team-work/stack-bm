@@ -2,6 +2,7 @@ package router
 
 import (
 	"stack-bm/internal/handler"
+	"stack-bm/internal/handler/bm/feishu"
 	"stack-bm/internal/handler/bm/sys"
 	"stack-bm/internal/handler/mkt/bili"
 	"stack-bm/internal/handler/mkt/ks"
@@ -32,9 +33,9 @@ func SetupRouter() *gin.Engine {
 	sysColumnHandler := sys.NewSysColumnHandler()
 	sysTagHandler := sys.NewSysTagHandler()
 
-	feishuAppHandler := sys.NewFeishuAppHandler()
-	feishuChatHandler := sys.NewFeishuChatHandler()
-	feishuUserHandler := sys.NewFeishuUserHandler()
+	feishuAppHandler := feishu.NewFeishuAppHandler()
+	feishuChatHandler := feishu.NewFeishuChatHandler()
+	feishuUserHandler := feishu.NewFeishuUserHandler()
 	gameHandler := game.NewGameHandler()
 	gameAppHandler := game.NewGameAppHandler()
 	gameAppTemplateHandler := game.NewGameAppTemplateHandler()

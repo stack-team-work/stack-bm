@@ -50,7 +50,7 @@ import { CreateOutline } from '@vicons/ionicons5'
 import { useTable } from '../../../composables/useTable'
 import { useModal } from '../../../composables/useModal'
 import { useDict } from '../../../composables/useDict'
-import { getFeishuAppList, createFeishuApp, updateFeishuApp, updateFeishuAppStatus } from '../../../api/bm/sys'
+import { getFeishuAppList, createFeishuApp, updateFeishuApp, updateFeishuAppStatus } from '../../../api/bm/feishu'
 import { formatTime } from '../../../utils/format'
 
 const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(getFeishuAppList)

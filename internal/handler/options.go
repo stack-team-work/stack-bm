@@ -6,6 +6,7 @@ import (
 	gameSvc "stack-bm/internal/service/sdk/game"
 	paySvc "stack-bm/internal/service/sdk/pay"
 	mediaSvc "stack-bm/internal/service/mkt/media"
+	feishuSvc "stack-bm/internal/service/bm/feishu"
 	sysadminSvc "stack-bm/internal/service/bm/sys"
 	"stack-bm/pkg/dict"
 	"stack-bm/pkg/response"
@@ -26,7 +27,7 @@ func NewOptionsHandler() *OptionsHandler {
 	return &OptionsHandler{
 		providers: map[string]func() ([]dict.Option, error){
 			"admin":              adminSvc.FindOptions,
-			"feishu_app":         sysadminSvc.NewFeishuAppService().FindOptions,
+			"feishu_app":         feishuSvc.NewFeishuAppService().FindOptions,
 			"game":               gameService.FindOptions,
 			"game_app_template":  gameSvc.NewGameAppTemplateService().FindOptions,
 			"game_cp":            gameSvc.NewGameCpService().FindOptions,
