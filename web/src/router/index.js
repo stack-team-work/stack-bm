@@ -121,6 +121,30 @@ const routes = [
         meta: { title: '领取记录' },
       },
       {
+        path: 'user-info',
+        name: 'UserInfo',
+        component: () => import('../views/user/UserInfo.vue'),
+        meta: { title: '玩家信息' },
+      },
+      {
+        path: 'user-orders',
+        name: 'UserOrder',
+        component: () => import('../views/user/UserOrder.vue'),
+        meta: { title: '订单流水' },
+      },
+      {
+        path: 'user-logins',
+        name: 'UserLogin',
+        component: () => import('../views/user/UserLogin.vue'),
+        meta: { title: '登录流水' },
+      },
+      {
+        path: 'user-actives',
+        name: 'UserActive',
+        component: () => import('../views/user/UserActive.vue'),
+        meta: { title: '激活流水' },
+      },
+      {
         path: 'media',
         name: 'Media',
         component: () => import('../views/mkt/media/Media.vue'),

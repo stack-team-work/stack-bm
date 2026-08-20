@@ -5,6 +5,7 @@ import (
 
 	"stack-bm/internal/model/sdk/game"
 	gameRepo "stack-bm/internal/repository/sdk/game"
+	"stack-bm/pkg/dict"
 	"stack-bm/pkg/utils"
 )
 
@@ -35,6 +36,8 @@ func (s *GameAppService) FindPage(page, size int, keyword string, gameID int, st
 }
 
 func (s *GameAppService) FindAll() ([]game.GameApp, error) { return s.repo.FindAll() }
+
+func (s *GameAppService) FindOptions() ([]dict.Option, error) { return s.repo.FindOptions() }
 
 func (s *GameAppService) Update(id uint, app *game.GameApp) error {
 	existing, err := s.repo.FindByID(id)

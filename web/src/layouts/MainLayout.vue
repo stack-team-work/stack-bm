@@ -250,6 +250,7 @@ const topNavRouteMap = {
   '/game-platform': 'game', '/sdk-logs': 'game',
   '/game-gift': 'operation', '/game-gift-code': 'operation', '/game-gift-user-code': 'operation',
   '/game-voucher': 'operation', '/game-voucher-use': 'operation',
+  '/user-info': 'operation', '/user-orders': 'operation', '/user-logins': 'operation', '/user-actives': 'operation',
   '/pay-platform': 'finance', '/pay-merchant': 'finance',
   '/admin': 'system', '/admin-group': 'system', '/menu': 'system', '/sys-column': 'system', '/sys-tag': 'system', '/logs': 'system',
   '/feishu-user': 'system', '/feishu-app': 'system', '/feishu-chat': 'system',
@@ -344,6 +345,15 @@ const sidebarMenu = computed(() => {
           children: [
             { label: '代金券配置', key: '/game-voucher' },
             { label: '使用记录', key: '/game-voucher-use' },
+          ],
+        },
+        {
+          label: '玩家管理', key: 'player-mgmt', icon: renderIcon(PersonOutline),
+          children: [
+            { label: '玩家信息', key: '/user-info' },
+            { label: '订单流水', key: '/user-orders' },
+            { label: '登录流水', key: '/user-logins' },
+            { label: '激活流水', key: '/user-actives' },
           ],
         },
       ]

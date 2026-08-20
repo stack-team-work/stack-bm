@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50744
 File Encoding         : 65001
 
-Date: 2026-08-12 20:53:52
+Date: 2026-08-20 21:23:08
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -91,7 +91,7 @@ CREATE TABLE `game_app_template` (
   `created_at` int(11) NOT NULL,
   `updated_at` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Table structure for game_cp
@@ -315,76 +315,6 @@ CREATE TABLE `sys_logs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='日志表';
 
 -- ----------------------------
--- Table structure for user
--- ----------------------------
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `client_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '客户端和服务端自定义激活id',
-  `user_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '玩家id',
-  `pid` int(11) NOT NULL COMMENT '父游戏id',
-  `app_id` int(11) NOT NULL COMMENT '子游戏id',
-  `app_ver` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '应用包版本',
-  `sdk_ver` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'sdk版本',
-  `package_name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '包名',
-  `auth_type` int(11) NOT NULL COMMENT '授权方式',
-  `account` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '注册账号',
-  `nickname` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '昵称',
-  `reg_from` tinyint(4) NOT NULL DEFAULT '1' COMMENT '注册来源1：SDK，2：官网',
-  `verify_pi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '国家实名系统pi',
-  `is_phone` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0' COMMENT '是否绑定手机',
-  `is_email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0' COMMENT '是否绑定邮箱',
-  `is_inner` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否内部玩家',
-  `is_verify` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否已实名认证',
-  `is_login` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否允许登录',
-  `is_charge` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否允许充值',
-  `sdk_level` int(11) DEFAULT '0' COMMENT 'sdk系统等级',
-  `vip_level` int(11) DEFAULT '0' COMMENT 'sdk系统vip等级',
-  `real_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '实名真实名字',
-  `real_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '实名真实身份号码',
-  `coin` int(11) DEFAULT '0' COMMENT '游戏币',
-  `sex` tinyint(4) DEFAULT NULL COMMENT '性别',
-  `age` int(11) DEFAULT NULL COMMENT '年龄',
-  `ad_id` int(11) NOT NULL DEFAULT '0' COMMENT '分包标识/广告位id',
-  `account_id` int(11) NOT NULL DEFAULT '0' COMMENT '渠道账号id',
-  `media_id` int(11) NOT NULL DEFAULT '0' COMMENT '媒体渠道id',
-  `media_sub_id` int(11) NOT NULL DEFAULT '0' COMMENT '媒体渠道子id',
-  `cpid` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0' COMMENT '渠道计划第一层级',
-  `aid` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0' COMMENT '渠道计划第二层级',
-  `cid` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0' COMMENT '渠道计划第三层级',
-  `tid` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0' COMMENT '渠道计划投放位置',
-  `ip` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ip',
-  `mac` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'mac',
-  `sys_brand` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '设备品牌',
-  `sys_model` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '设备机型',
-  `sys_name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '设备系统名称',
-  `sys_ver` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '设备版本',
-  `screen_size` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '屏幕尺寸',
-  `network` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '网络',
-  `op` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ip运营商',
-  `country` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '国家',
-  `province` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '省份',
-  `city` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '城市',
-  `idfa` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'idfa',
-  `idfv` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'idfv',
-  `odid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'odid',
-  `oaid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'oaid',
-  `udid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'udid',
-  `vaid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'vaid',
-  `aaid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'aaid',
-  `gaid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'gaid',
-  `caid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'caid',
-  `imei` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'imei',
-  `ua` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ua`',
-  `android_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'android_id',
-  `created_at` int(11) NOT NULL COMMENT '注册时间',
-  `updated_at` int(11) DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`) USING BTREE,
-  KEY `created_at` (`created_at`) USING BTREE,
-  KEY `app_id` (`app_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='用户表';
-
--- ----------------------------
 -- Table structure for user_actives
 -- ----------------------------
 DROP TABLE IF EXISTS `user_actives`;
@@ -458,7 +388,7 @@ CREATE TABLE `user_auth` (
   UNIQUE KEY `account` (`account`) USING BTREE,
   KEY `user_id` (`user_id`) USING BTREE,
   KEY `type` (`auth_type`,`account`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='用户授权表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='用户授权表';
 
 -- ----------------------------
 -- Table structure for user_code
@@ -474,7 +404,82 @@ CREATE TABLE `user_code` (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `account` (`account`) USING BTREE,
   KEY `code` (`code`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='手机短信码表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='手机短信码表';
+
+-- ----------------------------
+-- Table structure for user_info
+-- ----------------------------
+DROP TABLE IF EXISTS `user_info`;
+CREATE TABLE `user_info` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `client_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '客户端和服务端自定义激活id',
+  `user_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '玩家id',
+  `pid` int(11) NOT NULL COMMENT '父游戏id',
+  `app_id` int(11) NOT NULL COMMENT '子游戏id',
+  `app_ver` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '应用包版本',
+  `sdk_ver` varchar(16) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'sdk版本',
+  `package_name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '包名',
+  `auth_type` int(11) NOT NULL COMMENT '授权方式',
+  `account` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '注册账号',
+  `nickname` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '昵称',
+  `reg_from` tinyint(4) NOT NULL DEFAULT '1' COMMENT '注册来源1：SDK，2：官网',
+  `verify_pi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '国家实名系统pi',
+  `phone` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0' COMMENT '绑定手机',
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0' COMMENT '绑定邮箱',
+  `is_inner` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否内部玩家',
+  `is_verify` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否已实名认证',
+  `is_login` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否允许登录',
+  `is_charge` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否允许充值',
+  `sdk_level` int(11) DEFAULT '0' COMMENT 'sdk系统等级',
+  `vip_level` int(11) DEFAULT '0' COMMENT 'sdk系统vip等级',
+  `real_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '实名真实名字',
+  `real_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '实名真实身份号码',
+  `coin` int(11) DEFAULT '0' COMMENT '游戏币',
+  `sex` tinyint(4) DEFAULT NULL COMMENT '性别',
+  `age` int(11) DEFAULT NULL COMMENT '年龄',
+  `ad_id` int(11) NOT NULL DEFAULT '0' COMMENT '分包标识/广告位id',
+  `account_id` int(11) NOT NULL DEFAULT '0' COMMENT '渠道账号id',
+  `media_id` int(11) NOT NULL DEFAULT '0' COMMENT '媒体渠道id',
+  `media_sub_id` int(11) NOT NULL DEFAULT '0' COMMENT '媒体渠道子id',
+  `cpid` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0' COMMENT '渠道计划第一层级',
+  `aid` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0' COMMENT '渠道计划第二层级',
+  `cid` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0' COMMENT '渠道计划第三层级',
+  `tid` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0' COMMENT '渠道计划投放位置',
+  `ip` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ip',
+  `mac` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'mac',
+  `sys_brand` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '设备品牌',
+  `sys_model` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '设备机型',
+  `sys_name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '设备系统名称',
+  `sys_ver` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '设备版本',
+  `screen_size` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '屏幕尺寸',
+  `network` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '网络',
+  `network_name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '当前wifi名称',
+  `op` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ip运营商',
+  `country` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '国家',
+  `province` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '省份',
+  `city` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '城市',
+  `idfa` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'idfa',
+  `idfv` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'idfv',
+  `odid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'odid',
+  `oaid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'oaid',
+  `udid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'udid',
+  `vaid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'vaid',
+  `aaid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'aaid',
+  `gaid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'gaid',
+  `caid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'caid',
+  `imei` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'imei',
+  `ua` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ua`',
+  `android_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'android_id',
+  `is_emulator` tinyint(4) DEFAULT NULL COMMENT '是否模拟器：1是，0否',
+  `is_root` tinyint(4) DEFAULT NULL COMMENT '是否root：1是，0否；Android必需',
+  `os` tinyint(4) DEFAULT '2' COMMENT '平台：1：iOS，2：Android',
+  `unixtime` int(11) DEFAULT NULL COMMENT '本地当前时间戳，单位秒',
+  `created_at` int(11) NOT NULL COMMENT '注册时间',
+  `updated_at` int(11) DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `created_at` (`created_at`) USING BTREE,
+  KEY `app_id` (`app_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='用户表';
 
 -- ----------------------------
 -- Table structure for user_logins
@@ -507,6 +512,7 @@ CREATE TABLE `user_logins` (
   `sys_ver` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '设备版本',
   `screen_size` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '屏幕尺寸',
   `network` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '网络',
+  `network_name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '当前wifi名称',
   `op` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ip运营商',
   `country` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '国家',
   `province` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '省份',
@@ -523,11 +529,15 @@ CREATE TABLE `user_logins` (
   `imei` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'imei',
   `ua` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ua`',
   `android_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'android_id',
+  `is_emulator` tinyint(4) DEFAULT NULL COMMENT '是否模拟器：1是，0否',
+  `is_root` tinyint(4) DEFAULT NULL COMMENT '是否root：1是，0否；Android必需',
+  `os` tinyint(4) DEFAULT '2' COMMENT '平台：1：iOS，2：Android',
+  `unixtime` int(11) DEFAULT NULL COMMENT '本地当前时间戳，单位秒',
   `created_at` int(11) NOT NULL COMMENT '流水时间',
   PRIMARY KEY (`id`),
   KEY `ct` (`created_at`) USING BTREE,
   KEY `user_id` (`user_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='用户登录注册日志表';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='用户登录注册日志表';
 
 -- ----------------------------
 -- Table structure for user_orders
@@ -593,6 +603,7 @@ CREATE TABLE `user_orders` (
   `sys_ver` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '设备版本',
   `screen_size` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '屏幕尺寸',
   `network` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '网络',
+  `network_name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '当前wifi名称',
   `op` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ip运营商',
   `country` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '国家',
   `province` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '省份',
@@ -609,6 +620,10 @@ CREATE TABLE `user_orders` (
   `imei` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'imei',
   `ua` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'ua`',
   `android_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'android_id',
+  `is_emulator` tinyint(4) DEFAULT NULL COMMENT '是否模拟器：1是，0否',
+  `is_root` tinyint(4) DEFAULT NULL COMMENT '是否root：1是，0否；Android必需',
+  `os` tinyint(4) DEFAULT '2' COMMENT '平台：1：iOS，2：Android',
+  `unixtime` int(11) DEFAULT NULL COMMENT '本地当前时间戳，单位秒',
   `created_at` int(11) NOT NULL COMMENT '流水时间',
   `updated_at` int(11) DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,

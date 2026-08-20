@@ -11,6 +11,7 @@ import (
 	"stack-bm/internal/handler/sdk/game"
 	"stack-bm/internal/handler/sdk/pay"
 	sdkSys "stack-bm/internal/handler/sdk/sys"
+	"stack-bm/internal/handler/user"
 	"stack-bm/internal/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -71,6 +72,11 @@ func SetupRouter() *gin.Engine {
 
 	payPlatformHandler := pay.NewPayPlatformHandler()
 	payMerchantHandler := pay.NewPayMerchantHandler()
+
+	userInfoHandler := user.NewUserInfoHandler()
+	userOrderHandler := user.NewUserOrderHandler()
+	userLoginHandler := user.NewUserLoginHandler()
+	userActiveHandler := user.NewUserActiveHandler()
 
 	r.POST("/api/login", authHandler.Login)
 	r.POST("/api/captcha", authHandler.Captcha)
@@ -336,6 +342,11 @@ func SetupRouter() *gin.Engine {
 		api.POST("/pay-merchant/detail/:id", payMerchantHandler.GetByID)
 		api.POST("/pay-merchant/update/:id", payMerchantHandler.Update)
 		api.POST("/pay-merchant/delete/:id", payMerchantHandler.Delete)
+
+		api.POST("/user/info/list", userInfoHandler.GetList)
+		api.POST("/user/orders/list", userOrderHandler.GetList)
+		api.POST("/user/logins/list", userLoginHandler.GetList)
+		api.POST("/user/actives/list", userActiveHandler.GetList)
 	}
 
 	return r

@@ -95,6 +95,16 @@ var Dict = map[string]interface{}{
 	"game_gift_type": []Option{
 		{Label: "道具", Value: constants.GAME_GIFT_TYPE_PROP},
 	},
+	"user_order_pay_status": []Option{
+		{Label: "待支付", Value: 1},
+		{Label: "支付成功", Value: 2},
+		{Label: "支付失败", Value: 3},
+	},
+	"user_order_status": []Option{
+		{Label: "待同步", Value: 1},
+		{Label: "已同步", Value: 2},
+		{Label: "同步失败", Value: 3},
+	},
 	"sys_column_report_type": []Option{
 		{Label: "投放报表", Value: constants.SYS_COLUMN_REPORT_TYPE_AD},
 	},

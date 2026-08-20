@@ -3,6 +3,7 @@ package game
 import (
 	"stack-bm/internal/database"
 	"stack-bm/internal/model/sdk/game"
+	"stack-bm/pkg/dict"
 
 	"gorm.io/gorm"
 )
@@ -57,6 +58,12 @@ func (r *GameAppRepository) FindAll() ([]game.GameApp, error) {
 	var apps []game.GameApp
 	err := r.db.Where("status = 1").Order("id DESC").Find(&apps).Error
 	return apps, err
+}
+
+func (r *GameAppRepository) FindOptions() ([]dict.Option, error) {
+	var list []dict.Option
+	err := r.db.Model(&game.GameApp{}).Select("name as label, id as value").Where("status = 1").Order("id ASC").Find(&list).Error
+	return list, err
 }
 
 func (r *GameAppRepository) Update(app *game.GameApp) error {

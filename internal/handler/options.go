@@ -29,6 +29,7 @@ func NewOptionsHandler() *OptionsHandler {
 			"admin":              adminSvc.FindOptions,
 			"feishu_app":         feishuSvc.NewFeishuAppService().FindOptions,
 			"game":               gameService.FindOptions,
+			"game_app":          gameSvc.NewGameAppService().FindOptions,
 			"game_app_template":  gameSvc.NewGameAppTemplateService().FindOptions,
 			"game_cp":            gameSvc.NewGameCpService().FindOptions,
 			"game_gift":          gameSvc.NewGameGiftService().FindOptions,
