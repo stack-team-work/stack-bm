@@ -13,6 +13,8 @@ type Config struct {
 	DBMkt  DBConfig
 	JWT    JWTConfig
 	Mongo  MongoConfig
+	Redis  RedisConfig
+	OAuth  OAuthConfig
 }
 
 type ServerConfig struct {
@@ -37,6 +39,17 @@ type MongoConfig struct {
 	URI        string
 	ChannelDB  string
 	ChannelRaw string
+}
+
+type RedisConfig struct {
+	Host     string
+	Port     string
+	Password string
+	DB       int
+}
+
+type OAuthConfig struct {
+	RedirectPath string
 }
 
 var AppConfig *Config
@@ -85,6 +98,15 @@ func LoadConfig() *Config {
 			URI:        viper.GetString("MONGO_URI"),
 			ChannelDB:  viper.GetString("MONGO_CHANNEL_DB"),
 			ChannelRaw: viper.GetString("MONGO_CHANNEL_RAW_DB"),
+		},
+		Redis: RedisConfig{
+			Host:     viper.GetString("REDIS_HOST"),
+			Port:     viper.GetString("REDIS_PORT"),
+			Password: viper.GetString("REDIS_PASSWORD"),
+			DB:       viper.GetInt("REDIS_DB"),
+		},
+		OAuth: OAuthConfig{
+			RedirectPath: viper.GetString("OAUTH_REDIRECT_PATH"),
 		},
 	}
 

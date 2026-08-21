@@ -4,8 +4,8 @@ type MediaApplication struct {
 	ID        uint   `gorm:"primarykey" json:"id"`
 	MediaID   int    `gorm:"column:media_id;not null" json:"media_id"`
 	Name      string `gorm:"size:50;not null" json:"name"`
-	AppID     int    `gorm:"column:app_id;not null" json:"app_id"`
-	AppSecret int    `gorm:"column:app_secret" json:"app_secret"`
+	AppID     string `gorm:"column:app_id;size:50;not null" json:"app_id"`
+	AppSecret string `gorm:"column:app_secret;size:50" json:"app_secret"`
 	Status    int8   `gorm:"not null" json:"status"`
 	Remark    string `gorm:"size:255" json:"remark"`
 	Extra     string `gorm:"type:text" json:"extra"`

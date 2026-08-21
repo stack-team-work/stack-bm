@@ -79,6 +79,8 @@ var Dict = map[string]interface{}{
 	"media_manager_auth_status": []Option{
 		{Label: "未授权", Value: constants.MEDIA_MANAGER_AUTH_STATUS_NO},
 		{Label: "已授权", Value: constants.MEDIA_MANAGER_AUTH_STATUS_YES},
+		{Label: "授权失败", Value: constants.MEDIA_MANAGER_AUTH_STATUS_AUTH_FAIL},
+		{Label: "刷新授权失败", Value: constants.MEDIA_MANAGER_AUTH_STATUS_REFRESH_FAIL},
 	},
 	"pay_merchant_type": []Option{
 		{Label: "微信", Value: constants.PAY_MERCHANT_TYPE_WECHAT},

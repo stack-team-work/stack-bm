@@ -112,3 +112,36 @@ func (h *MediaManagerHandler) Delete(c *gin.Context) {
 	}
 	response.Success(c, nil)
 }
+
+// Oauth 生成管家授权跳转 URL
+func (h *MediaManagerHandler) Oauth(c *gin.Context) {
+	var req struct {
+		ID uint `json:"id"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil || req.ID == 0 {
+		response.Error(c, http.StatusBadRequest, "参数错误")
+		return
+	}
+	url, err := h.service.Oauth(req.ID)
+	if err != nil {
+		response.Error(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	response.Success(c, gin.H{"id": req.ID, "url": url})
+}
+
+// SyncAdvertiser 同步管家广告主列表
+func (h *MediaManagerHandler) SyncAdvertiser(c *gin.Context) {
+	var req struct {
+		ID uint `json:"id"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil || req.ID == 0 {
+		response.Error(c, http.StatusBadRequest, "参数错误")
+		return
+	}
+	if err := h.service.SyncAdvertiser(req.ID); err != nil {
+		response.Error(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	response.Success(c, gin.H{"status": true})
+}

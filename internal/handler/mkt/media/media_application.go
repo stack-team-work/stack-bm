@@ -25,7 +25,7 @@ func (h *MediaApplicationHandler) Create(c *gin.Context) {
 		response.Error(c, http.StatusBadRequest, "参数错误: "+err.Error())
 		return
 	}
-	if m.Name == "" || m.MediaID == 0 || m.AppID == 0 {
+	if m.Name == "" || m.MediaID == 0 || m.AppID == "" {
 		response.Error(c, http.StatusBadRequest, "名称、媒体和AppID不能为空")
 		return
 	}

@@ -30,8 +30,8 @@ func (s *MediaApplicationService) Update(id uint, m *media.MediaApplication) err
 	if err != nil { return errors.New("mkt应用不存在") }
 	if m.Name != "" { existing.Name = m.Name }
 	if m.MediaID > 0 { existing.MediaID = m.MediaID }
-	if m.AppID > 0 { existing.AppID = m.AppID }
-	if m.AppSecret > 0 { existing.AppSecret = m.AppSecret }
+	if m.AppID != "" { existing.AppID = m.AppID }
+	if m.AppSecret != "" { existing.AppSecret = m.AppSecret }
 	if m.Remark != "" { existing.Remark = m.Remark }
 	if m.Extra != "" { existing.Extra = m.Extra }
 	if m.AdminID > 0 { existing.AdminID = m.AdminID }

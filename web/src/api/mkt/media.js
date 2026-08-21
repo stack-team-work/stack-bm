@@ -100,6 +100,14 @@ export function deleteMediaManager(id) {
   return request.post(`/media-manager/delete/${id}`)
 }
 
+export function mediaManagerOauth(id) {
+  return request.post('/media-manager/oauth', { id })
+}
+
+export function mediaManagerSyncAdvertiser(id) {
+  return request.post('/media-manager/sync-advertiser', { id })
+}
+
 export function getMediaSubjectList(params) {
   return request.post('/media-subject/list', params)
 }

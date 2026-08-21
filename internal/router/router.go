@@ -56,6 +56,7 @@ func SetupRouter() *gin.Engine {
 	mediaApplicationHandler := media.NewMediaApplicationHandler()
 	mediaManagerHandler := media.NewMediaManagerHandler()
 	mediaSubjectHandler := media.NewMediaSubjectHandler()
+	oauthCallbackHandler := media.NewOAuthCallbackHandler()
 
 	biliAdTemplateHandler := bili.NewAdTemplateHandler()
 	biliAudienceTemplateHandler := bili.NewAudienceTemplateHandler()
@@ -82,6 +83,8 @@ func SetupRouter() *gin.Engine {
 	r.POST("/api/captcha", authHandler.Captcha)
 	r.POST("/api/dict", dictHandler.GetAll)
 	r.POST("/api/dict/:key", dictHandler.GetByKey)
+
+	r.GET("/oauth/callback/:channel", oauthCallbackHandler.Callback)
 
 	api := r.Group("/api")
 	api.Use(middleware.AuthMiddleware())
@@ -256,6 +259,8 @@ func SetupRouter() *gin.Engine {
 		api.POST("/media-manager/detail/:id", mediaManagerHandler.GetByID)
 		api.POST("/media-manager/update/:id", mediaManagerHandler.Update)
 		api.POST("/media-manager/delete/:id", mediaManagerHandler.Delete)
+		api.POST("/media-manager/oauth", mediaManagerHandler.Oauth)
+		api.POST("/media-manager/sync-advertiser", mediaManagerHandler.SyncAdvertiser)
 
 		api.POST("/media-subject/create", mediaSubjectHandler.Create)
 		api.POST("/media-subject/list", mediaSubjectHandler.GetList)

@@ -9,10 +9,21 @@ import (
 
 type MediaManagerService struct {
 	repo *mediaRepo.MediaManagerRepository
+	auth *ChannelAuthService
 }
 
 func NewMediaManagerService() *MediaManagerService {
-	return &MediaManagerService{repo: mediaRepo.NewMediaManagerRepository()}
+	return &MediaManagerService{repo: mediaRepo.NewMediaManagerRepository(), auth: NewChannelAuthService()}
+}
+
+// Oauth 生成管家授权跳转 URL
+func (s *MediaManagerService) Oauth(id uint) (string, error) {
+	return s.auth.GetOauthUrl(id)
+}
+
+// SyncAdvertiser 同步管家广告主列表
+func (s *MediaManagerService) SyncAdvertiser(id uint) error {
+	return s.auth.SyncAdvertiser(id)
 }
 
 func (s *MediaManagerService) Create(m *media.MediaManager) error { return s.repo.Create(m) }

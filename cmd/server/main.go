@@ -14,6 +14,7 @@ func main() {
 
 	database.InitDB()
 	database.InitMongo()
+	database.InitRedis()
 
 	r := router.SetupRouter()
 

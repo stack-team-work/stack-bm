@@ -61,10 +61,10 @@
 
 <script setup>
 import { ref, reactive, h, onMounted, computed } from 'vue'
-import { NSwitch, NInputNumber, useMessage } from 'naive-ui'
+import { NSwitch, NInputNumber, NButton, useMessage } from 'naive-ui'
 import { useTable } from '../../../composables/useTable'
 import { useModal } from '../../../composables/useModal'
-import { getMediaManagerList, createMediaManager, updateMediaManager, deleteMediaManager } from '../../../api/mkt/media'
+import { getMediaManagerList, createMediaManager, updateMediaManager, deleteMediaManager, mediaManagerOauth, mediaManagerSyncAdvertiser } from '../../../api/mkt/media'
 import { formatTime } from '../../../utils/format'
 import { useDict } from '../../../composables/useDict'
 import { useOptions } from '../../../composables/useOptions'
@@ -97,9 +97,10 @@ const columns = [
   { title: '管家名称', key: 'name', width: 120 },
   { title: '管家账号', key: 'account' },
   { title: '账号数', key: 'account_num', width: 70 },
+  { title: '授权状态', key: 'auth_status', width: 110, render: (row) => { const o = authOptions.value.find(x => x.value === row.auth_status); return o ? o.label : '--' } },
   { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, onUpdateValue: (val) => handleStatusChange(row, val), size: 'small' }) },
   { title: '创建时间', key: 'created_at', width: 170, render: (row) => formatTime(row.created_at) },
-  { title: '操作', key: 'actions', width: 140, render: (row) => h(TableActions, { row, edit: () => handleEdit(row), remove: () => onDelete(row.id) }) },
+  { title: '操作', key: 'actions', width: 280, render: (row) => h(TableActions, { row, edit: () => handleEdit(row), remove: () => onDelete(row.id) }, { extra: () => h('span', [ h(NButton, { size: 'tiny', secondary: true, style: 'margin-right:4px', onClick: () => handleOauth(row) }, { default: () => '去授权' }), h(NButton, { size: 'tiny', secondary: true, onClick: () => handleSyncAdvertiser(row) }, { default: () => '同步广告主' }) ]) }) },
 ]
 function doSearch() { search({ keyword: searchKeyword.value, media_id: searchMediaId.value ?? 0, status: searchStatus.value ?? -1 }) }
 function handleAdd() { resetForm(); open() }
@@ -108,6 +109,22 @@ async function handleSubmit() { if (await submit(formData, createMediaManager, u
 async function onDelete(id) { if (await doDelete(id, deleteMediaManager)) search({ keyword: searchKeyword.value, media_id: searchMediaId.value ?? 0, status: searchStatus.value ?? -1 }) }
 async function handleStatusChange(row, val) {
   try { await updateMediaManager(row.id, { ...row, status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新') } catch { message.error('更新失败') }
+}
+async function handleOauth(row) {
+  try {
+    const res = await mediaManagerOauth(row.id)
+    if (res.data && res.data.url) {
+      window.open(res.data.url, '_blank')
+    } else {
+      message.warning('该渠道无需授权或暂不支持授权')
+    }
+  } catch (e) { message.error(e.message || '获取授权链接失败') }
+}
+async function handleSyncAdvertiser(row) {
+  try {
+    await mediaManagerSyncAdvertiser(row.id)
+    message.success('广告主同步任务已提交')
+  } catch (e) { message.error(e.message || '同步失败') }
 }
 async function loadData() {
   mediaOptions.value = await loadOptions('media')
