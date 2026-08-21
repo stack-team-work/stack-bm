@@ -1,41 +1,53 @@
 package media
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
-	"net/url"
 
-	"stack-bm/internal/config"
-	"stack-bm/internal/model/mkt/media"
-	mediaRepo "stack-bm/internal/repository/mkt/media"
+	mediaModel "stack-bm/internal/model/mkt/media"
+	"stack-bm/internal/service/mkt/bili"
+	"stack-bm/internal/service/mkt/ks"
+	"stack-bm/internal/service/mkt/oauth"
+	"stack-bm/internal/service/mkt/tc"
+	"stack-bm/internal/service/mkt/tt"
 	"stack-bm/pkg/constants"
 	"stack-bm/pkg/utils"
+
+	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
-// ChannelAuthService 管家授权：生成授权 URL、分发回调
+// oauthService 各媒体管家授权服务统一接口
+type oauthService interface {
+	BuildOauthURL(appID, state, redirectURI string) string
+	FinishOauth(params map[string]string) error
+	SyncAdvertiser(manager *mediaModel.MediaManager, authInfo bson.M) error
+}
+
+// ChannelAuthService 管家授权调度器：生成授权 URL、分发回调与广告主同步
 type ChannelAuthService struct {
-	managerRepo *mediaRepo.MediaManagerRepository
-	appRepo     *mediaRepo.MediaApplicationRepository
-	mediaRepo   *mediaRepo.MediaRepository
-	tokenRepo   *mediaRepo.MediaManagerTokenRepository
+	auth     *oauth.ManagerAuth
+	services map[string]oauthService
 }
 
 func NewChannelAuthService() *ChannelAuthService {
+	auth := oauth.NewManagerAuth()
 	return &ChannelAuthService{
-		managerRepo: mediaRepo.NewMediaManagerRepository(),
-		appRepo:     mediaRepo.NewMediaApplicationRepository(),
-		mediaRepo:   mediaRepo.NewMediaRepository(),
-		tokenRepo:   mediaRepo.NewMediaManagerTokenRepository(),
+		auth: auth,
+		services: map[string]oauthService{
+			constants.ChannelBili: bili.NewOauthService(auth),
+			constants.ChannelKs:   ks.NewOauthService(auth),
+			constants.ChannelTt:   tt.NewOauthService(auth),
+			constants.ChannelTc:   tc.NewOauthService(auth),
+		},
 	}
 }
 
 // ResolveChannel 通过 manager 关联的 media.mark 解析渠道标识
-func (s *ChannelAuthService) ResolveChannel(manager *media.MediaManager) (string, error) {
+func (s *ChannelAuthService) ResolveChannel(manager *mediaModel.MediaManager) (string, error) {
 	if manager.MediaID == 0 {
 		return "", errors.New("管家未关联媒体渠道")
 	}
-	m, err := s.mediaRepo.FindByID(uint(manager.MediaID))
+	m, err := s.auth.MediaRepo.FindByID(uint(manager.MediaID))
 	if err != nil {
 		return "", errors.New("媒体渠道不存在")
 	}
@@ -46,33 +58,9 @@ func (s *ChannelAuthService) ResolveChannel(manager *media.MediaManager) (string
 	return channel, nil
 }
 
-// getApp 获取管家关联的应用配置
-func (s *ChannelAuthService) getApp(manager *media.MediaManager) (*media.MediaApplication, error) {
-	if manager.ApplicationID == 0 {
-		return nil, errors.New("管家未绑定授权应用")
-	}
-	app, err := s.appRepo.FindByID(uint(manager.ApplicationID))
-	if err != nil {
-		return nil, errors.New("授权应用不存在")
-	}
-	if app.AppID == "" {
-		return nil, errors.New("授权应用 app_id 未配置")
-	}
-	return app, nil
-}
-
-// redirectURI 拼接各渠道回调地址
-func (s *ChannelAuthService) redirectURI(channel string) string {
-	path := config.AppConfig.OAuth.RedirectPath
-	if path == "" {
-		path = "http://127.0.0.1:8080/oauth/callback/%s"
-	}
-	return fmt.Sprintf(path, channel)
-}
-
 // GetOauthUrl 生成授权跳转 URL
 func (s *ChannelAuthService) GetOauthUrl(managerID uint) (string, error) {
-	manager, err := s.managerRepo.FindByID(managerID)
+	manager, err := s.auth.ManagerRepo.FindByID(managerID)
 	if err != nil {
 		return "", errors.New("管家不存在")
 	}
@@ -80,68 +68,52 @@ func (s *ChannelAuthService) GetOauthUrl(managerID uint) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	app, err := s.getApp(manager)
+	svc, ok := s.services[channel]
+	if !ok {
+		return "", fmt.Errorf("渠道【%s】暂未开发管家授权", channel)
+	}
+	app, err := s.auth.GetApp(manager)
 	if err != nil {
 		return "", err
 	}
 
 	state := utils.XorEncrypt(fmt.Sprintf(`{"mkt_account_manager_id":%d}`, managerID), utils.XorKey)
-	redirectURI := s.redirectURI(channel)
-
-	switch channel {
-	case constants.ChannelTt:
-		return fmt.Sprintf("http://ad.toutiao.com/openapi/audit/oauth.html?app_id=%s&state=%s&redirect_uri=%s",
-			url.QueryEscape(app.AppID), url.QueryEscape(state), url.QueryEscape(redirectURI)), nil
-	case constants.ChannelTc:
-		return fmt.Sprintf("https://developers.e.qq.com/oauth/authorize?client_id=%s&state=%s&redirect_uri=%s",
-			url.QueryEscape(app.AppID), url.QueryEscape(state), url.QueryEscape(redirectURI)), nil
-	case constants.ChannelBili:
-		return fmt.Sprintf("https://ad.bilibili.com/developer/developer-authorization?client_id=%s&redirect_uri=%s&state=%s",
-			url.QueryEscape(app.AppID), url.QueryEscape(redirectURI), url.QueryEscape(state)), nil
-	case constants.ChannelKs:
-		query := url.Values{}
-		query.Set("app_id", app.AppID)
-		query.Set("scope", `["report_service","account_service","ad_query","ad_manage"]`)
-		query.Set("redirect_uri", redirectURI)
-		query.Set("oauth_type", "advertiser")
-		query.Set("state", state)
-		return "https://developers.e.kuaishou.com/tools/authorize?" + query.Encode(), nil
-	default:
-		return "", fmt.Errorf("渠道【%s】暂未开发管家授权", channel)
-	}
+	redirectURI := s.auth.RedirectURI(channel)
+	return svc.BuildOauthURL(app.AppID, state, redirectURI), nil
 }
 
 // FinishOauth 回调分发到对应渠道
 func (s *ChannelAuthService) FinishOauth(channel string, params map[string]string) error {
-	switch channel {
-	case constants.ChannelTt:
-		return s.ttFinishOauth(params)
-	case constants.ChannelTc:
-		return s.tcFinishOauth(params)
-	case constants.ChannelBili:
-		return s.biliFinishOauth(params)
-	case constants.ChannelKs:
-		return s.ksFinishOauth(params)
-	default:
+	svc, ok := s.services[channel]
+	if !ok {
 		return fmt.Errorf("渠道【%s】不支持授权", channel)
 	}
+	return svc.FinishOauth(params)
 }
 
-// updateAuthStatus 更新管家授权状态，auth_message 存入 extra 扩展信息
-func (s *ChannelAuthService) updateAuthStatus(managerID uint, status int8, authMessage string) error {
-	manager, err := s.managerRepo.FindByID(managerID)
+// SyncAdvertiser 同步管家广告主列表
+func (s *ChannelAuthService) SyncAdvertiser(managerID uint) error {
+	manager, err := s.auth.ManagerRepo.FindByID(managerID)
+	if err != nil {
+		return errors.New("管家不存在")
+	}
+	if manager.AuthStatus != constants.ManagerAuthStatusComplete {
+		return errors.New("管家账号暂未授权成功，不支持刷新广告主列表")
+	}
+	channel, err := s.ResolveChannel(manager)
 	if err != nil {
 		return err
 	}
-	manager.AuthStatus = status
-	if authMessage != "" {
-		extra := map[string]interface{}{}
-		if manager.Extra != "" {
-			_ = json.Unmarshal([]byte(manager.Extra), &extra)
-		}
-		extra["auth_message"] = authMessage
-		raw, _ := json.Marshal(extra)
-		manager.Extra = string(raw)
+	svc, ok := s.services[channel]
+	if !ok {
+		return fmt.Errorf("渠道【%s】暂不支持广告主同步", channel)
 	}
-	return s.managerRepo.Update(manager)
+	authInfo, err := s.auth.TokenRepo.FindByManagerID(int(managerID))
+	if err != nil {
+		return err
+	}
+	if authInfo == nil {
+		return errors.New("管家授权信息不存在")
+	}
+	return svc.SyncAdvertiser(manager, authInfo)
 }
