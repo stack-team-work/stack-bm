@@ -33,20 +33,7 @@ const campaignFields = [
   ...reportFields,
 ]
 
-const unitFields = [
-  'aid', 'promotion_name', 'cpid', 'project_name', 'account_id', 'uid', 'channel_id', 'sys_user_id', 'status', 'opt_status',
-  'learning_phase', 'budget_mode', 'budget', 'project_status', 'landing_type', 'pricing', 'inventory_catalog', 'inventory_type',
-  'platform', 'marketing_goal', 'ad_type', 'delivery_mode', 'deep_bid_type', 'is_deleted',
-  'mkt_estimate_ecpm', 'rate_fee_fodder_click', 'rate_roi_profit_1', 'total_fee_100', 'ratio_fee_100_cost', 'rate_fodder_click',
-  'app_id', 'project_opt_status', 'project_budget', 'account_budget', 'is_copy_ad', 'anchor_id', 'trusteeship_media_report_id',
-  ...reportFields.filter((f) => f !== 'rate_roi_profit_1'),
-]
-
-const creativeFields = []
-
 export default {
   account: buildColumns(accountFields),
   campaign: buildColumns(campaignFields),
-  unit: buildColumns(unitFields),
-  creative: buildColumns(creativeFields),
 }

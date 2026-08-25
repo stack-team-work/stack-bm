@@ -116,7 +116,7 @@ export function buildColumns(fields) {
 
 export const AD_DATA_LEVEL_TABS = [
   { key: 'account', label: '账户' },
-  { key: 'campaign', label: '广告组' },
-  { key: 'unit', label: '广告' },
-  { key: 'creative', label: '创意' },
+  { key: 'campaign', label: '第一层级' },
+  { key: 'unit', label: '第二层级' },
+  { key: 'creative', label: '第三层级' },
 ]

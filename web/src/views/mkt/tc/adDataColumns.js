@@ -37,16 +37,8 @@ const campaignFields = [
 
 const unitFields = []
 
-const creativeFields = [
-  'auto_derived_program_creative_switch_name', 'cpid', 'aid', 'dynamic_creative_name', 'configured_status', 'configured_status_name',
-  'is_deleted', 'optimization_goal', 'optimization_goal_name', 'subject_id', 'subject_name', 'deep_roi_goal', 'deep_roi_goal_name',
-  'adgroup_configured_status', 'adgroup_configured_status_name',
-  ...reportFields,
-]
-
 export default {
   account: buildColumns(accountFields),
   campaign: buildColumns(campaignFields),
   unit: buildColumns(unitFields),
-  creative: buildColumns(creativeFields),
 }
