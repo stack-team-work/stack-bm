@@ -5,11 +5,11 @@ import (
 	"fmt"
 
 	mediaModel "stack-bm/internal/model/mkt/media"
-	"stack-bm/internal/service/mkt/bili"
-	"stack-bm/internal/service/mkt/ks"
+	biliSync "stack-bm/internal/service/mkt/bili/sync"
+	ksSync "stack-bm/internal/service/mkt/ks/sync"
 	"stack-bm/internal/service/mkt/oauth"
-	"stack-bm/internal/service/mkt/tc"
-	"stack-bm/internal/service/mkt/tt"
+	tcSync "stack-bm/internal/service/mkt/tc/sync"
+	ttSync "stack-bm/internal/service/mkt/tt/sync"
 	"stack-bm/pkg/constants"
 	"stack-bm/pkg/utils"
 
@@ -20,24 +20,35 @@ import (
 type oauthService interface {
 	BuildOauthURL(appID, state, redirectURI string) string
 	FinishOauth(params map[string]string) error
-	SyncAdvertiser(manager *mediaModel.MediaManager, authInfo bson.M) error
+}
+
+// advertiserSyncer 各媒体广告主同步服务统一接口
+type advertiserSyncer interface {
+	Sync(manager *mediaModel.MediaManager, authInfo bson.M) error
 }
 
 // ChannelAuthService 管家授权调度器：生成授权 URL、分发回调与广告主同步
 type ChannelAuthService struct {
-	auth     *oauth.ManagerAuth
-	services map[string]oauthService
+	auth         *oauth.ManagerAuth
+	oauthSvcs    map[string]oauthService
+	advertisers  map[string]advertiserSyncer
 }
 
 func NewChannelAuthService() *ChannelAuthService {
 	auth := oauth.NewManagerAuth()
 	return &ChannelAuthService{
 		auth: auth,
-		services: map[string]oauthService{
+		oauthSvcs: map[string]oauthService{
 			constants.ChannelBili: bili.NewOauthService(auth),
 			constants.ChannelKs:   ks.NewOauthService(auth),
 			constants.ChannelTt:   tt.NewOauthService(auth),
 			constants.ChannelTc:   tc.NewOauthService(auth),
+		},
+		advertisers: map[string]advertiserSyncer{
+			constants.ChannelBili: biliSync.NewAdvertiserSyncService(auth),
+			constants.ChannelKs:   ksSync.NewAdvertiserSyncService(auth),
+			constants.ChannelTt:   ttSync.NewAdvertiserSyncService(auth),
+			constants.ChannelTc:   tcSync.NewAdvertiserSyncService(auth),
 		},
 	}
 }

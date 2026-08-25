@@ -1,24 +1,24 @@
-package tt
+package sync
 
 import (
 	"errors"
 
-	ttModel "stack-bm/internal/model/mkt/tt"
-	ttRepo "stack-bm/internal/repository/mkt/tt"
+	ksModel "stack-bm/internal/model/mkt/ks"
+	ksRepo "stack-bm/internal/repository/mkt/ks"
 )
 
 // AdDataService 广告数据
 type AdDataService struct {
-	repo *ttRepo.AdDataRepository
+	repo *ksRepo.AdDataRepository
 }
 
 func NewAdDataService() *AdDataService {
-	return &AdDataService{repo: ttRepo.NewAdDataRepository()}
+	return &AdDataService{repo: ksRepo.NewAdDataRepository()}
 }
 
 // List 广告数据列表（表未建，返回空）
 func (s *AdDataService) List(level string, page, size int, params map[string]interface{}) ([]map[string]interface{}, int64, error) {
-	collection, ok := ttModel.AdDataLevelCollections[level]
+	collection, ok := ksModel.AdDataLevelCollections[level]
 	if !ok {
 		return nil, 0, errors.New("未知的广告数据层级: " + level)
 	}

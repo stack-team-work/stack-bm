@@ -4,7 +4,6 @@ import (
 	"errors"
 	"time"
 
-	mediaModel "stack-bm/internal/model/mkt/media"
 	"stack-bm/internal/service/mkt/ks/api"
 	"stack-bm/internal/service/mkt/oauth"
 	"stack-bm/pkg/constants"
@@ -69,16 +68,5 @@ func (s *OauthService) FinishOauth(params map[string]string) error {
 
 	_ = s.auth.UpdateAuthStatus(managerID, constants.ManagerAuthStatusComplete, "")
 	s.auth.PushSyncQueue(managerID)
-	return nil
-}
-
-// SyncAdvertiser 同步快手广告主列表（预留实现）
-func (s *OauthService) SyncAdvertiser(manager *mediaModel.MediaManager, authInfo bson.M) error {
-	_ = s.auth.UpdateAccountNum(manager, 0)
-	return s.syncChannelAccounts(manager.ID)
-}
-
-// syncChannelAccounts 预留：同步更新渠道账户（当前渠道账户功能尚未开发）
-func (s *OauthService) syncChannelAccounts(managerID uint) error {
 	return nil
 }
