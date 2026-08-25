@@ -75,3 +75,7 @@ export function copyTtTitleTemplate(data) {
 export function getTtWordList() {
   return request.post('/tt-word-list/list')
 }
+
+export function getTtAdDataList(level, params) {
+  return request.post(`/tt-ad-data/${level}/list`, params)
+}

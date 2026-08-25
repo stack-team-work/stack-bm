@@ -187,6 +187,12 @@ const routes = [
         meta: { title: 'B站广告' },
       },
       {
+        path: 'bili-ad-data',
+        name: 'BiliAdData',
+        component: () => import('../views/mkt/bili/AdData.vue'),
+        meta: { title: 'B站广告数据' },
+      },
+      {
         path: 'bili-ads/ad-template/create',
         name: 'BiliAdTemplateCreate',
         component: () => import('../views/mkt/bili/AdTemplateForm.vue'),
@@ -229,6 +235,12 @@ const routes = [
         meta: { title: '快手广告' },
       },
       {
+        path: 'ks-ad-data',
+        name: 'KsAdData',
+        component: () => import('../views/mkt/ks/AdData.vue'),
+        meta: { title: '快手广告数据' },
+      },
+      {
         path: 'ks-ads/ad-template/create',
         name: 'KsAdTemplateCreate',
         component: () => import('../views/mkt/ks/AdTemplateForm.vue'),
@@ -269,6 +281,18 @@ const routes = [
         name: 'TtAds',
         component: () => import('../views/mkt/tt/TtAds.vue'),
         meta: { title: '头条广告' },
+      },
+      {
+        path: 'tt-ad-data',
+        name: 'TtAdData',
+        component: () => import('../views/mkt/tt/AdData.vue'),
+        meta: { title: '头条广告数据' },
+      },
+      {
+        path: 'tc-ad-data',
+        name: 'TcAdData',
+        component: () => import('../views/mkt/tc/AdData.vue'),
+        meta: { title: '腾讯广告数据' },
       },
       {
         path: 'tt-ads/ad-template/create',

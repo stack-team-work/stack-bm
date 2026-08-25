@@ -7,6 +7,7 @@ import (
 	"stack-bm/internal/handler/mkt/bili"
 	"stack-bm/internal/handler/mkt/ks"
 	"stack-bm/internal/handler/mkt/media"
+	"stack-bm/internal/handler/mkt/tc"
 	"stack-bm/internal/handler/mkt/tt"
 	"stack-bm/internal/handler/sdk/game"
 	"stack-bm/internal/handler/sdk/pay"
@@ -61,15 +62,20 @@ func SetupRouter() *gin.Engine {
 	biliAdTemplateHandler := bili.NewAdTemplateHandler()
 	biliAudienceTemplateHandler := bili.NewAudienceTemplateHandler()
 	biliTitleTemplateHandler := bili.NewTitleTemplateHandler()
+	biliAdDataHandler := bili.NewAdDataHandler()
 
 	ksAdTemplateHandler := ks.NewAdTemplateHandler()
 	ksAudienceTemplateHandler := ks.NewAudienceTemplateHandler()
 	ksTitleTemplateHandler := ks.NewTitleTemplateHandler()
+	ksAdDataHandler := ks.NewAdDataHandler()
 
 	ttAdTemplateHandler := tt.NewAdTemplateHandler()
 	ttAudienceTemplateHandler := tt.NewAudienceTemplateHandler()
 	ttTitleTemplateHandler := tt.NewTitleTemplateHandler()
 	ttWordListHandler := tt.NewWordListHandler()
+	ttAdDataHandler := tt.NewAdDataHandler()
+
+	tcAdDataHandler := tc.NewAdDataHandler()
 
 	payPlatformHandler := pay.NewPayPlatformHandler()
 	payMerchantHandler := pay.NewPayMerchantHandler()
@@ -333,6 +339,11 @@ func SetupRouter() *gin.Engine {
 		api.POST("/tt-title-template/copy", ttTitleTemplateHandler.Copy)
 
 		api.POST("/tt-word-list/list", ttWordListHandler.GetList)
+
+		api.POST("/bili-ad-data/:level/list", biliAdDataHandler.List)
+		api.POST("/ks-ad-data/:level/list", ksAdDataHandler.List)
+		api.POST("/tt-ad-data/:level/list", ttAdDataHandler.List)
+		api.POST("/tc-ad-data/:level/list", tcAdDataHandler.List)
 
 		api.POST("/pay-platform/create", payPlatformHandler.Create)
 		api.POST("/pay-platform/list", payPlatformHandler.GetList)

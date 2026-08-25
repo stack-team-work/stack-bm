@@ -71,3 +71,7 @@ export function deleteBiliTitleTemplate(id) {
 export function copyBiliTitleTemplate(data) {
   return request.post('/bili-title-template/copy', data)
 }
+
+export function getBiliAdDataList(level, params) {
+  return request.post(`/bili-ad-data/${level}/list`, params)
+}

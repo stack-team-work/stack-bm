@@ -205,7 +205,7 @@ import {
   LayersOutline, GiftOutline, TicketOutline, CashOutline,
   StatsChartOutline, DocumentTextOutline, MenuOutline,
   PersonOutline, ChevronDownOutline, PlayCircleOutline,
-  VideocamOutline, MegaphoneOutline, ChatbubblesOutline,
+  VideocamOutline, MegaphoneOutline, ChatbubblesOutline, LogoWechat,
 } from '@vicons/ionicons5'
 
 const router = useRouter()
@@ -233,17 +233,21 @@ const topNavRouteMap = {
   '/media': 'publish', '/media-sub': 'publish', '/media-agent': 'publish',
   '/media-application': 'publish', '/media-manager': 'publish', '/media-subject': 'publish',
   '/bili-ads': 'publish',
+  '/bili-ad-data': 'publish',
   '/bili-ads/ad-template/create': 'publish', '/bili-ads/ad-template/edit': 'publish',
   '/bili-ads/audience-template/create': 'publish', '/bili-ads/audience-template/edit': 'publish',
   '/bili-ads/title-template/create': 'publish', '/bili-ads/title-template/edit': 'publish',
   '/ks-ads': 'publish',
+  '/ks-ad-data': 'publish',
   '/ks-ads/ad-template/create': 'publish', '/ks-ads/ad-template/edit': 'publish',
   '/ks-ads/audience-template/create': 'publish', '/ks-ads/audience-template/edit': 'publish',
   '/ks-ads/title-template/create': 'publish', '/ks-ads/title-template/edit': 'publish',
   '/tt-ads': 'publish',
+  '/tt-ad-data': 'publish',
   '/tt-ads/ad-template/create': 'publish', '/tt-ads/ad-template/edit': 'publish',
   '/tt-ads/audience-template/create': 'publish', '/tt-ads/audience-template/edit': 'publish',
   '/tt-ads/title-template/create': 'publish', '/tt-ads/title-template/edit': 'publish',
+  '/tc-ad-data': 'publish',
   '/game': 'game', '/game-app': 'game', '/game-app/create': 'game', '/game-app/edit': 'game',
   '/game-app-template': 'game',
   '/game-cp': 'game', '/game-tag': 'game', '/game-variable': 'game',
@@ -300,18 +304,27 @@ const sidebarMenu = computed(() => {
           label: 'B站广告', key: 'bili-ads', icon: renderIcon(PlayCircleOutline),
           children: [
             { label: '模板列表', key: '/bili-ads' },
+            { label: '广告数据', key: '/bili-ad-data' },
           ],
         },
         {
           label: '快手广告', key: 'ks-ads', icon: renderIcon(VideocamOutline),
           children: [
             { label: '模板列表', key: '/ks-ads' },
+            { label: '广告数据', key: '/ks-ad-data' },
           ],
         },
         {
           label: '头条广告', key: 'tt-ads', icon: renderIcon(MegaphoneOutline),
           children: [
             { label: '模板列表', key: '/tt-ads' },
+            { label: '广告数据', key: '/tt-ad-data' },
+          ],
+        },
+        {
+          label: '腾讯广告', key: 'tc-ads', icon: renderIcon(LogoWechat),
+          children: [
+            { label: '广告数据', key: '/tc-ad-data' },
           ],
         },
       ]

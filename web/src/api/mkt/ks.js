@@ -71,3 +71,7 @@ export function deleteKsTitleTemplate(id) {
 export function copyKsTitleTemplate(data) {
   return request.post('/ks-title-template/copy', data)
 }
+
+export function getKsAdDataList(level, params) {
+  return request.post(`/ks-ad-data/${level}/list`, params)
+}

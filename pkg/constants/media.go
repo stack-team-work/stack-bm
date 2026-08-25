@@ -48,3 +48,11 @@ const (
 
 // OAuth 回调基础路径模板（%s 为渠道标识小写）
 const OAuthRedirectPath = "%s"
+
+// 广告数据层级（统一命名）
+const (
+	AdDataLevelAccount  = "account"  // 账户
+	AdDataLevelCampaign = "campaign" // 第一层级：广告组
+	AdDataLevelUnit     = "unit"     // 第二层级：广告
+	AdDataLevelCreative = "creative" // 第三层级：创意
+)
