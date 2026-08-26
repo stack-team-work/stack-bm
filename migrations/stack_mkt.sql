@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50744
 File Encoding         : 65001
 
-Date: 2026-08-21 14:09:51
+Date: 2026-08-26 20:48:53
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -39,6 +39,35 @@ INSERT INTO `media` VALUES ('1', '头条', 'tt', '1', '0', '1779791396', '177979
 INSERT INTO `media` VALUES ('2', '腾讯', 'tc', '1', '0', null, null, null);
 INSERT INTO `media` VALUES ('3', 'B站', 'bili', '1', '0', null, null, null);
 INSERT INTO `media` VALUES ('4', '快手', 'ks', '1', '0', null, null, null);
+
+-- ----------------------------
+-- Table structure for media_accounts
+-- ----------------------------
+DROP TABLE IF EXISTS `media_accounts`;
+CREATE TABLE `media_accounts` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '账户别名',
+  `agent_id` int(11) NOT NULL DEFAULT '0' COMMENT '代理id,关联media_agent表',
+  `media_sub_id` int(11) NOT NULL DEFAULT '0' COMMENT '子渠道id,关联media_sub.id',
+  `admin_id` int(11) NOT NULL DEFAULT '0' COMMENT '账号负责人',
+  `username` varchar(50) NOT NULL DEFAULT '' COMMENT '媒体渠道账号',
+  `subject_id` int(11) NOT NULL DEFAULT '0' COMMENT '主体id,关联media_subject表',
+  `uid` varchar(50) NOT NULL COMMENT '平台UID',
+  `rebate` decimal(16,4) NOT NULL DEFAULT '0.0000' COMMENT '返点',
+  `balance` decimal(16,4) NOT NULL DEFAULT '0.0000' COMMENT '可用账号余额',
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否启用，1：启用， 0：关闭',
+  `use_type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '投放类型，默认1：游戏',
+  `media_manager_manager_id` int(11) NOT NULL DEFAULT '0' COMMENT '媒体管家id，关联media_manager.id',
+  `updated_at` int(11) DEFAULT NULL,
+  `created_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_uid` (`uid`),
+  KEY `index_admin_id` (`admin_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=88656 DEFAULT CHARSET=utf8mb4 COMMENT='渠道账号表';
+
+-- ----------------------------
+-- Records of media_accounts
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for media_agent

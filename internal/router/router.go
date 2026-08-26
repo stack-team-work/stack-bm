@@ -57,25 +57,30 @@ func SetupRouter() *gin.Engine {
 	mediaApplicationHandler := media.NewMediaApplicationHandler()
 	mediaManagerHandler := media.NewMediaManagerHandler()
 	mediaSubjectHandler := media.NewMediaSubjectHandler()
+	mediaAccountHandler := media.NewMediaAccountHandler()
 	oauthCallbackHandler := media.NewOAuthCallbackHandler()
 
 	biliAdTemplateHandler := bili.NewAdTemplateHandler()
 	biliAudienceTemplateHandler := bili.NewAudienceTemplateHandler()
 	biliTitleTemplateHandler := bili.NewTitleTemplateHandler()
 	biliAdDataHandler := bili.NewAdDataHandler()
+	biliToolHandler := bili.NewToolHandler()
 
 	ksAdTemplateHandler := ks.NewAdTemplateHandler()
 	ksAudienceTemplateHandler := ks.NewAudienceTemplateHandler()
 	ksTitleTemplateHandler := ks.NewTitleTemplateHandler()
 	ksAdDataHandler := ks.NewAdDataHandler()
+	ksToolHandler := ks.NewToolHandler()
 
 	ttAdTemplateHandler := tt.NewAdTemplateHandler()
 	ttAudienceTemplateHandler := tt.NewAudienceTemplateHandler()
 	ttTitleTemplateHandler := tt.NewTitleTemplateHandler()
 	ttWordListHandler := tt.NewWordListHandler()
 	ttAdDataHandler := tt.NewAdDataHandler()
+	ttToolHandler := tt.NewToolHandler()
 
 	tcAdDataHandler := tc.NewAdDataHandler()
+	tcToolHandler := tc.NewToolHandler()
 
 	payPlatformHandler := pay.NewPayPlatformHandler()
 	payMerchantHandler := pay.NewPayMerchantHandler()
@@ -275,6 +280,13 @@ func SetupRouter() *gin.Engine {
 		api.POST("/media-subject/update/:id", mediaSubjectHandler.Update)
 		api.POST("/media-subject/delete/:id", mediaSubjectHandler.Delete)
 
+		api.POST("/media-account/create", mediaAccountHandler.Create)
+		api.POST("/media-account/list", mediaAccountHandler.GetList)
+		api.POST("/media-account/all", mediaAccountHandler.GetAll)
+		api.POST("/media-account/detail/:id", mediaAccountHandler.GetByID)
+		api.POST("/media-account/update/:id", mediaAccountHandler.Update)
+		api.POST("/media-account/delete/:id", mediaAccountHandler.Delete)
+
 		api.POST("/bili-ad-template/create", biliAdTemplateHandler.Create)
 		api.POST("/bili-ad-template/list", biliAdTemplateHandler.GetList)
 		api.POST("/bili-ad-template/detail/:id", biliAdTemplateHandler.GetByID)
@@ -341,9 +353,13 @@ func SetupRouter() *gin.Engine {
 		api.POST("/tt-word-list/list", ttWordListHandler.GetList)
 
 		api.POST("/bili-ad-data/:level/list", biliAdDataHandler.List)
+		api.POST("/bili-tool/:level/:action", biliToolHandler.Action)
 		api.POST("/ks-ad-data/:level/list", ksAdDataHandler.List)
+		api.POST("/ks-tool/:level/:action", ksToolHandler.Action)
 		api.POST("/tt-ad-data/:level/list", ttAdDataHandler.List)
+		api.POST("/tt-tool/:level/:action", ttToolHandler.Action)
 		api.POST("/tc-ad-data/:level/list", tcAdDataHandler.List)
+		api.POST("/tc-tool/:level/:action", tcToolHandler.Action)
 
 		api.POST("/pay-platform/create", payPlatformHandler.Create)
 		api.POST("/pay-platform/list", payPlatformHandler.GetList)

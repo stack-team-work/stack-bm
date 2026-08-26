@@ -175,6 +175,12 @@ const routes = [
         meta: { title: 'mkt管家' },
       },
       {
+        path: 'media-account',
+        name: 'MediaAccount',
+        component: () => import('../views/mkt/media/MediaAccount.vue'),
+        meta: { title: '渠道账户' },
+      },
+      {
         path: 'media-subject',
         name: 'MediaSubject',
         component: () => import('../views/mkt/media/MediaSubject.vue'),

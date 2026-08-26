@@ -20,6 +20,7 @@ type ManagerAuth struct {
 	AppRepo     *mediaRepo.MediaApplicationRepository
 	MediaRepo   *mediaRepo.MediaRepository
 	TokenRepo   *mediaRepo.MediaManagerTokenRepository
+	AccountRepo *mediaRepo.MediaAccountRepository
 }
 
 func NewManagerAuth() *ManagerAuth {
@@ -28,7 +29,58 @@ func NewManagerAuth() *ManagerAuth {
 		AppRepo:     mediaRepo.NewMediaApplicationRepository(),
 		MediaRepo:   mediaRepo.NewMediaRepository(),
 		TokenRepo:   mediaRepo.NewMediaManagerTokenRepository(),
+		AccountRepo: mediaRepo.NewMediaAccountRepository(),
 	}
+}
+
+// GetAccessToken 通过管家ID获取授权 access_token（读 mongo mkt_account_manager_token）
+func (m *ManagerAuth) GetAccessToken(managerID uint) (string, error) {
+	if managerID == 0 {
+		return "", errors.New("管家ID无效")
+	}
+	authInfo, err := m.TokenRepo.FindByManagerID(int(managerID))
+	if err != nil {
+		return "", err
+	}
+	if authInfo == nil {
+		return "", errors.New("管家授权信息不存在")
+	}
+	token, _ := authInfo["access_token"].(string)
+	if token == "" {
+		return "", errors.New("管家未授权或token为空")
+	}
+	return token, nil
+}
+
+// ResolveManagerByAccount 渠道账户 -> 管家ID（1:1，通过 media_manager_manager_id）
+func (m *ManagerAuth) ResolveManagerByAccount(accountID uint) (uint, error) {
+	if accountID == 0 {
+		return 0, errors.New("渠道账户ID无效")
+	}
+	account, err := m.AccountRepo.FindByID(accountID)
+	if err != nil {
+		return 0, errors.New("渠道账户不存在")
+	}
+	if account.MediaManagerManagerID == 0 {
+		return 0, errors.New("渠道账户未绑定管家")
+	}
+	return uint(account.MediaManagerManagerID), nil
+}
+
+// GetAccountContext 渠道账户 -> {平台UID, 授权token}
+func (m *ManagerAuth) GetAccountContext(accountID uint) (string, string, error) {
+	if accountID == 0 {
+		return "", "", errors.New("渠道账户ID无效")
+	}
+	account, err := m.AccountRepo.FindByID(accountID)
+	if err != nil {
+		return "", "", errors.New("渠道账户不存在")
+	}
+	token, err := m.GetAccessToken(uint(account.MediaManagerManagerID))
+	if err != nil {
+		return "", "", err
+	}
+	return account.UID, token, nil
 }
 
 // ParseManagerFromState 解密 state 获取管家ID

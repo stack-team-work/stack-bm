@@ -29,6 +29,15 @@ func (r *MediaRepository) FindByID(id uint) (*media.Media, error) {
 	return &m, nil
 }
 
+func (r *MediaRepository) FindByMark(mark string) (*media.Media, error) {
+	var m media.Media
+	err := r.db.Where("mark = ? AND is_deleted = 0", mark).First(&m).Error
+	if err != nil {
+		return nil, err
+	}
+	return &m, nil
+}
+
 func (r *MediaRepository) FindPage(page, size int, keyword string, status int) ([]media.Media, int64, error) {
 	var list []media.Media
 	var total int64

@@ -114,9 +114,71 @@ export function buildColumns(fields) {
   }))
 }
 
+// 字段分组：属性指标 / 媒体指标 / 投放指标
+export function groupField(field) {
+  if (field.startsWith('mkt_')) return '媒体指标'
+  if (/^(total_|rate_|ratio_|pay_)/.test(field)) return '投放指标'
+  return '属性指标'
+}
+
 export const AD_DATA_LEVEL_TABS = [
   { key: 'account', label: '账户' },
   { key: 'campaign', label: '第一层级' },
   { key: 'unit', label: '第二层级' },
   { key: 'creative', label: '第三层级' },
 ]
+
+// 各层级批量操作配置（type: simple 直接执行 / input 弹窗输入）
+export const AD_DATA_ACTIONS = {
+  campaign: {
+    idKey: 'cpid',
+    row: [
+      { key: 'open', label: '开启', type: 'simple' },
+      { key: 'pause', label: '暂停', type: 'simple' },
+      { key: 'set-budget', label: '预算', type: 'input', field: 'budget', inputType: 'number', inputLabel: '预算' },
+      { key: 'set-bid', label: '出价', type: 'input', field: 'bid', inputType: 'number', inputLabel: '出价' },
+      { key: 'set-deep-bid', label: '深度出价', type: 'input', field: 'deep_bid', inputType: 'number', inputLabel: '深度出价' },
+      { key: 'delete', label: '删除', type: 'simple', confirm: true },
+    ],
+    batch: [
+      { key: 'batch-status', label: '批量开启', status: 1 },
+      { key: 'batch-status', label: '批量暂停', status: 2 },
+      { key: 'batch-delete', label: '批量删除', confirm: true },
+    ],
+  },
+  unit: {
+    idKey: 'aid',
+    row: [
+      { key: 'open', label: '开启', type: 'simple' },
+      { key: 'pause', label: '暂停', type: 'simple' },
+      { key: 'set-budget', label: '预算', type: 'input', field: 'budget', inputType: 'number', inputLabel: '预算' },
+      { key: 'set-bid', label: '出价', type: 'input', field: 'bid', inputType: 'number', inputLabel: '出价' },
+      { key: 'set-deep-bid', label: '深度出价', type: 'input', field: 'deep_bid', inputType: 'number', inputLabel: '深度出价' },
+      { key: 'set-begin-date', label: '开始时间', type: 'input', field: 'begin_date', inputType: 'text', inputLabel: '开始时间' },
+      { key: 'collect', label: '收藏', type: 'simple' },
+      { key: 'cancel-collect', label: '取消收藏', type: 'simple' },
+      { key: 'set-raise', label: '一键起量', type: 'simple' },
+      { key: 'stop-raise', label: '关停起量', type: 'simple' },
+      { key: 'delete', label: '删除', type: 'simple', confirm: true },
+    ],
+    batch: [
+      { key: 'batch-status', label: '批量开启', status: 1 },
+      { key: 'batch-status', label: '批量暂停', status: 2 },
+      { key: 'batch-set-raise', label: '批量起量' },
+      { key: 'batch-stop-raise', label: '批量关停起量' },
+      { key: 'batch-delete', label: '批量删除', confirm: true },
+    ],
+  },
+  creative: {
+    idKey: 'cid',
+    row: [
+      { key: 'open', label: '开启', type: 'simple' },
+      { key: 'pause', label: '暂停', type: 'simple' },
+      { key: 'preview', label: '预览', type: 'simple' },
+    ],
+    batch: [
+      { key: 'batch-status', label: '批量开启', status: 1 },
+      { key: 'batch-status', label: '批量暂停', status: 2 },
+    ],
+  },
+}

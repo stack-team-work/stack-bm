@@ -127,3 +127,23 @@ export function updateMediaSubject(id, data) {
 export function deleteMediaSubject(id) {
   return request.post(`/media-subject/delete/${id}`)
 }
+
+export function getMediaAccountList(params) {
+  return request.post('/media-account/list', params)
+}
+
+export function getMediaAccountAll() {
+  return request.post('/media-account/all')
+}
+
+export function createMediaAccount(data) {
+  return request.post('/media-account/create', data)
+}
+
+export function updateMediaAccount(id, data) {
+  return request.post(`/media-account/update/${id}`, data)
+}
+
+export function deleteMediaAccount(id) {
+  return request.post(`/media-account/delete/${id}`)
+}

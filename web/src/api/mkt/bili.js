@@ -75,3 +75,7 @@ export function copyBiliTitleTemplate(data) {
 export function getBiliAdDataList(level, params) {
   return request.post(`/bili-ad-data/${level}/list`, params)
 }
+
+export function biliTool(level, action, data) {
+  return request.post(`/bili-tool/${level}/${action}`, data)
+}

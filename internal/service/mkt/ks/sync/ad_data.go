@@ -16,8 +16,8 @@ func NewAdDataService() *AdDataService {
 	return &AdDataService{repo: ksRepo.NewAdDataRepository()}
 }
 
-// List 广告数据列表（表未建，返回空）
-func (s *AdDataService) List(level string, page, size int, params map[string]interface{}) ([]map[string]interface{}, int64, error) {
+// List 广告数据列表（表未建，返回空；columns 用于字段投影，filters 用于筛选条件）
+func (s *AdDataService) List(level string, page, size int, columns []string, filters map[string]interface{}) ([]map[string]interface{}, int64, error) {
 	collection, ok := ksModel.AdDataLevelCollections[level]
 	if !ok {
 		return nil, 0, errors.New("未知的广告数据层级: " + level)
@@ -28,5 +28,5 @@ func (s *AdDataService) List(level string, page, size int, params map[string]int
 	if size < 1 {
 		size = 10
 	}
-	return s.repo.List(collection, page, size, params)
+	return s.repo.List(collection, page, size, columns, filters)
 }

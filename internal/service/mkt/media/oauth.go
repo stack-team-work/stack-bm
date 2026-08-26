@@ -5,10 +5,14 @@ import (
 	"fmt"
 
 	mediaModel "stack-bm/internal/model/mkt/media"
+	"stack-bm/internal/service/mkt/bili"
 	biliSync "stack-bm/internal/service/mkt/bili/sync"
+	"stack-bm/internal/service/mkt/ks"
 	ksSync "stack-bm/internal/service/mkt/ks/sync"
 	"stack-bm/internal/service/mkt/oauth"
+	"stack-bm/internal/service/mkt/tc"
 	tcSync "stack-bm/internal/service/mkt/tc/sync"
+	"stack-bm/internal/service/mkt/tt"
 	ttSync "stack-bm/internal/service/mkt/tt/sync"
 	"stack-bm/pkg/constants"
 	"stack-bm/pkg/utils"
@@ -79,7 +83,7 @@ func (s *ChannelAuthService) GetOauthUrl(managerID uint) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	svc, ok := s.services[channel]
+	svc, ok := s.oauthSvcs[channel]
 	if !ok {
 		return "", fmt.Errorf("渠道【%s】暂未开发管家授权", channel)
 	}
@@ -95,7 +99,7 @@ func (s *ChannelAuthService) GetOauthUrl(managerID uint) (string, error) {
 
 // FinishOauth 回调分发到对应渠道
 func (s *ChannelAuthService) FinishOauth(channel string, params map[string]string) error {
-	svc, ok := s.services[channel]
+	svc, ok := s.oauthSvcs[channel]
 	if !ok {
 		return fmt.Errorf("渠道【%s】不支持授权", channel)
 	}
@@ -115,7 +119,7 @@ func (s *ChannelAuthService) SyncAdvertiser(managerID uint) error {
 	if err != nil {
 		return err
 	}
-	svc, ok := s.services[channel]
+	syncSvc, ok := s.advertisers[channel]
 	if !ok {
 		return fmt.Errorf("渠道【%s】暂不支持广告主同步", channel)
 	}
@@ -126,5 +130,5 @@ func (s *ChannelAuthService) SyncAdvertiser(managerID uint) error {
 	if authInfo == nil {
 		return errors.New("管家授权信息不存在")
 	}
-	return svc.SyncAdvertiser(manager, authInfo)
+	return syncSvc.Sync(manager, authInfo)
 }

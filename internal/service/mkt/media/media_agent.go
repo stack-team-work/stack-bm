@@ -5,6 +5,7 @@ import (
 
 	"stack-bm/internal/model/mkt/media"
 	mediaRepo "stack-bm/internal/repository/mkt/media"
+	"stack-bm/pkg/dict"
 	"stack-bm/pkg/utils"
 )
 
@@ -46,3 +47,5 @@ func (s *MediaAgentService) Delete(id uint) error {
 	if err != nil { return errors.New("渠道代理不存在") }
 	return s.repo.Delete(id)
 }
+
+func (s *MediaAgentService) FindOptions() ([]dict.Option, error) { return s.repo.FindOptions() }

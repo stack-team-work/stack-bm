@@ -75,3 +75,7 @@ export function copyKsTitleTemplate(data) {
 export function getKsAdDataList(level, params) {
   return request.post(`/ks-ad-data/${level}/list`, params)
 }
+
+export function ksTool(level, action, data) {
+  return request.post(`/ks-tool/${level}/${action}`, data)
+}

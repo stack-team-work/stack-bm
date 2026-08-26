@@ -56,3 +56,10 @@ const (
 	AdDataLevelUnit     = "unit"     // 第二层级：广告
 	AdDataLevelCreative = "creative" // 第三层级：创意
 )
+
+// AdDataLevelIDField 广告数据层级 -> ID字段名
+var AdDataLevelIDField = map[string]string{
+	AdDataLevelCampaign: "cpid",
+	AdDataLevelUnit:     "aid",
+	AdDataLevelCreative: "cid",
+}

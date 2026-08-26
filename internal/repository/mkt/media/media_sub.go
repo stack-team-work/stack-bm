@@ -3,6 +3,7 @@ package media
 import (
 	"stack-bm/internal/database"
 	"stack-bm/internal/model/mkt/media"
+	"stack-bm/pkg/dict"
 
 	"gorm.io/gorm"
 )
@@ -65,4 +66,10 @@ func (r *MediaSubRepository) Update(s *media.MediaSub) error {
 
 func (r *MediaSubRepository) Delete(id uint) error {
 	return r.db.Model(&media.MediaSub{}).Where("id = ?", id).Update("is_deleted", 1).Error
+}
+
+func (r *MediaSubRepository) FindOptions() ([]dict.Option, error) {
+	var list []dict.Option
+	err := r.db.Model(&media.MediaSub{}).Select("name as label, id as value").Where("is_deleted = 0 AND status = 1").Order("id ASC").Find(&list).Error
+	return list, err
 }

@@ -79,3 +79,7 @@ export function getTtWordList() {
 export function getTtAdDataList(level, params) {
   return request.post(`/tt-ad-data/${level}/list`, params)
 }
+
+export function ttTool(level, action, data) {
+  return request.post(`/tt-tool/${level}/${action}`, data)
+}

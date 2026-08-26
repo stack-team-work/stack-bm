@@ -38,6 +38,10 @@ func NewOptionsHandler() *OptionsHandler {
 			"media":              mediaService.FindOptions,
 			"media_subject":      mediaSvc.NewMediaSubjectService().FindOptions,
 			"media_application":  mediaSvc.NewMediaApplicationService().FindOptions,
+			"media_sub":          mediaSvc.NewMediaSubService().FindOptions,
+			"media_agent":        mediaSvc.NewMediaAgentService().FindOptions,
+			"media_manager":      mediaSvc.NewMediaManagerService().FindOptions,
+			"media_account":      mediaSvc.NewMediaAccountService().FindOptions,
 		},
 	}
 }
