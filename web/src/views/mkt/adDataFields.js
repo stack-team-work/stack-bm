@@ -141,9 +141,9 @@ export const AD_DATA_ACTIONS = {
       { key: 'delete', label: '删除', type: 'simple', confirm: true },
     ],
     batch: [
-      { key: 'batch-status', label: '批量开启', status: 1 },
-      { key: 'batch-status', label: '批量暂停', status: 2 },
-      { key: 'batch-delete', label: '批量删除', confirm: true },
+      { key: 'batch-status', label: '批量开启', status: 1, buttonType: 'success' },
+      { key: 'batch-status', label: '批量暂停', status: 2, buttonType: 'warning' },
+      { key: 'batch-delete', label: '批量删除', confirm: true, buttonType: 'error' },
     ],
   },
   unit: {
@@ -162,11 +162,11 @@ export const AD_DATA_ACTIONS = {
       { key: 'delete', label: '删除', type: 'simple', confirm: true },
     ],
     batch: [
-      { key: 'batch-status', label: '批量开启', status: 1 },
-      { key: 'batch-status', label: '批量暂停', status: 2 },
-      { key: 'batch-set-raise', label: '批量起量' },
-      { key: 'batch-stop-raise', label: '批量关停起量' },
-      { key: 'batch-delete', label: '批量删除', confirm: true },
+      { key: 'batch-status', label: '批量开启', status: 1, buttonType: 'success' },
+      { key: 'batch-status', label: '批量暂停', status: 2, buttonType: 'warning' },
+      { key: 'batch-set-raise', label: '批量起量', buttonType: 'success' },
+      { key: 'batch-stop-raise', label: '批量关停起量', buttonType: 'warning' },
+      { key: 'batch-delete', label: '批量删除', confirm: true, buttonType: 'error' },
     ],
   },
   creative: {
@@ -177,8 +177,8 @@ export const AD_DATA_ACTIONS = {
       { key: 'preview', label: '预览', type: 'simple' },
     ],
     batch: [
-      { key: 'batch-status', label: '批量开启', status: 1 },
-      { key: 'batch-status', label: '批量暂停', status: 2 },
+      { key: 'batch-status', label: '批量开启', status: 1, buttonType: 'success' },
+      { key: 'batch-status', label: '批量暂停', status: 2, buttonType: 'warning' },
     ],
   },
 }

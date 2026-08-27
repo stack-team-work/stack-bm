@@ -7,25 +7,9 @@
       <n-button v-if="searchable" type="info" size="small" @click="doSearch">搜索</n-button>
       <n-button v-if="searchable" type="default" size="small" @click="resetSearch">重置</n-button>
       <n-checkbox v-if="batchActions.length" v-model:checked="allChecked" @update:checked="toggleAll">全选</n-checkbox>
-      <n-button v-for="ba in batchActions" :key="ba.key + ba.label" size="small" type="primary" secondary @click="handleBatch(ba)">{{ ba.label }}</n-button>
+      <n-button v-for="ba in batchActions" :key="ba.key + ba.label" size="small" :type="ba.buttonType || 'primary'" secondary @click="handleBatch(ba)">{{ ba.label }}</n-button>
       <span v-if="checkedRowKeys.length" style="font-size: 12px; color: #999">已选 {{ checkedRowKeys.length }} 项</span>
-      <n-popover trigger="click" style="width: 420px">
-        <template #trigger>
-          <n-button size="small" secondary>列设置</n-button>
-        </template>
-        <div v-for="g in columnGroups" :key="g.name">
-          <div style="font-weight: 600; margin: 8px 0 4px">{{ g.name }}</div>
-          <n-checkbox-group v-model:value="selectedColumnKeys">
-            <n-space :size="[8, 4]" wrap>
-              <n-checkbox v-for="col in g.columns" :key="col.key" :value="col.key" :label="col.title" />
-            </n-space>
-          </n-checkbox-group>
-        </div>
-        <div style="margin-top: 10px">
-          <n-button size="small" type="primary" @click="applyColumns">确定</n-button>
-          <n-button size="small" style="margin-left: 8px" @click="resetColumns">重置列</n-button>
-        </div>
-      </n-popover>
+      <n-button size="small" secondary @click="showColumnModal = true">列设置</n-button>
     </n-space>
 
     <n-empty v-if="!columns.length" description="该层级暂无数据" style="padding: 40px 0" />
@@ -47,12 +31,51 @@
       <n-input v-if="inputAction?.inputType === 'number'" v-model:value="inputValue" type="number" :placeholder="inputAction?.inputLabel" />
       <n-input v-else v-model:value="inputValue" :placeholder="inputAction?.inputLabel" />
     </n-modal>
+
+    <n-modal v-model:show="showColumnModal" preset="card" title="列设置" style="width: min(1100px, calc(100vw - 48px))">
+      <!-- 搜索 + 已选计数 -->
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px">
+        <n-input v-model:value="colKeyword" size="small" clearable placeholder="搜索列名" style="flex: 1">
+          <template #prefix>
+            <n-icon><SearchOutline /></n-icon>
+          </template>
+        </n-input>
+        <n-tag size="small" :bordered="false" type="info">已选 {{ selectedColumnKeys.length }} / {{ allColumnKeys.length }}</n-tag>
+      </div>
+
+      <!-- 滚动分组（可折叠，默认展开） -->
+      <div style="max-height: 500px; overflow-y: auto; padding: 2px 12px 4px 2px">
+        <n-collapse :default-expanded-names="allGroupNames">
+          <n-collapse-item v-for="g in filteredColumnGroups" :key="g.name" :name="g.name" style="margin-bottom: 4px" :title="`${g.name} (${g.columns.length})`">
+            <n-checkbox-group v-model:value="selectedColumnKeys">
+              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px 24px">
+                <n-checkbox v-for="col in g.columns" :key="col.key" :value="col.key" :label="col.title" />
+              </div>
+            </n-checkbox-group>
+          </n-collapse-item>
+        </n-collapse>
+        <div v-if="!filteredColumnGroups.length" style="color: #999; padding: 16px 0; text-align: center">暂无匹配列</div>
+      </div>
+
+      <!-- 底部操作 -->
+      <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center">
+        <div style="display: flex; gap: 8px">
+          <n-button size="small" type="info" secondary @click="selectAllColumns">全选</n-button>
+          <n-button size="small" type="warning" secondary @click="selectNoneColumns">全不选</n-button>
+        </div>
+        <div>
+          <n-button size="small" type="primary" @click="applyColumns">确定</n-button>
+          <n-button size="small" style="margin-left: 8px" @click="resetColumns">重置列</n-button>
+        </div>
+      </div>
+    </n-modal>
   </n-card>
 </template>
 
 <script setup>
 import { ref, computed, h, onMounted, watch } from 'vue'
 import { NButton, useMessage, useDialog } from 'naive-ui'
+import { SearchOutline } from '@vicons/ionicons5'
 import { useTable } from '../../composables/useTable'
 import { useDict } from '../../composables/useDict'
 import { groupField } from './adDataFields'
@@ -82,6 +105,7 @@ const batchActions = computed(() => props.actions?.batch || [])
 const allColumnKeys = computed(() => props.columns.map((c) => c.key))
 const storageKey = `adData_${props.storageKey}_${props.level}`
 const selectedColumnKeys = ref([])
+const showColumnModal = ref(false)
 const columnGroups = computed(() => {
   const groups = {}
   props.columns.forEach((c) => {
@@ -90,6 +114,25 @@ const columnGroups = computed(() => {
   })
   return Object.keys(groups).map((name) => ({ name, columns: groups[name] }))
 })
+
+// 搜索（只影响展示，不影响已选列）
+const colKeyword = ref('')
+const filteredColumnGroups = computed(() => {
+  const kw = colKeyword.value.trim().toLowerCase()
+  if (!kw) return columnGroups.value
+  return columnGroups.value
+    .map((g) => ({ ...g, columns: g.columns.filter((c) => (c.title || '').toLowerCase().includes(kw) || (c.key || '').toLowerCase().includes(kw)) }))
+    .filter((g) => g.columns.length)
+})
+const allGroupNames = computed(() => filteredColumnGroups.value.map((g) => g.name))
+
+function selectAllColumns() {
+  selectedColumnKeys.value = allColumnKeys.value.slice()
+}
+
+function selectNoneColumns() {
+  selectedColumnKeys.value = []
+}
 
 function initColumns() {
   let saved = null
