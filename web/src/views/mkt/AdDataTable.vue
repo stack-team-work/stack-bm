@@ -1,13 +1,13 @@
 <template>
   <n-card :bordered="false">
     <n-space v-if="batchActions.length || searchable" :size="8" style="margin-bottom: 12px" align="center" wrap>
-      <n-date-picker v-if="searchable" v-model:value="dateRange" type="daterange" clearable style="width: 240px" placeholder="创建时间" />
+      <n-date-picker v-if="searchable" v-model:value="dateRange" type="daterange" clearable style="width: 240px" placeholder="报表日期" />
       <n-input v-if="searchable" v-model:value="searchKeyword" placeholder="名称/账号" clearable style="width: 160px" @keyup.enter="doSearch" />
       <n-select v-if="searchable" v-model:value="searchStatus" :options="statusOptions" placeholder="状态" clearable style="width: 120px" />
       <n-button v-if="searchable" type="info" size="small" @click="doSearch">搜索</n-button>
       <n-button v-if="searchable" type="default" size="small" @click="resetSearch">重置</n-button>
       <n-checkbox v-if="batchActions.length" v-model:checked="allChecked" @update:checked="toggleAll">全选</n-checkbox>
-      <n-button v-for="ba in batchActions" :key="ba.key + ba.label" size="small" :type="ba.buttonType || 'primary'" secondary @click="handleBatch(ba)">{{ ba.label }}</n-button>
+      <n-button v-for="ba in batchActions" :key="ba.key + ba.label" size="small" :type="ba.buttonType || 'primary'" secondary :disabled="toolPending" @click="handleBatch(ba)">{{ ba.label }}</n-button>
       <span v-if="checkedRowKeys.length" style="font-size: 12px; color: #999">已选 {{ checkedRowKeys.length }} 项</span>
       <n-button size="small" secondary @click="showColumnModal = true">列设置</n-button>
     </n-space>
@@ -23,11 +23,11 @@
       :row-key="rowKey"
       :checked-row-keys="checkedRowKeys"
       @update:checked-row-keys="onCheckedChange"
-      @update:page="handlePageChange"
-      @update:page-size="handlePageSizeChange"
+      @update:page="onPageChange"
+      @update:page-size="onPageSizeChange"
     />
 
-    <n-modal v-model:show="showInput" preset="dialog" :title="inputAction?.inputLabel || '请输入'" positive-text="确定" negative-text="取消" @positive-click="confirmInput" @negative-click="showInput = false">
+    <n-modal v-model:show="showInput" preset="dialog" :title="inputAction?.inputLabel || '请输入'" positive-text="确定" negative-text="取消" :positive-button-props="{ loading: toolPending }" @positive-click="confirmInput" @negative-click="showInput = false">
       <n-input v-if="inputAction?.inputType === 'number'" v-model:value="inputValue" type="number" :placeholder="inputAction?.inputLabel" />
       <n-input v-else v-model:value="inputValue" :placeholder="inputAction?.inputLabel" />
     </n-modal>
@@ -95,7 +95,7 @@ const dialog = useDialog()
 const { options } = useDict()
 const statusOptions = computed(() => options('status'))
 
-const { loading, tableData, pagination, search, resetSearch: resetSearchBase, handlePageChange, handlePageSizeChange } = useTable(props.fetchFn)
+const { loading, tableData, pagination, search, handlePageChange, handlePageSizeChange } = useTable(props.fetchFn)
 
 const idKey = computed(() => props.actions?.idKey || 'id')
 const rowActions = computed(() => props.actions?.row || [])
@@ -159,18 +159,31 @@ const searchKeyword = ref('')
 const searchStatus = ref(null)
 const dateRange = ref(null)
 
+function fmtDate(ts) {
+  const d = new Date(ts)
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${d.getFullYear()}-${m}-${day}`
+}
+
 function buildFilters() {
   const f = { columns: selectedColumnKeys.value }
   if (searchKeyword.value) f.keyword = searchKeyword.value
   if (searchStatus.value != null) f.status = searchStatus.value
   if (Array.isArray(dateRange.value) && dateRange.value.length === 2) {
-    f.start_date = new Date(dateRange.value[0]).toISOString().slice(0, 10)
-    f.end_date = new Date(dateRange.value[1]).toISOString().slice(0, 10)
+    f.start_date = fmtDate(dateRange.value[0])
+    f.end_date = fmtDate(dateRange.value[1])
   }
   return f
 }
-function doSearch() { search(buildFilters()) }
-function resetSearch() { searchKeyword.value = ''; searchStatus.value = null; dateRange.value = null; resetSearchBase() }
+function doSearch() { clearChecked(); search(buildFilters()) }
+function resetSearch() {
+  searchKeyword.value = ''
+  searchStatus.value = null
+  dateRange.value = null
+  clearChecked()
+  search(buildFilters())
+}
 
 watch(() => props.columns, initColumns)
 
@@ -178,6 +191,7 @@ watch(() => props.columns, initColumns)
 const checkedRowKeys = ref([])
 const allChecked = ref(false)
 function rowKey(row) { return row[idKey.value] ?? row.id ?? '' }
+function clearChecked() { checkedRowKeys.value = []; allChecked.value = false }
 function onCheckedChange(keys) {
   checkedRowKeys.value = keys
   allChecked.value = tableData.value.length > 0 && keys.length === tableData.value.length
@@ -185,11 +199,19 @@ function onCheckedChange(keys) {
 function toggleAll(checked) {
   checkedRowKeys.value = checked ? tableData.value.map((r) => rowKey(r)).filter((k) => k !== '') : []
 }
+function onPageChange(page) { clearChecked(); handlePageChange(page) }
+function onPageSizeChange(size) { clearChecked(); handlePageSizeChange(size) }
 
 // 操作
+const toolPending = ref(false)
 function doTool(level, action, payload) {
   if (!props.toolFn) { message.warning('未配置操作服务'); return Promise.reject(new Error('未配置操作服务')) }
-  return props.toolFn(level, action, payload).then(() => { message.success('操作成功') })
+  if (toolPending.value) return Promise.resolve()
+  toolPending.value = true
+  return props.toolFn(level, action, payload)
+    .then(() => { message.success('操作成功') })
+    .catch((err) => { message.error(err?.message || '操作失败'); throw err })
+    .finally(() => { toolPending.value = false })
 }
 function handleRowAction(row, act) {
   const id = row[idKey.value]
@@ -208,13 +230,13 @@ function handleRowAction(row, act) {
   }
 }
 function confirmInput() {
-  if (!pendingRow.value || !inputAction.value) return
+  if (!pendingRow.value || !inputAction.value || toolPending.value) return
   const payload = { id: pendingRow.value[idKey.value] }
   payload[inputAction.value.field] = inputAction.value.inputType === 'number' ? Number(inputValue.value) : inputValue.value
-  doTool(props.level, inputAction.value.key, payload).catch(() => {})
-  showInput.value = false
-  pendingRow.value = null
-  inputAction.value = null
+  const action = inputAction.value
+  return doTool(props.level, action.key, payload)
+    .then(() => { showInput.value = false })
+    .finally(() => { pendingRow.value = null; inputAction.value = null })
 }
 function handleBatch(ba) {
   const ids = checkedRowKeys.value

@@ -4,11 +4,14 @@ import (
 	"stack-bm/internal/handler"
 	"stack-bm/internal/handler/bm/feishu"
 	"stack-bm/internal/handler/bm/sys"
-	"stack-bm/internal/handler/mkt/bili"
-	"stack-bm/internal/handler/mkt/ks"
+	biliadh "stack-bm/internal/handler/mkt/bili/v1/ad"
+	bilitplh "stack-bm/internal/handler/mkt/bili/v1/template"
+	ksadh "stack-bm/internal/handler/mkt/ks/v1/ad"
+	kstplh "stack-bm/internal/handler/mkt/ks/v1/template"
 	"stack-bm/internal/handler/mkt/media"
-	"stack-bm/internal/handler/mkt/tc"
-	"stack-bm/internal/handler/mkt/tt"
+	tcadh "stack-bm/internal/handler/mkt/tc/v1/ad"
+	ttadh "stack-bm/internal/handler/mkt/tt/v1/ad"
+	tttplh "stack-bm/internal/handler/mkt/tt/v1/template"
 	"stack-bm/internal/handler/sdk/game"
 	"stack-bm/internal/handler/sdk/pay"
 	sdkSys "stack-bm/internal/handler/sdk/sys"
@@ -59,28 +62,6 @@ func SetupRouter() *gin.Engine {
 	mediaSubjectHandler := media.NewMediaSubjectHandler()
 	mediaAccountHandler := media.NewMediaAccountHandler()
 	oauthCallbackHandler := media.NewOAuthCallbackHandler()
-
-	biliAdTemplateHandler := bili.NewAdTemplateHandler()
-	biliAudienceTemplateHandler := bili.NewAudienceTemplateHandler()
-	biliTitleTemplateHandler := bili.NewTitleTemplateHandler()
-	biliAdDataHandler := bili.NewAdDataHandler()
-	biliToolHandler := bili.NewToolHandler()
-
-	ksAdTemplateHandler := ks.NewAdTemplateHandler()
-	ksAudienceTemplateHandler := ks.NewAudienceTemplateHandler()
-	ksTitleTemplateHandler := ks.NewTitleTemplateHandler()
-	ksAdDataHandler := ks.NewAdDataHandler()
-	ksToolHandler := ks.NewToolHandler()
-
-	ttAdTemplateHandler := tt.NewAdTemplateHandler()
-	ttAudienceTemplateHandler := tt.NewAudienceTemplateHandler()
-	ttTitleTemplateHandler := tt.NewTitleTemplateHandler()
-	ttWordListHandler := tt.NewWordListHandler()
-	ttAdDataHandler := tt.NewAdDataHandler()
-	ttToolHandler := tt.NewToolHandler()
-
-	tcAdDataHandler := tc.NewAdDataHandler()
-	tcToolHandler := tc.NewToolHandler()
 
 	payPlatformHandler := pay.NewPayPlatformHandler()
 	payMerchantHandler := pay.NewPayMerchantHandler()
@@ -287,79 +268,21 @@ func SetupRouter() *gin.Engine {
 		api.POST("/media-account/update/:id", mediaAccountHandler.Update)
 		api.POST("/media-account/delete/:id", mediaAccountHandler.Delete)
 
-		api.POST("/bili-ad-template/create", biliAdTemplateHandler.Create)
-		api.POST("/bili-ad-template/list", biliAdTemplateHandler.GetList)
-		api.POST("/bili-ad-template/detail/:id", biliAdTemplateHandler.GetByID)
-		api.POST("/bili-ad-template/update/:id", biliAdTemplateHandler.Update)
-		api.POST("/bili-ad-template/delete/:id", biliAdTemplateHandler.Delete)
-		api.POST("/bili-ad-template/copy", biliAdTemplateHandler.Copy)
+		// 四渠道广告数据 v1（版本为本项目自定义：头条 v1 对应巨量V3，B站 v1 对应当前开放API）
+		biliV1 := api.Group("/bili/v1")
+		biliadh.RegisterRoutes(biliV1)
+		bilitplh.RegisterRoutes(biliV1)
 
-		api.POST("/bili-audience-template/create", biliAudienceTemplateHandler.Create)
-		api.POST("/bili-audience-template/list", biliAudienceTemplateHandler.GetList)
-		api.POST("/bili-audience-template/detail/:id", biliAudienceTemplateHandler.GetByID)
-		api.POST("/bili-audience-template/update/:id", biliAudienceTemplateHandler.Update)
-		api.POST("/bili-audience-template/delete/:id", biliAudienceTemplateHandler.Delete)
-		api.POST("/bili-audience-template/copy", biliAudienceTemplateHandler.Copy)
+		ksV1 := api.Group("/ks/v1")
+		ksadh.RegisterRoutes(ksV1)
+		kstplh.RegisterRoutes(ksV1)
 
-		api.POST("/bili-title-template/create", biliTitleTemplateHandler.Create)
-		api.POST("/bili-title-template/list", biliTitleTemplateHandler.GetList)
-		api.POST("/bili-title-template/detail/:id", biliTitleTemplateHandler.GetByID)
-		api.POST("/bili-title-template/update/:id", biliTitleTemplateHandler.Update)
-		api.POST("/bili-title-template/delete/:id", biliTitleTemplateHandler.Delete)
-		api.POST("/bili-title-template/copy", biliTitleTemplateHandler.Copy)
+		ttV1 := api.Group("/tt/v1")
+		ttadh.RegisterRoutes(ttV1)
+		tttplh.RegisterRoutes(ttV1)
 
-		api.POST("/ks-ad-template/create", ksAdTemplateHandler.Create)
-		api.POST("/ks-ad-template/list", ksAdTemplateHandler.GetList)
-		api.POST("/ks-ad-template/detail/:id", ksAdTemplateHandler.GetByID)
-		api.POST("/ks-ad-template/update/:id", ksAdTemplateHandler.Update)
-		api.POST("/ks-ad-template/delete/:id", ksAdTemplateHandler.Delete)
-		api.POST("/ks-ad-template/copy", ksAdTemplateHandler.Copy)
-
-		api.POST("/ks-audience-template/create", ksAudienceTemplateHandler.Create)
-		api.POST("/ks-audience-template/list", ksAudienceTemplateHandler.GetList)
-		api.POST("/ks-audience-template/detail/:id", ksAudienceTemplateHandler.GetByID)
-		api.POST("/ks-audience-template/update/:id", ksAudienceTemplateHandler.Update)
-		api.POST("/ks-audience-template/delete/:id", ksAudienceTemplateHandler.Delete)
-		api.POST("/ks-audience-template/copy", ksAudienceTemplateHandler.Copy)
-
-		api.POST("/ks-title-template/create", ksTitleTemplateHandler.Create)
-		api.POST("/ks-title-template/list", ksTitleTemplateHandler.GetList)
-		api.POST("/ks-title-template/detail/:id", ksTitleTemplateHandler.GetByID)
-		api.POST("/ks-title-template/update/:id", ksTitleTemplateHandler.Update)
-		api.POST("/ks-title-template/delete/:id", ksTitleTemplateHandler.Delete)
-		api.POST("/ks-title-template/copy", ksTitleTemplateHandler.Copy)
-
-		api.POST("/tt-ad-template/create", ttAdTemplateHandler.Create)
-		api.POST("/tt-ad-template/list", ttAdTemplateHandler.GetList)
-		api.POST("/tt-ad-template/detail/:id", ttAdTemplateHandler.GetByID)
-		api.POST("/tt-ad-template/update/:id", ttAdTemplateHandler.Update)
-		api.POST("/tt-ad-template/delete/:id", ttAdTemplateHandler.Delete)
-		api.POST("/tt-ad-template/copy", ttAdTemplateHandler.Copy)
-
-		api.POST("/tt-audience-template/create", ttAudienceTemplateHandler.Create)
-		api.POST("/tt-audience-template/list", ttAudienceTemplateHandler.GetList)
-		api.POST("/tt-audience-template/detail/:id", ttAudienceTemplateHandler.GetByID)
-		api.POST("/tt-audience-template/update/:id", ttAudienceTemplateHandler.Update)
-		api.POST("/tt-audience-template/delete/:id", ttAudienceTemplateHandler.Delete)
-		api.POST("/tt-audience-template/copy", ttAudienceTemplateHandler.Copy)
-
-		api.POST("/tt-title-template/create", ttTitleTemplateHandler.Create)
-		api.POST("/tt-title-template/list", ttTitleTemplateHandler.GetList)
-		api.POST("/tt-title-template/detail/:id", ttTitleTemplateHandler.GetByID)
-		api.POST("/tt-title-template/update/:id", ttTitleTemplateHandler.Update)
-		api.POST("/tt-title-template/delete/:id", ttTitleTemplateHandler.Delete)
-		api.POST("/tt-title-template/copy", ttTitleTemplateHandler.Copy)
-
-		api.POST("/tt-word-list/list", ttWordListHandler.GetList)
-
-		api.POST("/bili-ad-data/:level/list", biliAdDataHandler.List)
-		api.POST("/bili-tool/:level/:action", biliToolHandler.Action)
-		api.POST("/ks-ad-data/:level/list", ksAdDataHandler.List)
-		api.POST("/ks-tool/:level/:action", ksToolHandler.Action)
-		api.POST("/tt-ad-data/:level/list", ttAdDataHandler.List)
-		api.POST("/tt-tool/:level/:action", ttToolHandler.Action)
-		api.POST("/tc-ad-data/:level/list", tcAdDataHandler.List)
-		api.POST("/tc-tool/:level/:action", tcToolHandler.Action)
+		tcV1 := api.Group("/tc/v1")
+		tcadh.RegisterRoutes(tcV1)
 
 		api.POST("/pay-platform/create", payPlatformHandler.Create)
 		api.POST("/pay-platform/list", payPlatformHandler.GetList)

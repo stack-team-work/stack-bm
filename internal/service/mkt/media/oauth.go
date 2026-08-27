@@ -6,14 +6,14 @@ import (
 
 	mediaModel "stack-bm/internal/model/mkt/media"
 	"stack-bm/internal/service/mkt/bili"
-	biliSync "stack-bm/internal/service/mkt/bili/sync"
+	biliSync "stack-bm/internal/service/mkt/bili/v1/sync"
 	"stack-bm/internal/service/mkt/ks"
-	ksSync "stack-bm/internal/service/mkt/ks/sync"
+	ksSync "stack-bm/internal/service/mkt/ks/v1/sync"
 	"stack-bm/internal/service/mkt/oauth"
 	"stack-bm/internal/service/mkt/tc"
-	tcSync "stack-bm/internal/service/mkt/tc/sync"
+	tcSync "stack-bm/internal/service/mkt/tc/v1/sync"
 	"stack-bm/internal/service/mkt/tt"
-	ttSync "stack-bm/internal/service/mkt/tt/sync"
+	ttSync "stack-bm/internal/service/mkt/tt/v1/sync"
 	"stack-bm/pkg/constants"
 	"stack-bm/pkg/utils"
 

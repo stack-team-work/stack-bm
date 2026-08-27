@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"stack-bm/internal/service/mkt/oauth"
-	"stack-bm/internal/service/mkt/tt/api"
+	"stack-bm/internal/service/mkt/tt/v1/api"
 	"stack-bm/pkg/constants"
 
 	"go.mongodb.org/mongo-driver/v2/bson"

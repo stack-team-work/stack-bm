@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"stack-bm/internal/service/mkt/ks/api"
+	"stack-bm/internal/service/mkt/ks/v1/api"
 	"stack-bm/internal/service/mkt/oauth"
 	"stack-bm/pkg/constants"
 
