@@ -22,9 +22,6 @@
             <n-input v-model:value="formData.feishu_user_id" placeholder="请输入飞书用户ID" :disabled="isEdit" />
           </n-form-item-gi>
           <n-grid-item :span="2">
-            <n-form-item path="status" label="状态" label-placement="left">
-              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="正常" unchecked-text="异常" />
-            </n-form-item>
           </n-grid-item>
         </n-grid>
       </n-form>

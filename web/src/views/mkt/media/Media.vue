@@ -26,9 +26,6 @@
             </n-form-item>
           </n-grid-item>
           <n-grid-item :span="2">
-            <n-form-item path="status" label="状态" label-placement="left">
-              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
-            </n-form-item>
           </n-grid-item>
         </n-grid>
       </n-form>

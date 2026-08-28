@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50744
 File Encoding         : 65001
 
-Date: 2026-08-26 20:48:53
+Date: 2026-08-28 14:44:45
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -31,14 +31,6 @@ CREATE TABLE `media` (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `mark` (`mark`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
-
--- ----------------------------
--- Records of media
--- ----------------------------
-INSERT INTO `media` VALUES ('1', '头条', 'tt', '1', '0', '1779791396', '1779791396', null);
-INSERT INTO `media` VALUES ('2', '腾讯', 'tc', '1', '0', null, null, null);
-INSERT INTO `media` VALUES ('3', 'B站', 'bili', '1', '0', null, null, null);
-INSERT INTO `media` VALUES ('4', '快手', 'ks', '1', '0', null, null, null);
 
 -- ----------------------------
 -- Table structure for media_accounts
@@ -66,10 +58,6 @@ CREATE TABLE `media_accounts` (
 ) ENGINE=InnoDB AUTO_INCREMENT=88656 DEFAULT CHARSET=utf8mb4 COMMENT='渠道账号表';
 
 -- ----------------------------
--- Records of media_accounts
--- ----------------------------
-
--- ----------------------------
 -- Table structure for media_agent
 -- ----------------------------
 DROP TABLE IF EXISTS `media_agent`;
@@ -84,10 +72,6 @@ CREATE TABLE `media_agent` (
   `created_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='代理';
-
--- ----------------------------
--- Records of media_agent
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for media_application
@@ -110,8 +94,19 @@ CREATE TABLE `media_application` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='mkt应用表';
 
 -- ----------------------------
--- Records of media_application
+-- Table structure for media_dep
 -- ----------------------------
+DROP TABLE IF EXISTS `media_dep`;
+CREATE TABLE `media_dep` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mark` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  `is_deleted` tinyint(4) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL,
+  `created_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='代理';
 
 -- ----------------------------
 -- Table structure for media_manager
@@ -137,10 +132,6 @@ CREATE TABLE `media_manager` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='mkt管家表';
 
 -- ----------------------------
--- Records of media_manager
--- ----------------------------
-
--- ----------------------------
 -- Table structure for media_sub
 -- ----------------------------
 DROP TABLE IF EXISTS `media_sub`;
@@ -158,10 +149,6 @@ CREATE TABLE `media_sub` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
 
 -- ----------------------------
--- Records of media_sub
--- ----------------------------
-
--- ----------------------------
 -- Table structure for media_subject
 -- ----------------------------
 DROP TABLE IF EXISTS `media_subject`;
@@ -175,7 +162,3 @@ CREATE TABLE `media_subject` (
   `created_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT COMMENT='主体';
-
--- ----------------------------
--- Records of media_subject
--- ----------------------------

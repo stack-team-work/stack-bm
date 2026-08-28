@@ -163,6 +163,12 @@ const routes = [
         meta: { title: '渠道代理' },
       },
       {
+        path: 'media-dep',
+        name: 'MediaDep',
+        component: () => import('../views/mkt/media/MediaDep.vue'),
+        meta: { title: '账户部门' },
+      },
+      {
         path: 'media-application',
         name: 'MediaApplication',
         component: () => import('../views/mkt/media/MediaApplication.vue'),

@@ -57,6 +57,7 @@ func SetupRouter() *gin.Engine {
 	mediaHandler := media.NewMediaHandler()
 	mediaSubHandler := media.NewMediaSubHandler()
 	mediaAgentHandler := media.NewMediaAgentHandler()
+	mediaDepHandler := media.NewMediaDepHandler()
 	mediaApplicationHandler := media.NewMediaApplicationHandler()
 	mediaManagerHandler := media.NewMediaManagerHandler()
 	mediaSubjectHandler := media.NewMediaSubjectHandler()
@@ -237,6 +238,13 @@ func SetupRouter() *gin.Engine {
 		api.POST("/media-agent/detail/:id", mediaAgentHandler.GetByID)
 		api.POST("/media-agent/update/:id", mediaAgentHandler.Update)
 		api.POST("/media-agent/delete/:id", mediaAgentHandler.Delete)
+
+		api.POST("/media-dep/create", mediaDepHandler.Create)
+		api.POST("/media-dep/list", mediaDepHandler.GetList)
+		api.POST("/media-dep/all", mediaDepHandler.GetAll)
+		api.POST("/media-dep/detail/:id", mediaDepHandler.GetByID)
+		api.POST("/media-dep/update/:id", mediaDepHandler.Update)
+		api.POST("/media-dep/delete/:id", mediaDepHandler.Delete)
 
 		api.POST("/media-application/create", mediaApplicationHandler.Create)
 		api.POST("/media-application/list", mediaApplicationHandler.GetList)

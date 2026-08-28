@@ -36,11 +36,6 @@
           <n-form-item-gi path="auth_status" label="授权状态">
             <n-select v-model:value="formData.auth_status" :options="authOptions" placeholder="授权状态" />
           </n-form-item-gi>
-          <n-grid-item>
-            <n-form-item path="status" label="状态" label-placement="left">
-              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
-            </n-form-item>
-          </n-grid-item>
           <n-form-item-gi path="remark" label="备注" :span="2">
             <n-input v-model:value="formData.remark" placeholder="请输入备注" />
           </n-form-item-gi>

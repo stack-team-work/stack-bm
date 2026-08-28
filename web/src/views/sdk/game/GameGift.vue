@@ -40,11 +40,6 @@
           <n-form-item-gi path="desc" label="描述">
             <n-input v-model:value="formData.desc" placeholder="请输入描述" />
           </n-form-item-gi>
-          <n-grid-item>
-            <n-form-item path="status" label="状态" label-placement="left">
-              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="有效" unchecked-text="无效" />
-            </n-form-item>
-          </n-grid-item>
         </n-grid>
       </n-form>
       <template #footer>

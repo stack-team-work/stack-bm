@@ -37,11 +37,6 @@
           <n-form-item-gi path="author" label="作者">
             <n-input v-model:value="formData.author" placeholder="请输入作者" />
           </n-form-item-gi>
-          <n-grid-item>
-            <n-form-item path="status" label="状态" label-placement="left">
-              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
-            </n-form-item>
-          </n-grid-item>
         </n-grid>
       </n-form>
       <template #footer>
@@ -56,7 +51,7 @@
 
 <script setup>
 import { ref, reactive, h, onMounted, computed } from 'vue'
-import { NButton, NSpace, NSwitch, NTag } from 'naive-ui'
+import { NButton, NSpace, NSwitch, NTag, useMessage } from 'naive-ui'
 import { useModal } from '../../../composables/useModal'
 import { getMenuAll, createMenu, updateMenu, deleteMenu } from '../../../api/bm/sys'
 import { useDict } from '../../../composables/useDict'
@@ -64,6 +59,7 @@ import TableActions from '../../../components/TableActions.vue'
 
 const { showModal, isEdit, editId, submitLoading, formRef, open, openEdit, submit, handleDelete: doDelete } = useModal()
 const { load: loadDict, options } = useDict()
+const message = useMessage()
 const loading = ref(false)
 const tableData = ref([])
 const searchKeyword = ref('')
@@ -87,7 +83,7 @@ const columns = [
   { title: '父级', key: 'parent', width: 60 },
   { title: '图标', key: 'icon', width: 80 },
   { title: '排序', key: 'sort', width: 60 },
-  { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, readonly: true, size: 'small' }) },
+  { title: '状态', key: 'status', width: 70, render: (row) => h(NSwitch, { value: row.status === 1, onUpdateValue: (val) => handleStatusChange(row, val), size: 'small' }) },
   { title: '操作', key: 'actions', width: 140, render: (row) => h(TableActions, { row, edit: () => handleEdit(row), remove: () => onDelete(row.id) }) },
 ]
 
@@ -108,6 +104,9 @@ function handleAdd() { resetForm(); open() }
 function handleEdit(row) { resetForm(); formData.type = row.type; formData.name = row.name; formData.path = row.path; formData.parent = row.parent; formData.icon = row.icon || ''; formData.sort = row.sort; formData.author = row.author || ''; formData.status = row.status; openEdit(row) }
 async function handleSubmit() { if (await submit(formData, createMenu, updateMenu)) loadAll() }
 async function onDelete(id) { if (await doDelete(id, deleteMenu)) loadAll() }
+async function handleStatusChange(row, val) {
+  try { await updateMenu(row.id, { ...row, status: val ? 1 : 0 }); row.status = val ? 1 : 0; message.success('状态已更新') } catch { message.error('更新失败') }
+}
 
 async function loadAll() { try { const res = await getMenuAll(); allMenus.value = res.data || []; doSearch() } catch { /* */ } }
 onMounted(async () => { await loadDict(); loadAll() })

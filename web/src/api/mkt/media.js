@@ -60,6 +60,26 @@ export function deleteMediaAgent(id) {
   return request.post(`/media-agent/delete/${id}`)
 }
 
+export function getMediaDepList(params) {
+  return request.post('/media-dep/list', params)
+}
+
+export function getMediaDepAll() {
+  return request.post('/media-dep/all')
+}
+
+export function createMediaDep(data) {
+  return request.post('/media-dep/create', data)
+}
+
+export function updateMediaDep(id, data) {
+  return request.post(`/media-dep/update/${id}`, data)
+}
+
+export function deleteMediaDep(id) {
+  return request.post(`/media-dep/delete/${id}`)
+}
+
 export function getMediaApplicationList(params) {
   return request.post('/media-application/list', params)
 }

@@ -230,7 +230,7 @@ const topNavOptions = [
 
 const topNavRouteMap = {
   '/dashboard': 'publish',
-  '/media': 'publish', '/media-sub': 'publish', '/media-agent': 'publish',
+  '/media': 'publish', '/media-sub': 'publish', '/media-agent': 'publish', '/media-dep': 'publish',
   '/media-application': 'publish', '/media-manager': 'publish', '/media-subject': 'publish',
   '/media-account': 'publish',
   '/bili-ads': 'publish',
@@ -299,6 +299,7 @@ const sidebarMenu = computed(() => {
             { label: 'mkt应用', key: '/media-application' },
             { label: 'mkt管家', key: '/media-manager' },
             { label: '渠道账户', key: '/media-account' },
+            { label: '账户部门', key: '/media-dep' },
             { label: '主体管理', key: '/media-subject' },
           ],
         },

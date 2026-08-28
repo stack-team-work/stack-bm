@@ -30,11 +30,6 @@
           <n-form-item-gi path="group_id" label="所属角色">
             <n-select v-model:value="formData.group_id" :options="groupOptions" placeholder="请选择角色" />
           </n-form-item-gi>
-          <n-grid-item>
-            <n-form-item path="status" label="状态" label-placement="left">
-              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
-            </n-form-item>
-          </n-grid-item>
         </n-grid>
       </n-form>
       <template #footer>

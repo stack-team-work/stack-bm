@@ -30,11 +30,6 @@
           <n-form-item-gi path="remark" label="备注">
             <n-input v-model:value="formData.remark" placeholder="请输入备注" />
           </n-form-item-gi>
-          <n-grid-item>
-            <n-form-item path="status" label="状态" label-placement="left">
-              <n-switch v-model:value="formData.status" :checked-value="1" :unchecked-value="0" checked-text="启用" unchecked-text="禁用" />
-            </n-form-item>
-          </n-grid-item>
           <n-form-item-gi path="extra" label="扩展信息" :span="2">
             <n-input v-model:value="formData.extra" type="textarea" :rows="2" placeholder="请输入扩展信息" />
           </n-form-item-gi>
